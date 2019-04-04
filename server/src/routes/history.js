@@ -3,15 +3,15 @@ import { Router } from 'express';
 const router = Router();
 
 router.get('/', async (req, res) => {
-  const messages = await req.context.models.Message.find();
-  return res.send(messages);
+  const history = await req.context.models.History.find();
+  return res.send(history);
 });
 
-router.get('/:messageId', async (req, res) => {
-  const message = await req.context.models.Message.findById(
-    req.params.messageId,
+router.get('/:historyId', async (req, res) => {
+  const history = await req.context.models.Message.findById(
+    req.params.historyId,
   );
-  return res.send(message);
+  return res.send(history);
 });
 
 router.post('/', async (req, res) => {

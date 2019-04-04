@@ -1,9 +1,7 @@
-import session from './session';
+import history from './history';
 import user from './user';
-import message from './message';
 
 export default {
-  session,
   user,
-  message,
+  history,
 };
