@@ -2,40 +2,44 @@ import React, { Component } from 'react';
 import apiClass from './Api';
 import logo from './logo.svg';
 import { Text, FieldBox, Button, Logo} from './Components';
+import './styles.css';
 
 const LoginBox = (props) => (
     <div className="login-box">
         <Text class="title" text="Добро пожаловать" />
         <Text class="error-subtitle" text={props.text} />
         <FieldBox
-         fieldName="имя пользователя"
-         handler={props.handleEmail}
-         value={props.email}
-         type="email"
+            fieldName="имя пользователя"
+            handler={props.handleEmail}
+            value={props.email}
+            type="email"
         />
         <FieldBox
-         fieldName="пароль"
-         handler={props.handlePassword}
-         value={props.password}
-         type="password"
+            fieldName="пароль"
+            handler={props.handlePassword}
+            value={props.password}
+            type="password"
         />
         <Button
-         text="Создать аккаунт"
-         handler={props.handleNewUser}
+            type="button"
+            text="Создать аккаунт"
+            handler={props.handleNewUser}
         />
         <Button
-         text="Забыли пароль?"
-         handler={props.handleForgot}
+            type="button"
+            text="Забыли пароль?"
+            handler={props.handleForgot}
         />
         <Button
-         text="Войти"
-         handler={props.handleCredentials}
+            type="submit"
+            text="Войти"
+            handler={props.handleCredentials}
         />
     </div>
 );
 
 const ForgotBox = (props) => (
-    <div>
+    <div className="box">
         <Text class="title" text="Добро пожаловать" />
         <Text class="subtitle" text={props.text} />
         <FieldBox
@@ -45,10 +49,12 @@ const ForgotBox = (props) => (
             type="email"
         />
         <Button
+            type="button"
             text="Назад"
             handler={props.handleForgot}
         />
         <Button
+            type="submit"
             text="Сбросить пароль"
             handler={props.handleReset}
         />
@@ -56,7 +62,7 @@ const ForgotBox = (props) => (
 );
 
 const CreateBox = (props) => (
-    <div>
+    <div className="box">
         <Text class="title" text="Добро пожаловать" />
         <Text class="subtitle" text={props.text} />
         <FieldBox
@@ -139,7 +145,7 @@ class Login extends Component {
         super(props);
         this.state = {
             username: props.username,
-            email: props.username,
+            email: props.email,
             password: props.password,
             forgotten: false,
             isNew: true,
@@ -174,7 +180,8 @@ class Login extends Component {
 
     handleCredentials = () => {
         let { email, password } = this.state;
-        console.log(email + password);
+        console.log(email);
+        console.log(this.state);
         if (!email && !password) {
             this.setState({ text: 'Введите данные.'});
             setTimeout(() => {this.setState({ text: ''})}, 5000);
@@ -193,8 +200,9 @@ class Login extends Component {
 
     render() {
         let logoClass = "loading";
-        if (this.state.connectionStatus === 200) {
+        if (logoClass !== 'loaded' && this.state.connectionStatus === 200) {
             logoClass = "loaded";
+            console.log(this.state)
         }
         return (
         <div className="background">

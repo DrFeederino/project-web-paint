@@ -4,15 +4,20 @@ import apiClass from './Api';
 import Login from './Login';
 import User from './User';
 
+/*
+  To-Do:
+  1. Refactor code
+  2. Implement bcrypt
+  3. Implement PixiJS with hooks to its features
+*/
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: {
-        username: '',
-        email: '',
-        password: '',
-      },
+      user: null,
+      username: '',
+      email: 'admin@admin.com',
+      password: '12345',
       isLogged: false,
       text: '',
     };
@@ -24,6 +29,7 @@ class App extends Component {
     if (user) {
       this.setState({
         user: user,
+        isLogged: true,
       });
     }
   }
@@ -39,10 +45,10 @@ class App extends Component {
   }
 
   handleEmail = (e) => {
+    console.log(e.target.value);
     this.setState({
       email: e.target.value,
     });
-    console.log(this.state.username);
   }
 
   handleUsername = (e) => {
@@ -64,21 +70,29 @@ class App extends Component {
   createUser = async () => {
     let { email, username, password } = this.state;
     let res = await apiClass.createUser(username, email, password);
-    console.log(res);
+    if (res) {
+      this.setState({
+        user: res,
+        isLogged: true,
+      })
+    }
   }
+
   render() {
     let box = this.state.isLogged === true
-              ? <User />
+              ? <User
+                    user={this.state.user}
+                />
               : <Login
-                username={this.state.username}
-                handleUsername={this.handleUsername}
-                password={this.state.password}
-                handlePassword={this.handlePassword}
-                email={this.state.email}
-                handleEmail={this.handleEmail}
-                text={this.state.text}
-                handleLogin={this.handleLogin}
-                handleCreate={this.handleCreate}
+                    username={this.state.username}
+                    handleUsername={this.handleUsername}
+                    password={this.state.password}
+                    handlePassword={this.handlePassword}
+                    email={this.state.email}
+                    handleEmail={this.handleEmail}
+                    text={this.state.text}
+                    handleLogin={this.handleLogin}
+                    handleCreate={this.handleCreate}
                 />;
     return (box);
   }

@@ -10,7 +10,7 @@ class apiClass {
 
     static getUser = async (email, password) => {
         const options = {
-            method: 'GET',
+            method: 'POST',
             mode: "cors",
             headers: {
                 'Content-Type': 'application/json',
@@ -20,14 +20,14 @@ class apiClass {
                 password: password,
             }),
         };
-        return await fetch(`http://localhost:9000/users`, options)
-            .then(res => JSON.parse(res))
-            .catch(err => err);
+        return await fetch(`http://localhost:9000/users/login`, options)
+            .then(res => res.json())
+            .catch(err => console.log(err));
     }
 
-    static resetPass = async (email) => {
-        return await fetch(`http://localhost:9000/users/${email}`)
-            .then(res => JSON.parse(res))
+    static resetPass = async (id) => {
+        return await fetch(`http://localhost:9000/users/${id}`)
+            .then(res => res.json())
             .catch(err => err);
     }
 
@@ -46,9 +46,25 @@ class apiClass {
             }),
         };
         console.log(options);
-        return await fetch(`http://localhost:9000/users`, options)
-            .then(res => JSON.parse(res))
-            .catch(err => err);
+        return await fetch(`http://localhost:9000/users/create`, options)
+            .then(res => res.json())
+            .catch(err => console.log(err));
+    }
+
+    static deleteUser = async (id) => {
+        const options = {
+            method: 'DELETE',
+            mode: "cors",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                id: id,
+            }),
+        };
+        return await fetch(`http://localhost:9000/users/${id}/delete`, options)
+            .then(res => res.json())
+            .catch(err => console.log(err));
     }
 }
 
