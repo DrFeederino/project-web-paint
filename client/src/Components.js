@@ -28,7 +28,7 @@ const FieldBox = (props) => (
 );
 
 const Button = (props) => (
-    <button className="button" onClick={props.handler}>
+    <button className="button" onClick={props.handler} type={props.type}>
       <div className="contents">
         {props.text}
       </div>

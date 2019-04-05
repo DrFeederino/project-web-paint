@@ -14,82 +14,64 @@ class App extends Component {
         password: '',
       },
       isLogged: false,
-      token: undefined,
       text: '',
     };
   }
 
   handleLogin = () => {
-    let {user, token} = this.fetchUserData();
-    this.setState({
-      user: user,
-      token: token,
-      isLogged: true,
-    });
+    return;
   }
 
   handleLogout = () => {
     this.setState({
-      user: {
-        username: '',
-        email: '',
-        password: '',
-      },
+      username: '',
+      email: '',
+      password: '',
       isLogged: false,
-      token: undefined,
       text: '',
     })
   }
 
-  fetchUserData = async() => {
-    let {email, password} = this.state;
-    await apiClass.getUser(email, password)
-        .then(res => {
-          return res;
-        })
-        .catch(err => {
-            this.setState({
-                text: err,
-            })
-        })
-  }
-
-  handleReset = () => {
-    this.getResetStatus(); 
-  }
-
-  getResetStatus = async () => {
-    await apiClass.resetPass(this.state.user.email)
-      .then(this.setState({
-        text: 'Ссылка отправлена на почтовый ящик.'
-      })).catch(err => this.setState({
-        text: err
-      }));
-  }
-
-  handleCreate = () => {
-    let { user, token } = this.createUser();
+  handleEmail = (e) => {
     this.setState({
-      user: user,
-      token: token,
-      isLogged: true,
+      email: e.target.value,
     });
+    console.log(this.state.username);
+  }
+
+  handleUsername = (e) => {
+      this.setState({
+        username: e.target.value,
+      });
+  }
+
+  handlePassword = (e) => {
+      this.setState({
+        password: e.target.value,
+      });
+  }
+
+  handleCreate = async () => {
+    await this.createUser();
   }
 
   createUser = async () => {
-    let { email, username, password } = this.state.user;
-    await apiClass.createUser(username, email, password);
+    let { email, username, password } = this.state;
+    let res = await apiClass.createUser(username, email, password);
+    console.log(res);
   }
   render() {
     let box = this.state.isLogged === true
               ? <User />
               : <Login
-                username={this.state.user.username}
-                password={this.state.user.password}
-                email={this.state.user.email}
+                username={this.state.username}
+                handleUsername={this.handleUsername}
+                password={this.state.password}
+                handlePassword={this.handlePassword}
+                email={this.state.email}
+                handleEmail={this.handleEmail}
                 text={this.state.text}
                 handleLogin={this.handleLogin}
-                handleReset={this.handleReset}
                 handleCreate={this.handleCreate}
                 />;
     return (box);

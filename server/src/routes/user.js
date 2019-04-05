@@ -1,32 +1,47 @@
 import { Router } from 'express';
+import bcrypt from 'bcrypt';
 
 const router = Router();
+const saltRounds = 10; // per docs
 
 router.get('/', async (req, res) => {
-  const users = await req.context.models.User.find();
-  return res.send(users);
+  let users = await req.context.models.User.find();
+  res.send(users); // to check if everything is fine on server side
 });
 
-router.get('/:userId', async (req, res) => {
-  await req.context.models.User.findById(
-    req.params.userId,
-  );
-  res.sendStatus(200);
+router.all('/:username', async (req, res) => { //login users
+  let user;
+  console.log(req.params)
+  await req.context.models.User.findOne({
+    username: req.params.username,
+  }).then((fetchUser => user = fetchUser))
+    .catch(() => res.send('User not found'));
+  console.log(user);
+  if (user) {
+    bcrypt.compare(req.body.password, user.password)
+      .then(() => res.send(user))
+      .catch(() => res.send('Password does not match'));
+  } else { res.send('User not found')}
 });
 
-router.post('/:userId', async (req, res) => {
-  await req.context.models.User.create(
-    req.params.body,
-  );
-  res.sendStatus(200);
+router.post('/', async (req, res) => { //creates users
+  console.log('receieved post from UI');
+  console.log(req.body);
+  await req.context.models.User.create(req.body, (err, result) => {
+    if (err) { res.send(err) }
+    res.sendStatus(200);
+  });
 });
 
-router.delete('/:userId', async (req, res) => {
-  const user = await req.context.models.User.findById(req.params.userId);
-  let result = null;
-  if (user) { user.remove()}
-  return res.send(result);
-})
+router.delete('/', async (req, res) => { //delets users from db
+  await req.context.models.User.deleteOne({
+    username: req.body.username,
+  }, (err, result) => {
+    if (err) { res.send(err) }
+    res.sendStatus(200);
+  });
+});
+
 // userSchema.statics.createUser = async (user) => {
 //   this.create(...user, (err) => {
 //     if (err) { return err; }

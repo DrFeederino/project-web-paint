@@ -60,6 +60,12 @@ const CreateBox = (props) => (
         <Text class="title" text="Добро пожаловать" />
         <Text class="subtitle" text={props.text} />
         <FieldBox
+            fieldName="имя пользователя"
+            handler={props.handleUsername}
+            value={props.username}
+            type="text"
+        />
+        <FieldBox
             fieldName="электронная почта"
             handler={props.handleEmail}
             value={props.email}
@@ -73,10 +79,12 @@ const CreateBox = (props) => (
         />
         <Button
          text="Уже зарегестрированы?"
+         type="button"
          handler={props.handleNewUser}
         />
         <Button
          text="Создать аккаунт"
+         type="submit"
          handler={props.handleCreate}
         />
     </div>
@@ -113,6 +121,8 @@ const UserLogin = (props) => {
                 text={props.text}
                 handleNewUser={props.handleNewUser}
                 handleCreate={props.handleCreate}
+                username={props.username}
+                handleUsername={props.handleUsername}
             />);
     }
     return (
@@ -138,40 +148,24 @@ class Login extends Component {
             logo: {logo},
         };
         this.handleLogin = props.handleLogin.bind(this);
-        this.handleReset = props.handleReset.bind(this);
         this.handleCreate = props.handleCreate.bind(this);
+        this.handleEmail = props.handleEmail.bind(this);
+        this.handlePassword = props.handlePassword.bind(this);
+        this.handleUsername = props.handleUsername.bind(this);
     }
 
     async componentWillMount() {
-        await apiClass.statusCheck()
-            .then(res => {
-                console.log(res);
-                this.setState({
-                    connectionStatus: res.status
-                });
-            })
-            .catch(err => {
-                this.setState({
-                    connectionStatus: err
-                });
-            })
-    }
-
-    handleEmail = (e) => {
+        let res = await apiClass.statusCheck();
         this.setState({
-            email: e.target.value,
-        });
-    }
-
-    handlePassword = (e) => {
-        this.setState({
-            password: e.target.value,
-        });
+            connectionStatus: res.status,
+        })
+        console.log(res);
     }
 
     handleSubmit = (e) => {
         e.preventDefault();
     }
+
     handleNewUser = () => {
         this.setState(state => ({
             isNew: !state.isNew,
@@ -210,15 +204,18 @@ class Login extends Component {
                     <UserLogin
                         handleSubmit={this.handleSubmit}
                         email={this.state.email}
+                        username={this.state.username}
                         password={this.state.password}
                         forgotten={this.state.forgotten}
                         isNew={this.state.isNew}
+                        handleUsername={this.handleUsername}
                         handleEmail={this.handleEmail}
                         handlePassword={this.handlePassword}
                         handleCredentials={this.handleCredentials}
                         handleReset={this.handleReset}
                         handleForgot={this.handleForgot}
                         handleNewUser={this.handleNewUser}
+                        handleCreate={this.handleCreate}
                         text={this.state.text}
                     />
                 }
