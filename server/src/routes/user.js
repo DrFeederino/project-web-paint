@@ -4,23 +4,23 @@ import bcrypt from 'bcrypt';
 const router = Router();
 const saltRounds = 10; // per docs
 
-router.get('/', async (req, res) => {
+router.get('/show', async (req, res) => {
   let users = await req.context.models.User.find();
   res.send(users); // to check if everything is fine on server side
 });
 
-router.all('/:username', async (req, res) => { //login users
+router.get('/', async (req, res) => { //login users
   let user;
-  console.log(req.params)
+  console.log(req.body)
   await req.context.models.User.findOne({
-    username: req.params.username,
+    username: req.body.username,
   }).then((fetchUser => user = fetchUser))
     .catch(() => res.send('User not found'));
   console.log(user);
   if (user) {
-    bcrypt.compare(req.body.password, user.password)
-      .then(() => res.send(user))
-      .catch(() => res.send('Password does not match'));
+    if (user.password === req.body.password) {
+      res.send(user);
+    } else { res.send('Password does not match') }
   } else { res.send('User not found')}
 });
 

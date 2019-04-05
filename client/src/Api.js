@@ -9,7 +9,18 @@ class apiClass {
     }
 
     static getUser = async (email, password) => {
-        return await fetch(`http://localhost:9000/users/${email}`)
+        const options = {
+            method: 'GET',
+            mode: "cors",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: email,
+                password: password,
+            }),
+        };
+        return await fetch(`http://localhost:9000/users`, options)
             .then(res => JSON.parse(res))
             .catch(err => err);
     }
@@ -19,6 +30,7 @@ class apiClass {
             .then(res => JSON.parse(res))
             .catch(err => err);
     }
+
     static createUser = async (username, email, password) => {
         const options = {
             method: 'POST',
@@ -30,6 +42,7 @@ class apiClass {
                 username: username,
                 email: email,
                 password: password,
+                createdAt: new Date(),
             }),
         };
         console.log(options);

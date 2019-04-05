@@ -174,13 +174,13 @@ class Login extends Component {
 
     handleCredentials = () => {
         let { email, password } = this.state;
-        console.log(!email && !password);
+        console.log(email + password);
         if (!email && !password) {
             this.setState({ text: 'Введите данные.'});
             setTimeout(() => {this.setState({ text: ''})}, 5000);
+        } else {
+            this.handleLogin();
         }
-        this.handleLogin();
-        
     }
 
     handleForgot = () => {

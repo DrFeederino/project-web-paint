@@ -18,12 +18,18 @@ class App extends Component {
     };
   }
 
-  handleLogin = () => {
-    return;
+  handleLogin = async () => {
+    let { email, password } = this.state;
+    let user = await apiClass.getUser(email, password);
+    if (user) {
+      this.setState({
+        user: user,
+      });
+    }
   }
 
-  handleLogout = () => {
-    this.setState({
+  handleLogout = async () => {
+    await this.setState({
       username: '',
       email: '',
       password: '',
