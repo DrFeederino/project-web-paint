@@ -5,94 +5,100 @@ import { Text, FieldBox, Button, Logo} from './Components';
 import './styles.css';
 
 const LoginBox = (props) => (
-    <div className="login-box">
+    <div className="inside-box">
         <Text class="title" text="Добро пожаловать" />
-        <Text class="error-subtitle" text={props.text} />
+        <Text class="subtitle" text={props.text} />
         <FieldBox
-            fieldName="имя пользователя"
+            fieldName="электронная почта*"
             handler={props.handleEmail}
             value={props.email}
             type="email"
         />
         <FieldBox
-            fieldName="пароль"
+            fieldName="пароль*"
             handler={props.handlePassword}
             value={props.password}
             type="password"
         />
-        <Button
-            type="button"
-            text="Создать аккаунт"
-            handler={props.handleNewUser}
-        />
-        <Button
-            type="button"
-            text="Забыли пароль?"
-            handler={props.handleForgot}
-        />
-        <Button
-            type="submit"
-            text="Войти"
-            handler={props.handleCredentials}
-        />
+        <div className="buttons-box">
+            <Button
+                type="button"
+                text="Создать аккаунт"
+                handler={props.handleNewUser}
+            />
+            <Button
+                type="button"
+                text="Забыли пароль?"
+                handler={props.handleForgot}
+            />
+            <Button
+                type="submit"
+                text="Войти"
+                handler={props.handleLogin}
+            />
+        </div>
     </div>
 );
 
 const ForgotBox = (props) => (
-    <div className="box">
+    <div className="inside-box">
         <Text class="title" text="Добро пожаловать" />
         <Text class="subtitle" text={props.text} />
         <FieldBox
-            fieldName="электронная почта"
+            fieldName="электронная почта*"
             handler={props.handleEmail}
             value={props.email}
             type="email"
         />
-        <Button
-            type="button"
-            text="Назад"
-            handler={props.handleForgot}
-        />
-        <Button
-            type="submit"
-            text="Сбросить пароль"
-            handler={props.handleReset}
-        />
+        <div className="buttons-box">
+            <Button
+                type="button"
+                text="Назад"
+                handler={props.handleForgot}
+            />
+            <Button
+                type="submit"
+                text="Сбросить пароль"
+                handler={props.handleReset}
+            />
+        </div>
     </div>
 );
 
 const CreateBox = (props) => (
-    <div className="box">
+    <div className="inside-box">
         <Text class="title" text="Добро пожаловать" />
         <Text class="subtitle" text={props.text} />
         <FieldBox
-            fieldName="имя пользователя"
+            fieldName="имя пользователя*"
             handler={props.handleUsername}
             value={props.username}
             type="text"
         />
         <FieldBox
-            fieldName="электронная почта"
+            fieldName="электронная почта*"
             handler={props.handleEmail}
             value={props.email}
             type="email"
         />
         <FieldBox
-         fieldName="пароль"
+         fieldName="пароль*"
          handler={props.handlePassword}
          value={props.password}
          type="password"
         />
-        <Button
-         text="Уже зарегестрированы?"
-         type="button"
-         handler={props.handleNewUser}
-        />
-        <Button
-         text="Создать аккаунт"
-         type="submit"
-         handler={props.handleCreate}
-        />
+        <div className="buttons-box">
+            <Button
+            text="Уже зарегестрированы?"
+            type="button"
+            handler={props.handleNewUser}
+            />
+            <Button
+            text="Создать аккаунт"
+            type="submit"
+            handler={props.handleCreate}
+            />
+        </div>
     </div>
 );
 
@@ -105,7 +111,7 @@ const UserLogin = (props) => {
                 handlePassword={props.handlePassword}
                 email={props.email}
                 password={props.password}
-                handleCredentials={props.handleCredentials}
+                handleLogin={props.handleLogin}
                 text={props.text}
                 handleForgot={props.handleForgot}
                 handleNewUser={props.handleNewUser}
@@ -149,7 +155,7 @@ class Login extends Component {
             password: props.password,
             forgotten: false,
             isNew: true,
-            connectionStatus : '',
+            connectionStatus : 0,
             text: props.text,
             logo: {logo},
         };
@@ -158,14 +164,32 @@ class Login extends Component {
         this.handleEmail = props.handleEmail.bind(this);
         this.handlePassword = props.handlePassword.bind(this);
         this.handleUsername = props.handleUsername.bind(this);
+        this.handleReset = props.handleReset.bind(this);
+        this.setPassword = props.setPassword.bind(this);
+        this.setText = props.setText.bind(this);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            username: nextProps.username,
+            email: nextProps.email,
+            password: nextProps.password,
+            text: nextProps.text,
+        });
     }
 
     async componentWillMount() {
         let res = await apiClass.statusCheck();
-        this.setState({
-            connectionStatus: res.status,
-        })
-        console.log(res);
+        if (!res.status) {
+            this.setState({
+                connectionStatus: 500,
+                text: 'Произошла внутренняя ошибка',
+            });
+        } else {
+            this.setState({
+                connectionStatus: res.status,
+            });
+        }
     }
 
     handleSubmit = (e) => {
@@ -177,24 +201,14 @@ class Login extends Component {
             isNew: !state.isNew,
         }));
     }
-
-    handleCredentials = () => {
-        let { email, password } = this.state;
-        console.log(email);
-        console.log(this.state);
-        if (!email && !password) {
-            this.setState({ text: 'Введите данные.'});
-            setTimeout(() => {this.setState({ text: ''})}, 5000);
-        } else {
-            this.handleLogin();
-        }
-    }
-
+    
     handleForgot = () => {
+        this.setPassword('');
+        !this.state.forgotten ?
+            this.setText('Введите электронную почту для сброса') :
+            this.setText('');
         this.setState(state => ({
-            password: '',
             forgotten: !state.forgotten,
-            text: !state.forgotten ? "Введите электронную почту для сброса пароля" : '',
         }));
     }
 
@@ -202,7 +216,6 @@ class Login extends Component {
         let logoClass = "loading";
         if (logoClass !== 'loaded' && this.state.connectionStatus === 200) {
             logoClass = "loaded";
-            console.log(this.state)
         }
         return (
         <div className="background">
@@ -219,12 +232,18 @@ class Login extends Component {
                         handleUsername={this.handleUsername}
                         handleEmail={this.handleEmail}
                         handlePassword={this.handlePassword}
-                        handleCredentials={this.handleCredentials}
+                        handleLogin={this.handleLogin}
                         handleReset={this.handleReset}
                         handleForgot={this.handleForgot}
                         handleNewUser={this.handleNewUser}
                         handleCreate={this.handleCreate}
                         text={this.state.text}
+                    />
+                }
+                {this.state.connectionStatus === 500 && // can be replaced with Error component
+                    <Text
+                        text={this.state.text}
+                        class="error-subtitle"
                     />
                 }
             </div>

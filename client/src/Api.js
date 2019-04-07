@@ -4,11 +4,12 @@
 */
 class apiClass {
      static statusCheck = async () => {
-        let res = fetch(`http://localhost:9000/users`)
-        return res;
+        return await fetch(`http://localhost:9000/users`)
+            .then(res => res)
+            .catch(err => err);
     }
 
-    static getUser = async (email, password) => {
+    static getUser = async (email, password, data) => {
         const options = {
             method: 'POST',
             mode: "cors",
@@ -18,20 +19,44 @@ class apiClass {
             body: JSON.stringify({
                 email: email,
                 password: password,
+                data: {
+                    date: new Date(),
+                    action: 'login',
+                    os: data.os + ' ' + data.osVersion,
+                    device: data.ua,
+                }
             }),
         };
         return await fetch(`http://localhost:9000/users/login`, options)
             .then(res => res.json())
-            .catch(err => console.log(err));
+            .catch(err => err.json());
     }
 
-    static resetPass = async (id) => {
-        return await fetch(`http://localhost:9000/users/${id}`)
+    static getHistory = async (userId) => {
+        return await fetch(`http://localhost:9000/history/${userId}`)
+            .then(res => res.json())
+            .catch(err => err.json())
+    }
+
+    static resetPass = async (email, data) => {
+        const options = {
+            method: 'POST',
+            mode: "cors",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: email,
+                data: data,
+            }),
+        };
+        return await fetch(`http://localhost:9000/users/reset}`, options)
             .then(res => res.json())
             .catch(err => err);
     }
 
-    static createUser = async (username, email, password) => {
+    static createUser = async (username, email, password, data) => {
+        console.log(data.os);        
         const options = {
             method: 'POST',
             mode: "cors",
@@ -43,12 +68,17 @@ class apiClass {
                 email: email,
                 password: password,
                 createdAt: new Date(),
+                data: {
+                    date: new Date(),
+                    action: 'create',
+                    os: data.os + ' ' + data.osVersion,
+                    device: data.ua,
+                },
             }),
         };
-        console.log(options);
         return await fetch(`http://localhost:9000/users/create`, options)
-            .then(res => res.json())
-            .catch(err => console.log(err));
+            .then(res => res.status !== 403 ? res.json() : res)
+            .catch(err => err);
     }
 
     static deleteUser = async (id) => {

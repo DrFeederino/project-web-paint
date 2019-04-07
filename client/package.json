@@ -5,6 +5,8 @@
   "dependencies": {
     "bcrypt": "^3.0.5",
     "react": "^16.8.5",
+    "react-burger-menu": "^2.6.8",
+    "react-device-detect": "^1.6.2",
     "react-dom": "^16.8.5",
     "react-motion": "^0.5.2",
     "react-scripts": "2.1.8",
@@ -24,5 +26,6 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {}
 }

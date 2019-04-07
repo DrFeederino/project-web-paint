@@ -11,7 +11,7 @@ code {
     monospace;
 }
 
-.background{
+.background {
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -20,12 +20,35 @@ code {
   justify-content: space-evenly;
   background: lightgray;
 }
+
+.background-user {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  justify-content: space-evenly;
+  background: lightgrey;
+  overflow: auto;
+}
+
 .logoDiv {
   display: flex;
-  margin: 0 auto;
-  justify-content: space-evenly;
-  background: white;
+  flex: 1;
+  font-size: 2em;
+  flex-direction: column;
+  justify-content: center;
+  background: black;
+  color: white;
+  text-transform: uppercase;
+  text-align: center;
+  border-bottom: 1px solid black;
+  width: 100%;
+  max-height: 100px;
+  border-top-left-radius: 0.25em;
+  border-top-right-radius: 0.25em;
 }
+
 .loading {
   animation: loader-anim infinite 1s ease-in-out alternate;
 }
@@ -33,27 +56,197 @@ code {
 .loaded {
   animation: loader-finished infinite 1s ease-in-out alternate;
 }
+
 .box {
   margin: 0 auto;
   display: flex;
+  flex-wrap: wrap;
   flex-direction: column;
   background: #fff;
-  padding: 20px;
   box-shadow: 0 8px 12px 0 rgba(0, 0, 0, 0.12);
   min-width: 40vw;
   min-height: 40vh;
+  max-width: 65vw;
+  max-height: 65vh;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 1vmin);
-  border-radius: 4px;
+  justify-content: space-between;
+  font-size: 1em;
+  border-radius: 0.25em;
   color: black;
+}
+
+.login {
+  display: flex;
+  flex: 1;
+  width: 100%;
+}
+
+.auth {
+  padding: 1.5em;
+  width: 100%;
+}
+
+.inside-box {
+  width: 100%;
 }
 
 .title {
   color: black;
-  font-size: 16px;
-
+  font-size: 1.5em;
+  font-weight: 600;
+  border-bottom: 1px solid black;
+  padding-bottom: 10px;
 }
+
+.error-subtitle {
+  color: black;
+  font-size: 1.5em;
+  font-weight: 600;
+  display: flex;
+  flex: 1;
+  text-align: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.subtitle {
+  font-size: 1em;
+  font-weight: 400;
+  margin-bottom: 0.625em;
+}
+
+.outerDiv {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.header {
+  text-transform: uppercase;
+  font-size: 0.8em;
+  margin: 0 0 0.625em 0;
+}
+
+.innerDiv {
+  display: flex;
+  flex: 1;
+  margin: 0 0 0.625em 0;
+}
+
+.inputDefault {
+  width: 99%;
+  height: 2em;
+  border: 1px solid black;
+  padding: 0.4em;
+}
+
+.buttons-box {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+  flex-direction: row;
+  margin-bottom: 0.625em;
+}
+
+.button {
+  height: 2em;
+  background: linear-gradient(to left, white 50%, black 50%);
+  background-size: 300% 100%;
+  background-position: right bottom;
+  border: 1px solid black;
+  color: black;
+  transition: all 0.6s ease-in-out;
+}
+
+.button:hover {
+  color:white;
+  background-position: left bottom;
+  box-shadow: 0 2px 10px 0 rgba(0,0,0, 0.9);
+}
+
+.contents {
+  text-transform: uppercase;
+  font-size: 0.625em;
+}
+
+.top-bar-title {
+  padding-left: 3em;
+  font-size: 1.5em;
+  font-weight: 600;
+}
+
+.side-bar {
+  display: flex;
+  flex: 0.25;
+  justify-content: space-between;
+}
+
+.top-bar {
+  height: 4em;
+  text-align: left;
+  
+}
+
+.bm-item {
+  display: inline-block;
+  text-decoration: none;
+  margin-bottom: 1em;
+  color: #d1d1d1;
+  transition: color 0.2s;
+}
+
+/* Change color on hover */
+.bm-item:hover {
+  color: white;
+}
+
+.bm-burger-button {
+  position: fixed;
+  width: 2em;
+  height: 2em;
+  left: 2em;
+  top: 2em;
+}
+
+.bm-burger-bars {
+  background: #373a47;
+}
+
+.bm-cross-button {
+  height: 1.5em;
+  width: 1.5em;
+}
+
+.bm-cross {
+  background: #bdc3c7;
+}
+
+.bm-menu {
+  background: #373a47;
+  padding: 2.5em 1.5em 0;
+  font-size: 1.15em;
+}
+
+.bm-morph-shape {
+  fill: #373a47;
+}
+
+.bm-item-list {
+  color: #b8b7ad;
+}
+
+.bm-overlay {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.main-part {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 @keyframes loader-anim {
   from {
     transform: translateY(0);
@@ -61,6 +254,7 @@ code {
     transform: translateY(15px);
   }
 }
+
 @keyframes loader-finished {
   from {
     transform: translateY(0);

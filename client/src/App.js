@@ -3,12 +3,13 @@ import './App.css';
 import apiClass from './Api';
 import Login from './Login';
 import User from './User';
-
+import { deviceDetect } from 'react-device-detect';
 /*
   To-Do:
   1. Refactor code
   2. Implement bcrypt
   3. Implement PixiJS with hooks to its features
+  4. Error if user is registered already
 */
 class App extends Component {
   constructor(props) {
@@ -25,12 +26,32 @@ class App extends Component {
 
   handleLogin = async () => {
     let { email, password } = this.state;
-    let user = await apiClass.getUser(email, password);
-    if (user) {
+    let user;
+    if (email && password) {
+      user = await apiClass.getUser(email, password, deviceDetect());
+    }
+    console.log(user);
+    if (user.err) {
       this.setState({
-        user: user,
-        isLogged: true,
+        text: user.err,
       });
+      setTimeout(() => {
+        this.setState({
+          text: '',
+        })
+      }, 5000);
+      return;
+    }
+    if (user) {
+      await apiClass.getHistory(user._id)
+        .then(data => {
+          user.data = data;
+          this.setState({
+            user: user,
+            isLogged: true,
+          });
+        }).catch(err => console.log(err));
+      console.log(this.state.user);
     }
   }
 
@@ -40,12 +61,11 @@ class App extends Component {
       email: '',
       password: '',
       isLogged: false,
-      text: '',
+      text: 'Вы успешно вышли.',
     })
   }
 
   handleEmail = (e) => {
-    console.log(e.target.value);
     this.setState({
       email: e.target.value,
     });
@@ -63,18 +83,45 @@ class App extends Component {
       });
   }
 
-  handleCreate = async () => {
-    await this.createUser();
+  handleReset = async () => {
+    return;
   }
 
-  createUser = async () => {
+  setPassword = (value) => {
+    this.setState({
+        password: value,
+    });
+  }
+
+  setText = (value) => {
+    this.setState({
+      text: value,
+    })
+  }
+  handleCreate = async () => {
     let { email, username, password } = this.state;
-    let res = await apiClass.createUser(username, email, password);
-    if (res) {
+    if (email === '' || username=== '' || password === '') {
       this.setState({
+        text: 'Введите данные',
+      });
+      setTimeout(() => this.setState({
+        text: '',
+      }), 5000);
+      return;
+    }
+    let res = await apiClass.createUser(username, email, password, deviceDetect());
+    if (!res.status === 403) {
+      await this.setState({
         user: res,
         isLogged: true,
-      })
+      });
+    } else {
+      this.setState({
+        text: 'Пользователь зарегестрирован. Воспользуйтесь входом.'
+      });
+      setTimeout(() => this.setState({
+        text: '',
+      }), 5000);
     }
   }
 
@@ -93,7 +140,12 @@ class App extends Component {
                     text={this.state.text}
                     handleLogin={this.handleLogin}
                     handleCreate={this.handleCreate}
+                    handleReset={this.handleReset}
+                    setPassword={this.setPassword}
+                    setText={this.setText}
                 />;
+    console.log(deviceDetect());
+
     return (box);
   }
 }

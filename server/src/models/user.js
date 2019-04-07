@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema({
   },
   password: String,
   createdAt: Date,
+  data: [{ type: mongoose.Schema.Types.ObjectId, ref: 'History'}],
 });
 
 userSchema.pre('remove', function(next) {

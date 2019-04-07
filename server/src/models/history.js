@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 const historySchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   loginDate: {
     type: Date,
     required: true,
@@ -8,8 +9,7 @@ const historySchema = new mongoose.Schema({
   action: String,
   os: String,
   device: String,
-  IP: String,
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  ip: String,
 });
 
 const History = mongoose.model('History', historySchema);

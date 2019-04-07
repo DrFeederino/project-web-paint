@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import bcrypt from 'bcrypt';
+//import bcrypt from 'bcrypt';
 
 const router = Router();
 const saltRounds = 10; // per docs
@@ -15,22 +15,23 @@ router.get('/', async (req, res) => {
 
 router.post('/login', async (req, res) => { //login users
   let user;
-  console.log(req.body)
-  
+  console.log('Получен запрос на вход пользователя...');
   await req.context.models.User.findOne({
     email: req.body.email,
     password: req.body.password,
   }).then(fetchUser => {
     console.log("Вход пользователя "+ fetchUser.email + " в " + new Date());
+    const data = new req.context.models.History({
+        loginDate: req.body.data.date,
+        action: req.body.data.action,
+        os: req.body.data.os,
+        device: req.body.data.ua,
+        ip: req.ip,
+        userId: fetchUser._id,
+    })
+    console.log(fetchUser);
     res.json(fetchUser);
-  }).catch(() => res.sendStatus(401));
-//   console.log(user);
-//   if (user) {
-//     if (user.password === req.body.password) {
-//       console.log(user);
-//       res.send(user);
-//     } else { res.send('Password does not match') }
-//   } else { res.send('User not found')}
+  }).catch(() => res.status(401).json({err: 'Введены неверно данные.'}));
 });
 
 router.post('/create', async (req, res) => { //creates users
@@ -40,20 +41,36 @@ router.post('/create', async (req, res) => { //creates users
   });
   console.log(user);
   if (!user) {
-    await req.context.models.User.create(req.body, (err, result) => {
-      if (err) { res.json('Ошибка регистрации') }
-      console.log('Регистрация успешно выполнена!')
+    await req.context.models.User.create({
+      username: req.body.username,
+      email: req.body.email,
+      password: req.body.password,
+    }, (err, result) => {
+      if (err) { res.json('Ошибка регистрации'); }
+      console.log(req.body.data);
+      const data = new req.context.models.History({
+        loginDate: req.body.date,
+        action: req.body.data.action,
+        os: req.body.data.os,
+        device: req.body.data.ua,
+        ip: req.ip,
+        userId: result._id,
+      });
+      data.save((err) => {
+        console.log(err);
+      })
+      console.log('Регистрация успешно выполнена!');
       console.log(result);
       res.redirect(`/users/${result._id}`);
     });
   } else {
-    console.log('Пользователь имеется в БД.')
-    res.json('Пользователь зарегестрирован.');
+    console.log('Пользователь имеется в БД.');
+    res.sendStatus(403);
   }
 });
 
 router.get('/:userId', async (req, res) => {
-  console.log('Получен переход от регистрации...')
+  console.log('Получен переход от регистрации...');
   await req.context.models.User.findOne({
     _id: req.params.userId,
   }, (err, result) => {
@@ -61,11 +78,23 @@ router.get('/:userId', async (req, res) => {
     console.log('Выдача данных пользователя.');
     console.log(result);
     res.json(result);
-  })
+  });
+});
+
+router.put('/:userId/update', async (req, res) => {
+  console.log('Получен запрос на обновление данных...');
+  let user = await req.context.models.User.findOne({
+    _id: req.params.userId,
+  });
+  if (user) {
+    console.log(user);
+    user = req.body;
+    await user.save();
+  }
 });
 
 router.delete('/:userId/delete', async (req, res) => { //delets users from db
-  console.log('Получен запрос на удаление...')
+  console.log('Получен запрос на удаление...');
   let user = await req.context.models.User.findOne({
     _id: req.params.userId,
   });
@@ -77,7 +106,7 @@ router.delete('/:userId/delete', async (req, res) => { //delets users from db
       res.sendStatus(200);
     });
   } else {
-    console.log('Невозможно удалить пользователя.')
+    console.log('Невозможно удалить пользователя.');
     res.sendStatus(401);
   }
 });
