@@ -1,21 +1,21 @@
 import React, { Component } from 'react';
-import { SideBar, TopBar, Section } from './Components';
+import { SideBar, TopBar, History, PasswordChange, Logout, Users} from './Components';
+import apiClass from './Api';
 
-const options = {
-    "История" : "Здесь вы можете посмотреть историю ваших действий",
-    "Смена пароля": "Осуществите смену пароля",
-    "Выход": "",
-};
+const options = ['История', 'Смена пароля']
 
 class User extends Component {
     constructor(props) {
         super(props);
         this.state = {
             user: props.user,
+            users: null,
             username: '',
             email: '',
             password: '',
         }
+        this.handleLogout = props.handleLogout.bind(this);
+        this.setPassword = props.setPassword.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -24,6 +24,18 @@ class User extends Component {
         });
     }
 
+    async componentDidMount() {
+        let email = this.state.user.email;
+        if (email === 'admin@admin.com') {
+            await apiClass.fetchUsers()
+                .then(users => {
+                    this.setState({
+                        users: users,
+                    });
+                    console.log(users);
+                }).catch(err => console.log(err));
+        }
+    }
     componentWillUnmount() {
         this.setState({
             user: null,
@@ -49,25 +61,48 @@ class User extends Component {
             password: e.target.value,
         });
     }
-
+    handleButton = (e) => {
+        let { password } = this.state;
+        if (password) {
+            this.setPassword(this.state.password)
+        }
+        return;
+    }
     render() {
-        console.log(this.state.user)
+        console.log(this.state.users)
         return (
             <div className="background-user" id="page-wrap">
                 <SideBar
-                    nav={Object.keys(options)}
+                    nav={options}
+                />
+                <TopBar
+                    username={this.state.user.username}
                 />
                 <div className="main-part">
-                    <TopBar
-                        username={this.state.username}
+                    {this.state.users !== null &&
+                    (<Users
+                        head='Список пользователей'
+                        description='Здесь можете просмотреть список всех пользователей'
+                        data={this.state.users}
+                    />)
+                }
+                    <History
+                        head='История'
+                        description='Здесь вы можете посмотреть историю ваших действий'
+                        data={this.state.user.data}
                     />
-                    {Object.keys(options).map(id => (
-                        <Section
-                        id={id}
-                        head={id}
-                        description={options[id]}
-                        />
-                    ))}
+                    <PasswordChange
+                        head='Смена пароля'
+                        description='Осуществите смену пароля'
+                        val={this.state.password}
+                        handler={this.handlePassword}
+                        buttonHandler={this.handleButton}
+                    />
+                    <Logout
+                        head='Выйти из системы'
+                        handleLogout={this.handleLogout}
+                        //handlers and data go here
+                    />
                 </div>
             </div>
         )

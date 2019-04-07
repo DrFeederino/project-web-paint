@@ -2,7 +2,7 @@ import { Router } from 'express';
 //import bcrypt from 'bcrypt';
 
 const router = Router();
-const saltRounds = 10; // per docs
+//const saltRounds = 10; // per docs
 
 router.get('/show', async (req, res) => {
   let users = await req.context.models.User.find();
@@ -29,6 +29,8 @@ router.post('/login', async (req, res) => { //login users
         ip: req.ip,
         userId: fetchUser._id,
     })
+    data.save();
+    console.log(data);
     console.log(fetchUser);
     res.json(fetchUser);
   }).catch(() => res.status(401).json({err: 'Введены неверно данные.'}));
@@ -41,10 +43,12 @@ router.post('/create', async (req, res) => { //creates users
   });
   console.log(user);
   if (!user) {
+    console.log(req.body);
     await req.context.models.User.create({
       username: req.body.username,
       email: req.body.email,
       password: req.body.password,
+      createdAt: req.body.date,
     }, (err, result) => {
       if (err) { res.json('Ошибка регистрации'); }
       console.log(req.body.data);
@@ -56,12 +60,10 @@ router.post('/create', async (req, res) => { //creates users
         ip: req.ip,
         userId: result._id,
       });
-      data.save((err) => {
-        console.log(err);
-      })
+      data.save();
       console.log('Регистрация успешно выполнена!');
       console.log(result);
-      res.redirect(`/users/${result._id}`);
+      res.status(200).redirect(`/users/${result._id}`);
     });
   } else {
     console.log('Пользователь имеется в БД.');
@@ -77,7 +79,7 @@ router.get('/:userId', async (req, res) => {
     if (err) { res.json('Ошибка получения данных пользователя!') }
     console.log('Выдача данных пользователя.');
     console.log(result);
-    res.json(result);
+    res.status(200).json(result);
   });
 });
 

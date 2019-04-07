@@ -55,6 +55,12 @@ class apiClass {
             .catch(err => err);
     }
 
+    static fetchUsers = async () => {
+        return await fetch(`http://localhost:9000/users/show`)
+            .then(res => res.json())
+            .catch(err => err);
+    }
+
     static createUser = async (username, email, password, data) => {
         console.log(data.os);        
         const options = {
@@ -67,7 +73,7 @@ class apiClass {
                 username: username,
                 email: email,
                 password: password,
-                createdAt: new Date(),
+                date: new Date(),
                 data: {
                     date: new Date(),
                     action: 'create',

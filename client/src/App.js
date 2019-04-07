@@ -109,26 +109,37 @@ class App extends Component {
       }), 5000);
       return;
     }
-    let res = await apiClass.createUser(username, email, password, deviceDetect());
-    if (!res.status === 403) {
-      await this.setState({
-        user: res,
-        isLogged: true,
-      });
-    } else {
+    await apiClass.createUser(username, email, password, deviceDetect())
+    .then(res => {
+      if (res.status !== 403) {
+        this.setState({
+          user: res,
+          isLogged: true,
+        });
+      } else {
+        this.setState({
+          text: 'Пользователь зарегестрирован. Воспользуйтесь входом.'
+        });
+        setTimeout(() => this.setState({
+          text: '',
+        }), 5000);
+      }})
+    .catch( () => {
       this.setState({
-        text: 'Пользователь зарегестрирован. Воспользуйтесь входом.'
+        text: 'Ошибка.'
       });
       setTimeout(() => this.setState({
         text: '',
       }), 5000);
-    }
+    })
   }
 
   render() {
     let box = this.state.isLogged === true
               ? <User
                     user={this.state.user}
+                    handleLogout={this.handleLogout}
+                    setPassword={this.setPassword}
                 />
               : <Login
                     username={this.state.username}
