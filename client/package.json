@@ -3,14 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "bcrypt": "^3.0.5",
-    "react": "^16.8.5",
-    "react-burger-menu": "^2.6.8",
+    "react": "^16.8.6",
+    "react-burger-menu": "^2.6.10",
     "react-device-detect": "^1.6.2",
-    "react-dom": "^16.8.5",
+    "react-dom": "^16.8.6",
+    "react-i18next": "^10.9.0",
     "react-motion": "^0.5.2",
     "react-scripts": "2.1.8",
-    "ts-pnp": "^1.0.1"
+    "ts-pnp": "^1.1.2"
   },
   "scripts": {
     "start": "react-scripts start",
