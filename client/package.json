@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "antd": "^3.17.0",
     "react": "^16.8.6",
     "react-burger-menu": "^2.6.10",
     "react-device-detect": "^1.6.2",
