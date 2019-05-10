@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import apiClass from './Api';
 import logo from './logo.svg';
 import { Text, FieldBox, Button, Logo} from './Components';
-import './styles.css';
+import '../styles/styles.css';
 
 const LoginBox = (props) => (
     <div className="inside-box">

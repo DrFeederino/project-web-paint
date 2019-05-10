@@ -1,16 +1,12 @@
 import React, { Component } from 'react';
 import './App.css';
-import apiClass from './Api';
-import Login from './Login';
-import User from './User';
+import apiClass from '../components/Api';
+import Login from '../components/Login';
+import User from '../components/User';
 import { deviceDetect } from 'react-device-detect';
-/*
-  To-Do:
-  1. Refactor code
-  2. Implement bcrypt
-  3. Implement PixiJS with hooks to its features
-  4. Error if user is registered already
-*/
+import { Helmet } from 'react-helmet';
+import ImageEditor from '../components/Editor/ImageEditor';
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -30,7 +26,6 @@ class App extends Component {
     if (email && password) {
       user = await apiClass.getUser(email, password, deviceDetect());
     }
-    console.log(user);
     if (user.err) {
       this.setState({
         text: user.err,
@@ -51,7 +46,6 @@ class App extends Component {
             isLogged: true,
           });
         }).catch(err => console.log(err));
-      console.log(this.state.user);
     }
   }
 
@@ -135,7 +129,17 @@ class App extends Component {
   }
 
   render() {
-    let box = this.state.isLogged === true
+    let helmet = (
+      <Helmet>
+        <meta charSet="utf-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <meta name="description" content="This is an image editor web app in React and Fabric.js. Influenced by salgum1114's React Design Editor." />
+          <link rel="manifest" href="./manifest.json" />
+          <link rel="shortcut icon" href="./favicon.ico" />
+          <title>React Image Editor</title>
+      </Helmet>
+    );
+    let renderApp = this.state.isLogged === true
               ? <User
                     user={this.state.user}
                     handleLogout={this.handleLogout}
@@ -155,9 +159,15 @@ class App extends Component {
                     setPassword={this.setPassword}
                     setText={this.setText}
                 />;
-    console.log(deviceDetect());
 
-    return (box);
+    return (
+      <div className="app-main">
+        {helmet}
+        <div className="app-content">
+          {renderApp}
+        </div>
+      </div>
+      );
   }
 }
 

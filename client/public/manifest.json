@@ -1,6 +1,6 @@
 {
-  "short_name": "Web App Paint",
-  "name": "Web Application for work with images. Done in React.",
+  "short_name": "Image Editor Web App",
+  "name": "React image editor.",
   "icons": [
     {
       "src": "favicon.ico",

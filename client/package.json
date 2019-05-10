@@ -7,12 +7,15 @@
     "react-burger-menu": "^2.6.10",
     "react-device-detect": "^1.6.2",
     "react-dom": "^16.8.6",
+    "react-helmet": "^5.2.1",
     "react-i18next": "^10.9.0",
     "react-motion": "^0.5.2",
     "react-scripts": "2.1.8",
+    "source-map-explorer": "^1.8.0",
     "ts-pnp": "^1.1.2"
   },
   "scripts": {
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
