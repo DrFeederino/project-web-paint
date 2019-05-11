@@ -86,28 +86,28 @@ class ImageFooterToolbar extends Component {
         const zoomValue = parseInt((zoomRatio * 100).toFixed(2), 10);
         return (
             <React.Fragment>
-                <div className="rde-editor-footer-toolbar-interaction">
+                <div className="app-editor-footer-toolbar-interaction">
                     <Button.Group>
                         <CommonButton
                             type={interactionMode === 'selection' ? 'primary' : 'default'}
-                            style={{ borderBottomLeftRadius: '8px', borderTopLeftRadius: '8px' }}
+                            style={{ boapprBottomLeftRadius: '8px', boapprTopLeftRadius: '8px' }}
                             onClick={() => { selection(); }}
                             icon="mouse-pointer"
                             tooltipTitle={i18n.t('action.selection')}
                         />
                         <CommonButton
                             type={interactionMode === 'grab' ? 'primary' : 'default'}
-                            style={{ borderBottomRightRadius: '8px', borderTopRightRadius: '8px' }}
+                            style={{ boapprBottomRightRadius: '8px', boapprTopRightRadius: '8px' }}
                             onClick={() => { grab(); }}
                             tooltipTitle={i18n.t('action.grab')}
                             icon="hand-rock"
                         />
                     </Button.Group>
                 </div>
-                <div className="rde-editor-footer-toolbar-zoom">
+                <div className="app-editor-footer-toolbar-zoom">
                     <Button.Group>
                         <CommonButton
-                            style={{ borderBottomLeftRadius: '8px', borderTopLeftRadius: '8px' }}
+                            style={{ boapprBottomLeftRadius: '8px', boapprTopLeftRadius: '8px' }}
                             onClick={() => { canvasRef.zoomHandlers.zoomOut(); }}
                             icon="search-minus"
                             tooltipTitle={i18n.t('action.zoom-out')}
@@ -124,14 +124,14 @@ class ImageFooterToolbar extends Component {
                             icon="expand"
                         />
                         <CommonButton
-                            style={{ borderBottomRightRadius: '8px', borderTopRightRadius: '8px' }}
+                            style={{ boapprBottomRightRadius: '8px', boapprTopRightRadius: '8px' }}
                             onClick={() => { canvasRef.zoomHandlers.zoomIn(); }}
                             icon="search-plus"
                             tooltipTitle={i18n.t('action.zoom-in')}
                         />
                     </Button.Group>
                 </div>
-                <div className="rde-editor-footer-toolbar-preview">
+                <div className="app-editor-footer-toolbar-preview">
                     <Tooltip title={i18n.t('action.preview')}>
                         <Switch checked={preview} onChange={onChangePreview} />
                     </Tooltip>

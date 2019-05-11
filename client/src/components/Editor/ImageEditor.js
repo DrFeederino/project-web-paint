@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import storage from 'store/storages/localStorage';
+import { Badge, Button, Spin, Popconfirm, Menu, Modal } from 'antd';
 import i18n from 'i18next';
+
 import Canvas from '../canvas/Canvas';
-import ImageFooterToolbar from './ImageFooterToolbar';
+import ImageFooterToolbar from './ImageFooter';
 import ImageItems from './ImageItems';
 import ImageTitle from './ImageTitle';
-import ImageHeaderToolbar from './ImageHeaderToolbar';
+import ImageHeaderToolbar from './ImageHeader';
 import ImagePreview from './ImagePreview';
 import ImageConfigurations from './ImageConfig';
 
@@ -160,7 +161,7 @@ class ImageEditor extends Component {
             }
             this.canvasHandlers.onSelect(null);
         },
-        onModified: debounce((target) => {
+        onModified: setTimeout((target) => {
             if (!this.state.editing) {
                 this.changeEditing(true);
             }

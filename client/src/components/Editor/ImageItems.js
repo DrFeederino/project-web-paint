@@ -232,15 +232,15 @@ class ImageItems extends Component {
                 key={item.name}
                 draggable
                 onClick={e => this.handlers.onDrawingItem(item)}
-                className="rde-editor-items-item"
+                className="app-editor-items-item"
                 style={{ justifyContent: this.state.collapse ? 'center' : null }}
             >
-                <span className="rde-editor-items-item-icon">
+                <span className="app-editor-items-item-icon">
                     <Icon name={item.icon.name} prefix={item.icon.prefix} style={item.icon.style} />
                 </span>
                 {
                     this.state.collapse ? null : (
-                        <div className="rde-editor-items-item-text">
+                        <div className="app-editor-items-item-text">
                             {item.name}
                         </div>
                     )
@@ -253,15 +253,15 @@ class ImageItems extends Component {
                 onClick={e => this.handlers.onAddItem(item, centered)}
                 onDragStart={e => this.events.onDragStart(e, item)}
                 onDragEnd={e => this.events.onDragEnd(e, item)}
-                className="rde-editor-items-item"
+                className="app-editor-items-item"
                 style={{ justifyContent: this.state.collapse ? 'center' : null }}
             >
-                <span className="rde-editor-items-item-icon">
+                <span className="app-editor-items-item-icon">
                     <Icon name={item.icon.name} prefix={item.icon.prefix} style={item.icon.style} />
                 </span>
                 {
                     this.state.collapse ? null : (
-                        <div className="rde-editor-items-item-text">
+                        <div className="app-editor-items-item-text">
                             {item.name}
                         </div>
                     )
@@ -273,7 +273,7 @@ class ImageItems extends Component {
     render() {
         const { descriptors } = this.props;
         const { collapse, textSearch, filteredDescriptors, activeKey } = this.state;
-        const className = classnames('rde-editor-items', {
+        const className = classnames('app-editor-items', {
             minimize: collapse,
         });
         return (
@@ -283,7 +283,7 @@ class ImageItems extends Component {
                         <CommonButton
                             icon={collapse ? 'angle-double-right' : 'angle-double-left'}
                             shape="circle"
-                            className="rde-action-btn"
+                            className="app-action-btn"
                             style={{ margin: '0 4px' }}
                             onClick={this.handlers.onCollapse}
                         />
@@ -314,7 +314,7 @@ class ImageItems extends Component {
                                             }
                                         </FlexBox>
                                     ) : (
-                                        <Collapse style={{ width: '100%' }} bordered={false} activeKey={activeKey.length ? activeKey : Object.keys(descriptors)} onChange={this.handlers.onChangeActiveKey}>
+                                        <Collapse style={{ width: '100%' }} boappred={false} activeKey={activeKey.length ? activeKey : Object.keys(descriptors)} onChange={this.handlers.onChangeActiveKey}>
                                             {
                                                 Object.keys(descriptors).map(key => (
                                                     <Collapse.Panel key={key} header={key} showArrow={!collapse}>

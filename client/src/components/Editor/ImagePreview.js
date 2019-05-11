@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Button } from 'antd';
 
 import Icon from '../icon/Icon';
 import Canvas from '../canvas/Canvas';
@@ -19,15 +21,10 @@ class ImagePreview extends Component {
     }
 
     componentDidMount() {
-        this.resizeSensor = new ResizeSensor(this.container, (e) => {
-            const { canvasRect: currentCanvasRect } = this.state;
-            const canvasRect = Object.assign({}, currentCanvasRect, {
-                width: this.container.clientWidth,
-                height: this.container.clientHeight,
-            });
-            this.setState({
-                canvasRect,
-            });
+        const { canvasRect: currentCanvasRect } = this.state;
+        const canvasRect = Object.assign({}, currentCanvasRect, {
+            width: this.container.clientWidth,
+            height: this.container.clientHeight,
         });
         this.setState({
             canvasRect: {

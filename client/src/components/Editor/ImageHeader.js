@@ -16,21 +16,21 @@ class ImageHeaderToolbar extends Component {
         const { canvasRef, selectedItem } = this.props;
         const isCropping = canvasRef ? canvasRef.interactionMode === 'crop' : false;
         return (
-            <FlexBox className="rde-editor-header-toolbar-container" flex="1">
-                <FlexItem className="rde-canvas-toolbar rde-canvas-toolbar-list">
+            <FlexBox className="app-editor-header-toolbar-container" flex="1">
+                <FlexItem className="app-canvas-toolbar app-canvas-toolbar-list">
                     <CommonButton
-                        className="rde-action-btn"
+                        className="app-action-btn"
                         shape="circle"
                         icon="layer-group"
                         tooltipTitle={i18n.t('action.canvas-list')}
                     />
-                    <div className="rde-canvas-list">
+                    <div className="app-canvas-list">
                         <CanvasList canvasRef={canvasRef} selectedItem={selectedItem} />
                     </div>
                 </FlexItem>
-                <FlexItem className="rde-canvas-toolbar rde-canvas-toolbar-alignment">
+                <FlexItem className="app-canvas-toolbar app-canvas-toolbar-alignment">
                     <CommonButton
-                        className="rde-action-btn"
+                        className="app-action-btn"
                         shape="circle"
                         disabled={isCropping}
                         onClick={() => canvasRef.handlers.bringForward()}
@@ -38,7 +38,7 @@ class ImageHeaderToolbar extends Component {
                         tooltipTitle={i18n.t('action.bring-forward')}
                     />
                     <CommonButton
-                        className="rde-action-btn"
+                        className="app-action-btn"
                         shape="circle"
                         disabled={isCropping}
                         onClick={() => canvasRef.handlers.sendBackwards()}
@@ -46,7 +46,7 @@ class ImageHeaderToolbar extends Component {
                         tooltipTitle={i18n.t('action.send-backwards')}
                     />
                     <CommonButton
-                        className="rde-action-btn"
+                        className="app-action-btn"
                         shape="circle"
                         disabled={isCropping}
                         onClick={() => canvasRef.handlers.bringToFront()}
@@ -54,7 +54,7 @@ class ImageHeaderToolbar extends Component {
                         tooltipTitle={i18n.t('action.bring-to-front')}
                     />
                     <CommonButton
-                        className="rde-action-btn"
+                        className="app-action-btn"
                         shape="circle"
                         disabled={isCropping}
                         onClick={() => canvasRef.handlers.sendToBack()}
@@ -62,9 +62,9 @@ class ImageHeaderToolbar extends Component {
                         tooltipTitle={i18n.t('action.send-to-back')}
                     />
                 </FlexItem>
-                <FlexItem className="rde-canvas-toolbar rde-canvas-toolbar-alignment">
+                <FlexItem className="app-canvas-toolbar app-canvas-toolbar-alignment">
                     <CommonButton
-                        className="rde-action-btn"
+                        className="app-action-btn"
                         shape="circle"
                         disabled={isCropping}
                         onClick={() => canvasRef.alignmentHandlers.left()}
@@ -72,7 +72,7 @@ class ImageHeaderToolbar extends Component {
                         tooltipTitle={i18n.t('action.align-left')}
                     />
                     <CommonButton
-                        className="rde-action-btn"
+                        className="app-action-btn"
                         shape="circle"
                         disabled={isCropping}
                         onClick={() => canvasRef.alignmentHandlers.center()}
@@ -80,7 +80,7 @@ class ImageHeaderToolbar extends Component {
                         tooltipTitle={i18n.t('action.align-center')}
                     />
                     <CommonButton
-                        className="rde-action-btn"
+                        className="app-action-btn"
                         shape="circle"
                         disabled={isCropping}
                         onClick={() => canvasRef.alignmentHandlers.right()}
@@ -88,9 +88,9 @@ class ImageHeaderToolbar extends Component {
                         tooltipTitle={i18n.t('action.align-right')}
                     />
                 </FlexItem>
-                <FlexItem className="rde-canvas-toolbar rde-canvas-toolbar-group">
+                <FlexItem className="app-canvas-toolbar app-canvas-toolbar-group">
                     <CommonButton
-                        className="rde-action-btn"
+                        className="app-action-btn"
                         shape="circle"
                         disabled={isCropping}
                         onClick={() => canvasRef.handlers.toGroup()}
@@ -98,7 +98,7 @@ class ImageHeaderToolbar extends Component {
                         tooltipTitle={i18n.t('action.object-group')}
                     />
                     <CommonButton
-                        className="rde-action-btn"
+                        className="app-action-btn"
                         shape="circle"
                         disabled={isCropping}
                         onClick={() => canvasRef.handlers.toActiveSelection()}
@@ -106,9 +106,9 @@ class ImageHeaderToolbar extends Component {
                         tooltipTitle={i18n.t('action.object-ungroup')}
                     />
                 </FlexItem>
-                <FlexItem className="rde-canvas-toolbar rde-canvas-toolbar-crop">
+                <FlexItem className="app-canvas-toolbar app-canvas-toolbar-crop">
                     <CommonButton
-                        className="rde-action-btn"
+                        className="app-action-btn"
                         shape="circle"
                         disabled={canvasRef ? canvasRef.cropHandlers.validType() : true}
                         onClick={() => canvasRef.cropHandlers.start()}
@@ -116,7 +116,7 @@ class ImageHeaderToolbar extends Component {
                         tooltipTitle={i18n.t('action.crop')}
                     />
                     <CommonButton
-                        className="rde-action-btn"
+                        className="app-action-btn"
                         shape="circle"
                         disabled={canvasRef ? !canvasRef.cropRect : true}
                         onClick={() => canvasRef.cropHandlers.finish()}
@@ -124,7 +124,7 @@ class ImageHeaderToolbar extends Component {
                         tooltipTitle={i18n.t('action.crop-save')}
                     />
                     <CommonButton
-                        className="rde-action-btn"
+                        className="app-action-btn"
                         shape="circle"
                         disabled={canvasRef ? !canvasRef.cropRect : true}
                         onClick={() => canvasRef.cropHandlers.cancel()}
@@ -132,9 +132,9 @@ class ImageHeaderToolbar extends Component {
                         tooltipTitle={i18n.t('action.crop-cancel')}
                     />
                 </FlexItem>
-                <FlexItem className="rde-canvas-toolbar rde-canvas-toolbar-operation">
+                <FlexItem className="app-canvas-toolbar app-canvas-toolbar-operation">
                     <CommonButton
-                        className="rde-action-btn"
+                        className="app-action-btn"
                         shape="circle"
                         disabled={isCropping}
                         onClick={() => canvasRef.handlers.saveImage()}
@@ -142,7 +142,7 @@ class ImageHeaderToolbar extends Component {
                         tooltipTitle={i18n.t('action.image-save')}
                     />
                     <CommonButton
-                        className="rde-action-btn"
+                        className="app-action-btn"
                         shape="circle"
                         disabled={isCropping}
                         onClick={() => canvasRef.handlers.duplicate()}
@@ -150,7 +150,7 @@ class ImageHeaderToolbar extends Component {
                         tooltipTitle={i18n.t('action.clone')}
                     />
                     <CommonButton
-                        className="rde-action-btn"
+                        className="app-action-btn"
                         shape="circle"
                         disabled={isCropping}
                         onClick={() => canvasRef.handlers.remove()}
@@ -158,12 +158,12 @@ class ImageHeaderToolbar extends Component {
                         tooltipTitle={i18n.t('action.delete')}
                     />
                 </FlexItem>
-                {/* <FlexItem className="rde-canvas-toolbar rde-canvas-toolbar-history">
-                    <Button className="rde-action-btn" disabled={isCropping}>
+                {/* <FlexItem className="app-canvas-toolbar app-canvas-toolbar-history">
+                    <Button className="app-action-btn" disabled={isCropping}>
                         <Icon name="undo-alt" style={{ marginRight: 8 }} />
                         {'Undo'}
                     </Button>
-                    <Button className="rde-action-btn" disabled={isCropping}>
+                    <Button className="app-action-btn" disabled={isCropping}>
                         {'Redo'}
                         <Icon name="redo-alt" style={{ marginLeft: 8 }} />
                     </Button>

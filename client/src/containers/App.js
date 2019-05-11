@@ -5,7 +5,7 @@ import Login from '../components/Login';
 import User from '../components/User';
 import { deviceDetect } from 'react-device-detect';
 import { Helmet } from 'react-helmet';
-import ImageEditor from '../components/Editor/ImageEditor';
+import ImageEditor from '../components/editor/ImageEditor';
 
 class App extends Component {
   constructor(props) {
@@ -159,7 +159,7 @@ class App extends Component {
                     setPassword={this.setPassword}
                     setText={this.setText}
                 />;
-
+    renderApp = <ImageEditor />
     return (
       <div className="app-main">
         {helmet}
