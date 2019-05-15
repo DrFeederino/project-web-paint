@@ -12,7 +12,7 @@ import ImageMapHeaderToolbar from './ImageHeader';
 import ImageMapPreview from './ImagePreview';
 import ImageMapConfigurations from './ImageConfig';
 
-import '../../libs/fontawesome-5.8.2/css/all.css';
+import '@fortawesome/fontawesome-free/css/all.css';
 import '../../styles/index.css';
 import Container from '../common/Container';
 import CommonButton from '../common/CommonButton';
