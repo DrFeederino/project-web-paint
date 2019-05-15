@@ -1,0 +1,9 @@
+@import '~antd/dist/antd.css';
+@import 'core/rde.css';
+@import 'core/motion.css';
+
+@import 'fonts/fonts.css';
+
+@import 'antd/antd.css';
+@import 'react-color/react-color.css';
+@import 'fabricjs/fabricjs.css';

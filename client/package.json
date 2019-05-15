@@ -11,6 +11,8 @@
     "i18next": "^15.1.0",
     "i18next-browser-languagedetector": "^3.0.1",
     "interactjs": "^1.4.1",
+    "less": "^3.9.0",
+    "less-loader": "^5.0.0",
     "lodash": "^4.17.11",
     "mediaelement": "^4.2.9",
     "react": "^16.8.6",

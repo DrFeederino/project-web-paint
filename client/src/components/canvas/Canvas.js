@@ -12,8 +12,8 @@ import anime from 'animejs';
 import CanvasObjects from './CanvasObjects';
 import Arrow from './Arrow';
 
-import '../../styles/core/tooltip.less';
-import '../../styles/core/contextmenu.less';
+import '../../styles/core/tooltip.css';
+import '../../styles/core/contextmenu.css';
 
 const defaultCanvasOption = {
     preserveObjectStacking: true,
