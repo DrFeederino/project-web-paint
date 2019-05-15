@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Upload, Icon } from 'antd';
+import { Upload, Icon, message } from 'antd';
 
 const { Dragger } = Upload;
 
@@ -34,7 +34,7 @@ class FileUpload extends Component {
             onChange: (info) => {
                 const isLimit = info.file.size / 1024 / 1024 < limit;
                 if (!isLimit) {
-                    console.error(`Limited to ${limit}MB or less`);
+                    message.error(`Limited to ${limit}MB or less`);
                     return false;
                 }
                 const { onChange } = this.props;

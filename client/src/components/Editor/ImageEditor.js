@@ -1,15 +1,19 @@
 import React, { Component } from 'react';
+import { ResizeSensor } from 'css-element-queries';
 import { Badge, Button, Spin, Popconfirm, Menu, Modal } from 'antd';
+import debounce from 'lodash/debounce';
 import i18n from 'i18next';
 
 import Canvas from '../canvas/Canvas';
-import ImageFooterToolbar from './ImageFooter';
-import ImageItems from './ImageItems';
-import ImageTitle from './ImageTitle';
-import ImageHeaderToolbar from './ImageHeader';
-import ImagePreview from './ImagePreview';
-import ImageConfigurations from './ImageConfig';
+import ImageMapFooterToolbar from './ImageFooter';
+import ImageMapItems from './ImageItems';
+import ImageMapTitle from './ImageTitle';
+import ImageMapHeaderToolbar from './ImageHeader';
+import ImageMapPreview from './ImagePreview';
+import ImageMapConfigurations from './ImageConfig';
 
+import '../../libs/fontawesome-5.8.2/css/all.css';
+import '../../styles/index.less';
 import Container from '../common/Container';
 import CommonButton from '../common/CommonButton';
 
@@ -71,42 +75,41 @@ const defaultOptions = {
 };
 
 class ImageEditor extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            selectedItem: null,
-            zoomRatio: 1,
-            canvasRect: {
-                width: 300,
-                height: 150,
-            },
-            preview: false,
-            loading: false,
-            progress: 0,
-            animations:[],
-            styles: [],
-            dataSources: [],
-            editing: false,
-            descriptors: {},
-        }
+    state = {
+        selectedItem: null,
+        zoomRatio: 1,
+        canvasRect: {
+            width: 300,
+            height: 150,
+        },
+        preview: false,
+        loading: false,
+        progress: 0,
+        animations: [],
+        styles: [],
+        dataSources: [],
+        editing: false,
+        descriptors: {},
     }
 
-    componentDidMount = () => {
+    componentDidMount() {
         this.showLoading(true);
         import('./Descriptors.json').then((descriptors) => {
             this.setState({
                 descriptors,
             }, () => {
                 this.showLoading(false);
+            })
+        });
+        this.resizeSensor = new ResizeSensor(this.container, () => {
+            const { canvasRect: currentCanvasRect } = this.state;
+            const canvasRect = Object.assign({}, currentCanvasRect, {
+                width: this.container.clientWidth,
+                height: this.container.clientHeight,
             });
-        });
-        const { canvasRect: currentCanvasRect } = this.state;
-        const canvasRect = Object.assign({}, currentCanvasRect, {
-            width: this.container.clientWidth,
-            height: this.container.clientHeight,
-        });
-        this.setState({
-            canvasRect,
+            this.setState({
+                canvasRect,
+            });
         });
         this.setState({
             canvasRect: {
@@ -130,21 +133,21 @@ class ImageEditor extends Component {
         },
         onSelect: (target) => {
             if (target
-                && target.id
-                && target.id !== 'workarea'
-                && target.type !== 'activeSelection') {
-                    if (this.state.selectedItem && target.id === this.state.selectedItem.id) {
-                        return;
-                    }
-                    this.canvasRef.handlers.getObjects().forEach((obj) => {
-                        if (obj) {
-                            this.canvasRef.animationHandlers.initAnimation(obj, true);
-                        }
-                    });
-                    this.setState({
-                        selectedItem: target,
-                    });
+            && target.id
+            && target.id !== 'workarea'
+            && target.type !== 'activeSelection') {
+                if (this.state.selectedItem && target.id === this.state.selectedItem.id) {
                     return;
+                }
+                this.canvasRef.handlers.getObjects().forEach((obj) => {
+                    if (obj) {
+                        this.canvasRef.animationHandlers.initAnimation(obj, true);
+                    }
+                });
+                this.setState({
+                    selectedItem: target,
+                });
+                return;
             }
             this.canvasRef.handlers.getObjects().forEach((obj) => {
                 if (obj) {
@@ -161,18 +164,18 @@ class ImageEditor extends Component {
             }
             this.canvasHandlers.onSelect(null);
         },
-        onModified: setTimeout((target) => {
+        onModified: debounce((target) => {
             if (!this.state.editing) {
                 this.changeEditing(true);
             }
             if (target
-                && target.id
-                && target.id !== 'workarea'
-                && target.type !== 'activeSelection') {
-                    this.setState({
-                        selectedItem: target,
-                    });
-                    return;
+            && target.id
+            && target.id !== 'workarea'
+            && target.type !== 'activeSelection') {
+                this.setState({
+                    selectedItem: target,
+                });
+                return;
             }
             this.setState({
                 selectedItem: null,
@@ -289,8 +292,10 @@ class ImageEditor extends Component {
             this.canvasRef.workarea.set(changedKey, changedValue);
             this.canvasRef.canvas.requestRenderAll();
         },
-        onTooltip: (target) => {
+        onTooltip: (ref, target) => {
             const value = (Math.random() * 10) + 1;
+            const { animations, styles } = this.state;
+            
             return (
                 <div>
                     <div>
@@ -304,7 +309,7 @@ class ImageEditor extends Component {
                 </div>
             );
         },
-        onLink: (target) => {
+        onLink: (canvas, target) => {
             const { link } = target;
             if (link.state === 'current') {
                 document.location.href = link.url;
@@ -312,7 +317,7 @@ class ImageEditor extends Component {
             }
             window.open(link.url);
         },
-        onContext: (event, target) => {
+        onContext: (ref, event, target) => {
             if ((target && target.id === 'workarea') || !target) {
                 const { layerX: left, layerY: top } = event;
                 return (
@@ -405,7 +410,7 @@ class ImageEditor extends Component {
                 setTimeout(() => {
                     const reader = new FileReader();
                     reader.onprogress = (e) => {
-                        if (e.lengthComputable) {
+                        if (e.lengthComputable) {                                            
                             const progress = parseInt(((e.loaded / e.total) * 100), 10);
                             this.handlers.onProgress(progress);
                         }
@@ -446,7 +451,7 @@ class ImageEditor extends Component {
             inputEl.onchange = (e) => {
                 this.handlers.onImport(e.target.files);
             };
-            document.body.appendChild(inputEl);
+            document.body.appendChild(inputEl); // required for firefox
             inputEl.click();
             inputEl.remove();
         },
@@ -467,8 +472,8 @@ class ImageEditor extends Component {
             };
             const anchorEl = document.createElement('a');
             anchorEl.href = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(exportDatas, null, '\t'))}`;
-            anchorEl.download = 'data.json';
-            document.body.appendChild(anchorEl); 
+            anchorEl.download = `${this.canvasRef.workarea.name || 'sample'}.json`;
+            document.body.appendChild(anchorEl); // required for firefox
             anchorEl.click();
             anchorEl.remove();
             this.showLoading(false);
@@ -555,7 +560,7 @@ class ImageEditor extends Component {
         const action = (
             <React.Fragment>
                 <CommonButton
-                    className="app-action-btn"
+                    className="rde-action-btn"
                     shape="circle"
                     icon="file-download"
                     disabled={!editing}
@@ -573,7 +578,7 @@ class ImageEditor extends Component {
                             placement="bottomRight"
                         >
                             <CommonButton
-                                className="app-action-btn"
+                                className="rde-action-btn"
                                 shape="circle"
                                 icon="file-upload"
                                 tooltipTitle={i18n.t('action.upload')}
@@ -582,7 +587,7 @@ class ImageEditor extends Component {
                         </Popconfirm>
                     ) : (
                         <CommonButton
-                            className="app-action-btn"
+                            className="rde-action-btn"
                             shape="circle"
                             icon="file-upload"
                             tooltipTitle={i18n.t('action.upload')}
@@ -592,7 +597,7 @@ class ImageEditor extends Component {
                     )
                 }
                 <CommonButton
-                    className="app-action-btn"
+                    className="rde-action-btn"
                     shape="circle"
                     icon="image"
                     tooltipTitle={i18n.t('action.image-save')}
@@ -607,21 +612,21 @@ class ImageEditor extends Component {
             </React.Fragment>
         );
         const title = (
-            <ImageTitle
+            <ImageMapTitle
                 title={titleContent}
                 action={action}
             />
         );
         const content = (
-            <div className="app-editor">
-                <ImageItems ref={(c) => { this.itemsRef = c; }} canvasRef={this.canvasRef} descriptors={descriptors} />
-                <div className="app-editor-canvas-container">
-                    <div className="app-editor-header-toolbar">
-                        <ImageHeaderToolbar canvasRef={this.canvasRef} selectedItem={selectedItem} onSelect={onSelect} />
+            <div className="rde-editor">
+                <ImageMapItems ref={(c) => { this.itemsRef = c; }} canvasRef={this.canvasRef} descriptors={descriptors} />
+                <div className="rde-editor-canvas-container">
+                    <div className="rde-editor-header-toolbar">
+                        <ImageMapHeaderToolbar canvasRef={this.canvasRef} selectedItem={selectedItem} onSelect={onSelect} />
                     </div>
                     <div
                         ref={(c) => { this.container = c; }}
-                        className="app-editor-canvas"
+                        className="rde-editor-canvas"
                     >
                         <Canvas
                             ref={(c) => { this.canvasRef = c; }}
@@ -645,15 +650,10 @@ class ImageEditor extends Component {
                         />
                     </div>
                     <div className="rde-editor-footer-toolbar">
-                        <ImageFooterToolbar
-                            canvasRef={this.canvasRef}
-                            preview={preview}
-                            onChangePreview={onChangePreview}
-                            zoomRatio={zoomRatio}
-                        />
+                        <ImageMapFooterToolbar canvasRef={this.canvasRef} preview={preview} onChangePreview={onChangePreview} zoomRatio={zoomRatio} />
                     </div>
                 </div>
-                <ImageConfigurations
+                <ImageMapConfigurations
                     canvasRef={this.canvasRef}
                     onChange={onChange}
                     selectedItem={selectedItem}
@@ -664,13 +664,7 @@ class ImageEditor extends Component {
                     styles={styles}
                     dataSources={dataSources}
                 />
-                <ImagePreview
-                    ref={(c) => { this.preview = c; }}
-                    preview={preview}
-                    onChangePreview={onChangePreview}
-                    onTooltip={onTooltip}
-                    onLink={onLink}
-                />
+                <ImageMapPreview ref={(c) => { this.preview = c; }} preview={preview} onChangePreview={onChangePreview} onTooltip={onTooltip} onLink={onLink} />
             </div>
         );
         return (

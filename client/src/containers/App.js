@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './App.css';
+//import './App.css';
 import apiClass from '../components/Api';
 import Login from '../components/Login';
 import User from '../components/User';
@@ -161,9 +161,9 @@ class App extends Component {
                 />;
     renderApp = <ImageEditor />
     return (
-      <div className="app-main">
+      <div className="rde-main">
         {helmet}
-        <div className="app-content">
+        <div className="rde-content">
           {renderApp}
         </div>
       </div>

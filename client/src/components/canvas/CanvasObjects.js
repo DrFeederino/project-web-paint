@@ -46,12 +46,6 @@ export default (mergedObjects, defaultOptions) => {
                 ...option,
             }),
         },
-        video: {
-            create: ({ videoElement, ...option }) => new fabric.Image(videoElement, {
-                ...defaultOptions,
-                ...option,
-            }),
-        },
         polygon: {
             create: ({ points, ...option }) => new fabric.Polygon(points, {
                 ...defaultOptions,

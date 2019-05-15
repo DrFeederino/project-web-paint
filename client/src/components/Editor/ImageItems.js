@@ -1,3 +1,7 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable no-nested-ternary */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Collapse, notification, Input, message } from 'antd';
@@ -220,11 +224,15 @@ class ImageItems extends Component {
         },
     }
 
-    renderItems = items => (
-        <FlexBox flexWrap="wrap" flexDirection="column" style={{ width: '100%' }}>
-            {items.map(item => this.renderItem(item))}
-        </FlexBox>
-    )
+    renderItems = items => {
+        if (!items.map) return;
+        console.log(items);
+        return (
+            <FlexBox flexWrap="wrap" flexDirection="column" style={{ width: '100%' }}>
+                {items.map(item => this.renderItem(item))}
+            </FlexBox>
+        )
+        }
 
     renderItem = (item, centered) => (
         item.type === 'drawing' ? (
@@ -232,15 +240,15 @@ class ImageItems extends Component {
                 key={item.name}
                 draggable
                 onClick={e => this.handlers.onDrawingItem(item)}
-                className="app-editor-items-item"
+                className="rde-editor-items-item"
                 style={{ justifyContent: this.state.collapse ? 'center' : null }}
             >
-                <span className="app-editor-items-item-icon">
+                <span className="rde-editor-items-item-icon">
                     <Icon name={item.icon.name} prefix={item.icon.prefix} style={item.icon.style} />
                 </span>
                 {
                     this.state.collapse ? null : (
-                        <div className="app-editor-items-item-text">
+                        <div className="rde-editor-items-item-text">
                             {item.name}
                         </div>
                     )
@@ -253,15 +261,15 @@ class ImageItems extends Component {
                 onClick={e => this.handlers.onAddItem(item, centered)}
                 onDragStart={e => this.events.onDragStart(e, item)}
                 onDragEnd={e => this.events.onDragEnd(e, item)}
-                className="app-editor-items-item"
+                className="rde-editor-items-item"
                 style={{ justifyContent: this.state.collapse ? 'center' : null }}
             >
-                <span className="app-editor-items-item-icon">
+                <span className="rde-editor-items-item-icon">
                     <Icon name={item.icon.name} prefix={item.icon.prefix} style={item.icon.style} />
                 </span>
                 {
                     this.state.collapse ? null : (
-                        <div className="app-editor-items-item-text">
+                        <div className="rde-editor-items-item-text">
                             {item.name}
                         </div>
                     )
@@ -273,7 +281,7 @@ class ImageItems extends Component {
     render() {
         const { descriptors } = this.props;
         const { collapse, textSearch, filteredDescriptors, activeKey } = this.state;
-        const className = classnames('app-editor-items', {
+        const className = classnames('rde-editor-items', {
             minimize: collapse,
         });
         return (
@@ -283,7 +291,7 @@ class ImageItems extends Component {
                         <CommonButton
                             icon={collapse ? 'angle-double-right' : 'angle-double-left'}
                             shape="circle"
-                            className="app-action-btn"
+                            className="rde-action-btn"
                             style={{ margin: '0 4px' }}
                             onClick={this.handlers.onCollapse}
                         />
@@ -314,7 +322,7 @@ class ImageItems extends Component {
                                             }
                                         </FlexBox>
                                     ) : (
-                                        <Collapse style={{ width: '100%' }} boappred={false} activeKey={activeKey.length ? activeKey : Object.keys(descriptors)} onChange={this.handlers.onChangeActiveKey}>
+                                        <Collapse style={{ width: '100%' }} bordered={false} activeKey={activeKey.length ? activeKey : Object.keys(descriptors)} onChange={this.handlers.onChangeActiveKey}>
                                             {
                                                 Object.keys(descriptors).map(key => (
                                                     <Collapse.Panel key={key} header={key} showArrow={!collapse}>

@@ -52,7 +52,7 @@ class ImageConfigurations extends Component {
         } = this.props;
         const { collapse, activeKey } = this.state;
         const { onChangeTab, onCollapse } = this.handlers;
-        const className = classnames('app-editor-configurations', {
+        const className = classnames('rde-editor-configurations', {
             minimize: collapse,
         });
         return (

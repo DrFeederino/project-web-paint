@@ -5,7 +5,7 @@ import { Button, Modal, Form, Col, Row, Input } from 'antd';
 import i18n from 'i18next';
 
 import Icon from './Icon';
-import icons from '../../libs/fontawesome-5.2.0/metadata/icons.json';
+import icons from '../../libs/fontawesome-5.8.2/metadata/icons.json';
 
 class IconChooser extends Component {
     handlers = {

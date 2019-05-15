@@ -86,7 +86,7 @@ class ImageFooterToolbar extends Component {
         const zoomValue = parseInt((zoomRatio * 100).toFixed(2), 10);
         return (
             <React.Fragment>
-                <div className="app-editor-footer-toolbar-interaction">
+                <div className="rde-editor-footer-toolbar-interaction">
                     <Button.Group>
                         <CommonButton
                             type={interactionMode === 'selection' ? 'primary' : 'default'}
@@ -104,7 +104,7 @@ class ImageFooterToolbar extends Component {
                         />
                     </Button.Group>
                 </div>
-                <div className="app-editor-footer-toolbar-zoom">
+                <div className="rde-editor-footer-toolbar-zoom">
                     <Button.Group>
                         <CommonButton
                             style={{ boapprBottomLeftRadius: '8px', boapprTopLeftRadius: '8px' }}
@@ -131,7 +131,7 @@ class ImageFooterToolbar extends Component {
                         />
                     </Button.Group>
                 </div>
-                <div className="app-editor-footer-toolbar-preview">
+                <div className="rde-editor-footer-toolbar-preview">
                     <Tooltip title={i18n.t('action.preview')}>
                         <Switch checked={preview} onChange={onChangePreview} />
                     </Tooltip>

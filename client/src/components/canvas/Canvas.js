@@ -3,9 +3,12 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { fabric } from 'fabric';
 import uuid from 'uuid/v4';
+import debounce from 'lodash/debounce';
+import { MediaElementPlayer } from 'mediaelement';
+import 'mediaelement/build/mediaelementplayer.min.css';
 import interact from 'interactjs';
 import anime from 'animejs';
-import debounce from 'lodash';
+
 import CanvasObjects from './CanvasObjects';
 import Arrow from './Arrow';
 
@@ -873,7 +876,7 @@ class Canvas extends Component {
                 this.workareaHandlers.setImage(workarea.src, true);
                 this.workarea.setCoords();
             }
-            debounce(() => {
+            setTimeout(() => {
                 json.forEach((obj) => {
                     if (workareaExist.length && obj.id === 'workarea') {
                         prevLeft = obj.left;
@@ -1629,6 +1632,315 @@ class Canvas extends Component {
         },
     }
 
+    videoHandlers = {
+        play: () => {
+
+        },
+        pause: () => {
+
+        },
+        stop: () => {
+
+        },
+        create: (obj, src) => {
+            const { editable } = this.props;
+            const { id, autoplay, muted, loop } = obj;
+            const { left, top } = obj.getBoundingRect();
+            const videoElement = fabric.util.makeElement('video', {
+                id,
+                autoplay,
+                muted,
+                loop,
+                preload: 'none',
+                controls: false,
+            });
+            const { scaleX, scaleY, angle } = obj;
+            const zoom = this.canvas.getZoom();
+            const width = obj.width * scaleX * zoom;
+            const height = obj.height * scaleY * zoom;
+            const video = fabric.util.wrapElement(videoElement, 'div', {
+                id: `${obj.id}_container`,
+                style: `transform: rotate(${angle}deg);
+                        width: ${width}px;
+                        height: ${height}px;
+                        left: ${left}px;
+                        top: ${top}px;
+                        position: absolute;`,
+            });
+            this.container.current.appendChild(video);
+            const player = new MediaElementPlayer(obj.id, {
+                pauseOtherPlayers: false,
+                videoWidth: '100%',
+                videoHeight: '100%',
+                success: (mediaeElement, originalNode, instance) => {
+                    if (editable) {
+                        instance.pause();
+                    }
+                    // https://www.youtube.com/watch?v=bbAQtfoQMp8
+                    // console.log(mediaeElement, originalNode, instance);
+                },
+            });
+            player.setPlayerSize(width, height);
+            player.setSrc(src.src);
+            if (editable) {
+                this.elementHandlers.draggable(video, obj);
+                video.addEventListener('mousedown', (e) => {
+                    this.canvas.setActiveObject(obj);
+                    this.canvas.renderAll();
+                }, false);
+            }
+            obj.setCoords();
+            obj.set('player', player);
+        },
+        load: (obj, src) => {
+            const { canvas } = this;
+            const { editable } = this.props;
+            if (editable) {
+                this.elementHandlers.removeById(obj.id);
+            }
+            this.videoHandlers.create(obj, src);
+            this.canvas.renderAll();
+            fabric.util.requestAnimFrame(function render() {
+                canvas.renderAll();
+                fabric.util.requestAnimFrame(render);
+            });
+        },
+        set: (obj, src) => {
+            let newSrc;
+            if (typeof src === 'string') {
+                obj.set('file', null);
+                obj.set('src', src);
+                newSrc = {
+                    src,
+                };
+                this.videoHandlers.load(obj, newSrc);
+            } else {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    obj.set('file', src);
+                    obj.set('src', e.target.result);
+                    newSrc = {
+                        src: e.target.result,
+                        type: src.type,
+                    };
+                    this.videoHandlers.load(obj, newSrc);
+                };
+                reader.readAsDataURL(src);
+            }
+        },
+    }
+
+    elementHandlers = {
+        setById: (id, source) => {
+            const findObject = this.handlers.findById(id);
+            if (!findObject) {
+                return;
+            }
+            if (findObject.type === 'video') {
+                this.videoHandlers.set(findObject, source);
+            } else if (findObject.type === 'element') {
+                this.elementHandlers.set(findObject, source);
+            } else if (findObject.type === 'iframe') {
+                this.elementHandlers.set(findObject, source);
+            }
+        },
+        set: (obj, source) => {
+            if (obj.type === 'iframe') {
+                this.elementHandlers.createIFrame(obj, source);
+            } else {
+                this.elementHandlers.createElement(obj, source);
+            }
+        },
+        createElement: (obj, code) => {
+            obj.set('code', code);
+            const { editable } = this.props;
+            const { left, top } = obj.getBoundingRect();
+            const { id, scaleX, scaleY, angle } = obj;
+            if (editable) {
+                this.elementHandlers.removeById(id);
+                this.elementHandlers.removeStyleById(id);
+                this.elementHandlers.removeScriptById(id);
+            }
+            const zoom = this.canvas.getZoom();
+            const width = obj.width * scaleX * zoom;
+            const height = obj.height * scaleY * zoom;
+            const element = fabric.util.makeElement('div', {
+                id: `${id}_container`,
+                style: `transform: rotate(${angle}deg);
+                        width: ${width}px;
+                        height: ${height}px;
+                        left: ${left}px;
+                        top: ${top}px;
+                        position: absolute;`,
+            });
+            const { html, css, js } = code;
+            if (code.css && code.css.length) {
+                const styleElement = document.createElement('style');
+                styleElement.id = `${id}_style`;
+                styleElement.type = 'text/css';
+                styleElement.innerHTML = css;
+                document.head.appendChild(styleElement);
+            }
+            this.container.current.appendChild(element);
+            if (code.js && code.js.length) {
+                const script = document.createElement('script');
+                script.id = `${id}_script`;
+                script.type = 'text/javascript';
+                script.innerHTML = js;
+                element.appendChild(script);
+            }
+            element.innerHTML = html;
+            if (editable) {
+                this.elementHandlers.draggable(element, obj);
+                element.addEventListener('mousedown', (e) => {
+                    this.canvas.setActiveObject(obj);
+                    this.canvas.renderAll();
+                }, false);
+            }
+            obj.setCoords();
+        },
+        createIFrame: (obj, src) => {
+            obj.set('src', src);
+            const { editable } = this.props;
+            const { id, scaleX, scaleY, angle } = obj;
+            if (editable) {
+                this.elementHandlers.removeById(id);
+            }
+            const { left, top } = obj.getBoundingRect();
+            const iframeElement = fabric.util.makeElement('iframe', {
+                id,
+                src,
+                width: '100%',
+                height: '100%',
+            });
+            const zoom = this.canvas.getZoom();
+            const width = obj.width * scaleX * zoom;
+            const height = obj.height * scaleY * zoom;
+            const iframe = fabric.util.wrapElement(iframeElement, 'div', {
+                id: `${id}_container`,
+                style: `transform: rotate(${angle}deg);
+                        width: ${width}px;
+                        height: ${height}px;
+                        left: ${left}px;
+                        top: ${top}px;
+                        position: absolute;
+                        z-index: 100000;`,
+            });
+            this.container.current.appendChild(iframe);
+            if (editable) {
+                this.elementHandlers.draggable(iframe, obj);
+                iframe.addEventListener('mousedown', (e) => {
+                    this.canvas.setActiveObject(obj);
+                    this.canvas.renderAll();
+                }, false);
+            }
+            obj.setCoords();
+        },
+        findScriptById: id => document.getElementById(`${id}_script`),
+        findStyleById: id => document.getElementById(`${id}_style`),
+        findById: id => document.getElementById(`${id}_container`),
+        remove: (el) => {
+            if (!el) {
+                return;
+            }
+            this.container.current.removeChild(el);
+        },
+        removeStyleById: (id) => {
+            const style = this.elementHandlers.findStyleById(id);
+            if (!style) {
+                return;
+            }
+            document.head.removeChild(style);
+        },
+        removeScriptById: (id) => {
+            const style = this.elementHandlers.findScriptById(id);
+            if (!style) {
+                return;
+            }
+            document.head.removeChild(style);
+        },
+        removeById: (id) => {
+            const el = this.elementHandlers.findById(id);
+            this.elementHandlers.remove(el);
+        },
+        removeByIds: (ids) => {
+            ids.forEach((id) => {
+                this.elementHandlers.removeById(id);
+                this.elementHandlers.removeStyleById(id);
+                this.elementHandlers.removeScriptById(id);
+            });
+        },
+        setPosition: (el, left, top) => {
+            if (!el) {
+                return false;
+            }
+            el.style.left = `${left}px`;
+            el.style.top = `${top}px`;
+            el.style.transform = null;
+            el.setAttribute('data-x', 0);
+            el.setAttribute('data-y', 0);
+            return el;
+        },
+        setSize: (el, width, height) => {
+            if (!el) {
+                return false;
+            }
+            el.style.width = `${width}px`;
+            el.style.height = `${height}px`;
+            return el;
+        },
+        setScale: (el, x, y) => {
+            if (!el) {
+                return false;
+            }
+            el.style.transform = `scale(${x}, ${y})`;
+            return el;
+        },
+        setZoom: (el, zoom) => {
+            if (!el) {
+                return false;
+            }
+            el.style.zoom = zoom;
+            return el;
+        },
+        draggable: (el, obj) => {
+            if (!el) {
+                return false;
+            }
+            return interact(el)
+                .draggable({
+                    restrict: {
+                        restriction: 'parent',
+                        // elementRect: { top: 0, left: 0, bottom: 1, right: 1 },
+                    },
+                    onmove: (e) => {
+                        const { dx, dy, target } = e;
+                        // keep the dragged position in the data-x/data-y attributes
+                        const x = (parseFloat(target.getAttribute('data-x')) || 0) + dx;
+                        const y = (parseFloat(target.getAttribute('data-y')) || 0) + dy;
+                        // translate the element
+                        target.style.webkitTransform = `translate(${x}px, ${y}px)`;
+                        target.style.transform = `translate(${x}px, ${y}px)`;
+                        // update the posiion attributes
+                        target.setAttribute('data-x', x);
+                        target.setAttribute('data-y', y);
+                        // update canvas object the position
+                        obj.set({
+                            left: obj.left + dx,
+                            top: obj.top + dy,
+                        });
+                        obj.setCoords();
+                        this.canvas.renderAll();
+                    },
+                    onend: () => {
+                        if (this.props.onSelect) {
+                            this.props.onSelect(obj);
+                        }
+                    },
+                });
+        },
+    }
+
     workareaHandlers = {
         setLayout: (value) => {
             this.workarea.set('layout', value);
@@ -2261,6 +2573,8 @@ class Canvas extends Component {
             });
         },
     }
+
+
     drawingHandlers = {
         polygon: {
             init: () => {
@@ -2748,7 +3062,7 @@ class Canvas extends Component {
                     this.tooltipRef.removeChild(this.tooltipRef.firstChild);
                 }
                 const tooltip = document.createElement('div');
-                tooltip.className = 'app-tooltip-right';
+                tooltip.className = 'rde-tooltip-right';
                 let element = target.name;
                 const { onTooltip } = this.props;
                 if (onTooltip) {

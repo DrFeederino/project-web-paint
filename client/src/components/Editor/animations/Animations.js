@@ -18,23 +18,19 @@ const initialAnimation = {
 };
 
 class Animations extends Component {
-    static propTypes = {
-        animations: PropTypes.array,
-        onChangeAnimations: PropTypes.func,
-    }
-
-    static defaultProps = {
-        animations: [],
-    }
-
-    state = {
-        animation: initialAnimation,
-        visible: false,
-        validateTitle: {
-            validateStatus: '',
-            help: '',
-        },
-        current: 'add',
+    constructor(props) {
+        super(props);
+        this.state = {
+            animations: PropTypes.array,
+            onChangeAnimations: PropTypes.func,
+            animation: initialAnimation,
+            visible: false,
+            validateTitle: {
+                validateStatus: '',
+                help: '',
+            },
+            current: 'add',
+        }
     }
 
     handlers = {
