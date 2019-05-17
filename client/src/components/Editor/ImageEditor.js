@@ -5,12 +5,12 @@ import debounce from 'lodash/debounce';
 import i18n from 'i18next';
 
 import Canvas from '../canvas/Canvas';
-import ImageMapFooterToolbar from './ImageFooter';
-import ImageMapItems from './ImageItems';
-import ImageMapTitle from './ImageTitle';
-import ImageMapHeaderToolbar from './ImageHeader';
-import ImageMapPreview from './ImagePreview';
-import ImageMapConfigurations from './ImageConfig';
+import ImageFooterToolbar from './ImageFooter';
+import ImageItems from './ImageItems';
+import ImageTitle from './ImageTitle';
+import ImageHeaderToolbar from './ImageHeader';
+import ImagePreview from './ImagePreview';
+import ImageConfigurations from './ImageConfig';
 
 import '@fortawesome/fontawesome-free/css/all.css';
 import '../../styles/index.css';
@@ -95,11 +95,12 @@ class ImageEditor extends Component {
     componentDidMount() {
         this.showLoading(true);
         import('./Descriptors.json').then((descriptors) => {
+            descriptors = descriptors.default;
             this.setState({
                 descriptors,
             }, () => {
                 this.showLoading(false);
-            })
+            });
         });
         this.resizeSensor = new ResizeSensor(this.container, () => {
             const { canvasRect: currentCanvasRect } = this.state;
@@ -612,17 +613,17 @@ class ImageEditor extends Component {
             </React.Fragment>
         );
         const title = (
-            <ImageMapTitle
+            <ImageTitle
                 title={titleContent}
                 action={action}
             />
         );
         const content = (
             <div className="rde-editor">
-                <ImageMapItems ref={(c) => { this.itemsRef = c; }} canvasRef={this.canvasRef} descriptors={descriptors} />
+                <ImageItems ref={(c) => { this.itemsRef = c; }} canvasRef={this.canvasRef} descriptors={descriptors}/>
                 <div className="rde-editor-canvas-container">
                     <div className="rde-editor-header-toolbar">
-                        <ImageMapHeaderToolbar canvasRef={this.canvasRef} selectedItem={selectedItem} onSelect={onSelect} />
+                        <ImageHeaderToolbar canvasRef={this.canvasRef} selectedItem={selectedItem} onSelect={onSelect} />
                     </div>
                     <div
                         ref={(c) => { this.container = c; }}
@@ -650,10 +651,10 @@ class ImageEditor extends Component {
                         />
                     </div>
                     <div className="rde-editor-footer-toolbar">
-                        <ImageMapFooterToolbar canvasRef={this.canvasRef} preview={preview} onChangePreview={onChangePreview} zoomRatio={zoomRatio} />
+                        <ImageFooterToolbar canvasRef={this.canvasRef} preview={preview} onChangePreview={onChangePreview} zoomRatio={zoomRatio} />
                     </div>
                 </div>
-                <ImageMapConfigurations
+                <ImageConfigurations
                     canvasRef={this.canvasRef}
                     onChange={onChange}
                     selectedItem={selectedItem}
@@ -664,9 +665,10 @@ class ImageEditor extends Component {
                     styles={styles}
                     dataSources={dataSources}
                 />
-                <ImageMapPreview ref={(c) => { this.preview = c; }} preview={preview} onChangePreview={onChangePreview} onTooltip={onTooltip} onLink={onLink} />
+                <ImagePreview ref={(c) => { this.preview = c; }} preview={preview} onChangePreview={onChangePreview} onTooltip={onTooltip} onLink={onLink} />
             </div>
         );
+        console.log(descriptors);
         return (
             <Container
                 title={title}

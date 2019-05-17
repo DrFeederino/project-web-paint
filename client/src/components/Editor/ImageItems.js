@@ -1,7 +1,3 @@
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable no-nested-ternary */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Collapse, notification, Input, message } from 'antd';
@@ -20,31 +16,32 @@ notification.config({
 });
 
 class ImageItems extends Component {
-    static propTypes = {
-        canvasRef: PropTypes.any,
-        descriptors: PropTypes.object,
-    }
-
-    state = {
-        activeKey: [],
-        collapse: false,
-        textSearch: '',
-        descriptors: {},
-        filteredDescriptors: [],
-    }
+    constructor(props) {
+        super(props);
+        this.state = {
+            canvasRef: props.canvasRef,
+            descriptors: props.descriptors,
+            activeKey: [],
+            collapse: false,
+            textSearch: '',
+            filteredDescriptors: [],
+            isMount: false,
+        }
+    };
 
     componentDidMount() {
-        const { canvasRef } = this.props;
+        const { canvasRef } = this.state;
         this.waitForCanvasRender(canvasRef);
     }
 
     componentWillReceiveProps(nextProps) {
-        if (JSON.stringify(this.props.descriptors) !== JSON.stringify(nextProps.descriptors)) {
+        if (JSON.stringify(this.state.descriptors) !== JSON.stringify(nextProps.descriptors)) {
             const descriptors = Object.keys(nextProps.descriptors).reduce((prev, key) => {
                 return prev.concat(nextProps.descriptors[key]);
             }, []);
             this.setState({
                 descriptors,
+                isMount: true,
             });
         }
     }
@@ -65,7 +62,7 @@ class ImageItems extends Component {
     }
 
     componentWillUnmount() {
-        const { canvasRef } = this.props;
+        const { canvasRef } = this.state;
         this.detachEventListener(canvasRef);
     }
 
@@ -75,7 +72,7 @@ class ImageItems extends Component {
                 this.attachEventListener(canvas);
                 return;
             }
-            const { canvasRef } = this.props;
+            const { canvasRef } = this.state;
             this.waitForCanvasRender(canvasRef);
         }, 5);
     };
@@ -97,7 +94,7 @@ class ImageItems extends Component {
     /* eslint-disable react/sort-comp, react/prop-types */
     handlers = {
         onAddItem: (item, centered) => {
-            const { canvasRef } = this.props;
+            const { canvasRef } = this.state;
             if (canvasRef.workarea.layout === 'responsive') {
                 if (!canvasRef.workarea._element) {
                     notification.warn({
@@ -115,7 +112,7 @@ class ImageItems extends Component {
             canvasRef.handlers.add(option, centered);
         },
         onDrawingItem: (item) => {
-            const { canvasRef } = this.props;
+            const { canvasRef } = this.state;
             if (canvasRef.workarea.layout === 'responsive') {
                 if (!canvasRef.workarea._element) {
                     notification.warn({
@@ -155,7 +152,7 @@ class ImageItems extends Component {
             });
         },
         transformList: () => {
-            return Object.values(this.props.descriptors).reduce((prev, curr) => prev.concat(curr), []);
+            return Object.values(this.state.descriptors).reduce((prev, curr) => prev.concat(curr), []);
         },
     }
 
@@ -226,7 +223,6 @@ class ImageItems extends Component {
 
     renderItems = items => {
         if (!items.map) return;
-        console.log(items);
         return (
             <FlexBox flexWrap="wrap" flexDirection="column" style={{ width: '100%' }}>
                 {items.map(item => this.renderItem(item))}
@@ -280,10 +276,12 @@ class ImageItems extends Component {
 
     render() {
         const { descriptors } = this.props;
-        const { collapse, textSearch, filteredDescriptors, activeKey } = this.state;
+        const { collapse, textSearch, filteredDescriptors, activeKey, isMount } = this.state;
         const className = classnames('rde-editor-items', {
             minimize: collapse,
         });
+        if (!isMount) return null;
+        console.log(this.state);
         return (
             <div className={className}>
                 <FlexBox flex="1" flexDirection="column" style={{ height: '100%' }}>

@@ -1,69 +1,62 @@
 {
-	"MARKER": [
-		{
-			"name": "Marker",
-			"description": "",
-			"type": "marker",
-			"icon": {
-                "prefix": "fas",
-                "name": "map-marker-alt"
-            },
-            "option": {
-                "type": "i-text",
-                "text": "\uf3c5",
-                "fontFamily": "Font Awesome 5 Free",
-                "fontWeight": 900,
-                "fontSize": 60,
-                "width": 30,
-                "height": 30,
-                "editable": false,
-                "name": "New marker"
-            }
-		}
-	],
-	"TEXT": [
-		{
-			"name": "Text",
-			"description": "",
-			"type": "text",
-			"icon": {
-                "prefix": "fas",
-                "name": "font"
-            },
-            "option": {
-                "type": "textbox",
-                "text": "",
-                "width": 60,
-                "height": 30,
-                "fontSize": 32,
-                "name": "New text"
-            }
-		}
-	],
-	"IMAGE": [
-		{
-			"name": "Image",
-			"description": "",
-			"type": "image",
-			"icon": {
-                "prefix": "fas",
-                "name": "image"
-            },
-            "option": {
-                "type": "image",
-                "width": 160,
-                "height": 160,
-                "name": "New image",
-                "src": "./images/sample/transparentBg.png"
-            }
-		}
-	],
-	"SHAPE": [
-		{
-			"name": "Triangle",
-			"description": "",
-			"type": "shape",
-			"icon": {
+    "MARKER": [{
+        "name": "Marker",
+        "description": "",
+        "type": "marker",
+        "icon": {
+            "prefix": "fas",
+            "name": "map-marker-alt"
+        },
+        "option": {
+            "type": "i-text",
+            "text": "\uf3c5",
+            "fontFamily": "Font Awesome 5 Free",
+            "fontWeight": 900,
+            "fontSize": 60,
+            "width": 30,
+            "height": 30,
+            "editable": false,
+            "name": "New marker"
+        }
+    }],
+    "TEXT": [{
+        "name": "Text",
+        "description": "",
+        "type": "text",
+        "icon": {
+            "prefix": "fas",
+            "name": "font"
+        },
+        "option": {
+            "type": "textbox",
+            "text": "",
+            "width": 60,
+            "height": 30,
+            "fontSize": 32,
+            "name": "New text"
+        }
+    }],
+    "IMAGE": [{
+        "name": "Image",
+        "description": "",
+        "type": "image",
+        "icon": {
+            "prefix": "fas",
+            "name": "image"
+        },
+        "option": {
+            "type": "image",
+            "width": 160,
+            "height": 160,
+            "name": "New image",
+            "src": "./images/sample/transparentBg.png"
+        }
+    }],
+    "SHAPE": [{
+            "name": "Triangle",
+            "description": "",
+            "type": "shape",
+            "icon": {
                 "prefix": "fas",
                 "name": "play",
                 "style": {
@@ -78,10 +71,10 @@
             }
         },
         {
-			"name": "Rectangle",
-			"description": "",
-			"type": "shape",
-			"icon": {
+            "name": "Rectangle",
+            "description": "",
+            "type": "shape",
+            "icon": {
                 "prefix": "fas",
                 "name": "stop"
             },
@@ -93,10 +86,10 @@
             }
         },
         {
-			"name": "Circle",
-			"description": "",
-			"type": "shape",
-			"icon": {
+            "name": "Circle",
+            "description": "",
+            "type": "shape",
+            "icon": {
                 "prefix": "fas",
                 "name": "circle"
             },
@@ -105,14 +98,13 @@
                 "radius": 30,
                 "name": "New shape"
             }
-		}
-	],
-	"DRAWING": [
-		{
-			"name": "Polygon",
-			"description": "",
-			"type": "drawing",
-			"icon": {
+        }
+    ],
+    "DRAWING": [{
+            "name": "Polygon",
+            "description": "",
+            "type": "drawing",
+            "icon": {
                 "prefix": "fas",
                 "name": "draw-polygon"
             },
@@ -125,7 +117,7 @@
             "name": "Line",
             "description": "",
             "type": "drawing",
-			"icon": {
+            "icon": {
                 "prefix": "fas",
                 "name": "minus"
             },
@@ -138,7 +130,7 @@
             "name": "Arrow",
             "description": "",
             "type": "drawing",
-			"icon": {
+            "icon": {
                 "prefix": "fas",
                 "name": "long-arrow-alt-right"
             },
@@ -147,13 +139,12 @@
                 "name": "New arrow"
             }
         }
-	],
-	"ELEMENT": [
-		{
-			"name": "Element",
-			"description": "",
-			"type": "dom_element",
-			"icon": {
+    ],
+    "ELEMENT": [{
+            "name": "Element",
+            "description": "",
+            "type": "dom_element",
+            "icon": {
                 "prefix": "fab",
                 "name": "html5"
             },
@@ -165,10 +156,10 @@
             }
         },
         {
-			"name": "IFrame",
-			"description": "",
-			"type": "dom_element",
-			"icon": {
+            "name": "IFrame",
+            "description": "",
+            "type": "dom_element",
+            "icon": {
                 "prefix": "fas",
                 "name": "window-maximize"
             },
@@ -180,10 +171,10 @@
             }
         },
         {
-			"name": "Video",
-			"description": "",
-			"type": "dom_element",
-			"icon": {
+            "name": "Video",
+            "description": "",
+            "type": "dom_element",
+            "icon": {
                 "prefix": "fab",
                 "name": "youtube"
             },
@@ -196,6 +187,6 @@
                 "muted": true,
                 "loop": true
             }
-		}
-	]
+        }
+    ]
 }
