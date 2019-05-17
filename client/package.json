@@ -7,13 +7,16 @@
     "antd": "^3.17.0",
     "css-element-queries": "^1.2.0",
     "fabric": "~2.3.3",
+    "husky": "^2.3.0",
     "i18next": "^15.1.0",
     "i18next-browser-languagedetector": "^3.0.1",
     "interactjs": "^1.4.1",
     "less": "^3.9.0",
     "less-loader": "^5.0.0",
+    "lint-staged": "^8.1.7",
     "lodash": "^4.17.11",
     "mediaelement": "^4.2.9",
+    "prettier": "^1.17.1",
     "react": "^16.8.6",
     "react-ace": "^6.5.0",
     "react-burger-menu": "^2.6.10",
@@ -47,5 +50,16 @@
   ],
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.8.2"
+  },
+  "husky" : {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged" : {
+    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --single-quote --write",
+      "git add"
+    ]
   }
 }
