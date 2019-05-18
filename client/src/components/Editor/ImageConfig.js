@@ -3,10 +3,12 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { Tabs } from 'antd';
 import Animations from './animations/Animations';
+import Properties from './properties/Properties';
 import Styles from './styles/Styles';
-import DataSources from './datasources/DataSources';
 import Icon from '../icon/Icon';
 import CommonButton from '../common/CommonButton';
+import CanvasList from '../canvas/CanvasList';
+import i18n from 'i18next';
 
 class ImageConfigurations extends Component {
   constructor(props) {
@@ -74,7 +76,10 @@ class ImageConfigurations extends Component {
           onChange={onChangeTab}
           tabBarStyle={{ marginTop: 60 }}
         >
-          <Tabs.TabPane
+          <Tabs.TabPane tab={<Icon name="cog" />} key="map">
+            <Properties onChange={onChange} canvasRef={canvasRef} />
+          </Tabs.TabPane>
+          {/*<Tabs.TabPane
             tab={<Icon name="vine" prefix="fab" />}
             key="animations"
           >
@@ -85,15 +90,17 @@ class ImageConfigurations extends Component {
           </Tabs.TabPane>
           <Tabs.TabPane tab={<Icon name="star-half-alt" />} key="styles">
             <Styles styles={styles} onChangeStyles={onChangeStyles} />
-          </Tabs.TabPane>
-          <Tabs.TabPane tab={<Icon name="table" />} key="datasources">
-            <DataSources
-              ref={c => {
-                this.dataSourcesRef = c;
-              }}
-              dataSources={dataSources}
-              onChangeDataSources={onChangeDataSources}
+          </Tabs.TabPane>*/}
+          <Tabs.TabPane tab={<Icon name="star-half-alt" />}>
+            <CommonButton
+              className="rde-action-btn"
+              shape="circle"
+              icon="layer-group"
+              tooltipTitle={i18n.t('action.canvas-list')}
             />
+            <div className="rde-canvas-list">
+              <CanvasList canvasRef={canvasRef} selectedItem={selectedItem} />
+            </div>
           </Tabs.TabPane>
         </Tabs>
       </div>
