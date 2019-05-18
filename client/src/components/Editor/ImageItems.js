@@ -169,7 +169,6 @@ class ImageItems extends Component {
       });
     },
     onSearchNode: e => {
-      const { descriptors } = this.state;
       const filteredDescriptors = this.handlers
         .transformList()
         .filter(descriptor =>
