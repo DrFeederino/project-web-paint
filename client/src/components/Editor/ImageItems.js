@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Collapse, notification, Input, message } from 'antd';
+import { notification, Input, message } from 'antd';
 import uuid from 'uuid/v4';
 import classnames from 'classnames';
 import i18n from 'i18next';
@@ -362,24 +362,13 @@ class ImageItems extends Component {
                     .map(item => this.renderItem(item))}
                 </FlexBox>
               ) : (
-                <Collapse
-                  style={{ width: '100%' }}
-                  bordered={false}
-                  activeKey={
-                    activeKey.length ? activeKey : Object.keys(descriptors)
-                  }
-                  onChange={this.handlers.onChangeActiveKey}
-                >
+                <FlexBox style={{ width: '100%' }} flexDirection="column">
                   {Object.keys(descriptors).map(key => (
-                    <Collapse.Panel
-                      key={key}
-                      header={key}
-                      showArrow={!collapse}
-                    >
+                    <FlexBox flexDirection="column" key={key}>
                       {this.renderItems(descriptors[key])}
-                    </Collapse.Panel>
+                    </FlexBox>
                   ))}
-                </Collapse>
+                </FlexBox>
               )}
             </FlexBox>
           </Scrollbar>

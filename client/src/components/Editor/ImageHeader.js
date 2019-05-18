@@ -6,12 +6,11 @@ import { CommonButton } from '../common';
 
 class ImageHeaderToolbar extends Component {
   static propTypes = {
-    canvasRef: PropTypes.any,
-    selectedItem: PropTypes.object
+    canvasRef: PropTypes.any
   };
 
   render() {
-    const { canvasRef, selectedItem } = this.props;
+    const { canvasRef } = this.props;
     const isCropping = canvasRef ? canvasRef.interactionMode === 'crop' : false;
     return (
       <FlexBox className="rde-editor-header-toolbar-container" flex="1">
