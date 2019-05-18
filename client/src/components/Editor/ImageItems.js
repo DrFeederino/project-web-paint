@@ -23,8 +23,7 @@ class ImageItems extends Component {
       activeKey: [],
       collapse: false,
       textSearch: '',
-      filteredDescriptors: [],
-      isMount: false
+      filteredDescriptors: []
     };
   }
 
@@ -42,7 +41,6 @@ class ImageItems extends Component {
       this.setState(
         {
           descriptors,
-          isMount: true,
           canvasRef: nextProps.canvasRef
         },
         () => {
@@ -216,6 +214,12 @@ class ImageItems extends Component {
       if (e.stopPropagation) {
         e.stopPropagation();
       }
+      if (!this.item) {
+        notification.warn({
+          message: 'Sorry, drag and drop is not supported for vector types'
+        });
+        return;
+      }
       const { layerX, layerY } = e;
       const dt = e.dataTransfer;
       if (dt.types.length && dt.types[0] === 'Files') {
@@ -269,7 +273,7 @@ class ImageItems extends Component {
   };
 
   renderItem = (item, centered) =>
-    item.type === 'drawing' ? (
+    item.type === 'drawing' ? ( // vector types are a bit mess to drag and drop
       <div
         key={item.name}
         draggable
@@ -313,17 +317,10 @@ class ImageItems extends Component {
 
   render() {
     const { descriptors } = this.props;
-    const {
-      collapse,
-      textSearch,
-      filteredDescriptors,
-      activeKey,
-      isMount
-    } = this.state;
+    const { collapse, textSearch, filteredDescriptors, activeKey } = this.state;
     const className = classnames('rde-editor-items', {
       minimize: collapse
     });
-    if (!isMount) return null;
     return (
       <div className={className}>
         <FlexBox flex="1" flexDirection="column" style={{ height: '100%' }}>
