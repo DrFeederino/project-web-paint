@@ -91,7 +91,7 @@
     "download": "Download",
     "ok": "Ok",
     "cancel": "Cancel",
-    "search-list": "Search list",
+    "search-list": "Find a tool",
     "add": "Add",
     "modify": "Modify",
     "all-delete": "All delete",
@@ -99,7 +99,8 @@
     "start": "Start",
     "pause": "Pause",
     "stop": "Stop",
-    "execute": "Execute"
+    "execute": "Execute",
+    "save-file-name": "New image"
   },
   "common": {
     "name": "Name",
@@ -142,5 +143,8 @@
   "validation": {
     "enter-property": "Please enter {{arg}}.",
     "already-property": "Already exist {{arg}}."
+  },
+  "user": {
+    "welcome": "Welcome, "
   }
 }

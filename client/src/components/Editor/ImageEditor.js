@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ResizeSensor } from 'css-element-queries';
-import { Badge, Button, Popconfirm, Menu } from 'antd';
+import { Badge, Button, Menu } from 'antd';
 import debounce from 'lodash/debounce';
 import i18n from 'i18next';
 
@@ -453,41 +453,6 @@ class ImageEditor extends Component {
   };
 
   handlers = {
-    onUpload: () => {
-      const inputEl = document.createElement('input');
-      inputEl.accept = '.json';
-      inputEl.type = 'file';
-      inputEl.hidden = true;
-      inputEl.onchange = e => {
-        this.handlers.onImport(e.target.files);
-      };
-      document.body.appendChild(inputEl); // required for firefox
-      inputEl.click();
-      inputEl.remove();
-    },
-    onDownload: () => {
-      this.showLoading(true);
-      const objects = this.canvasRef.handlers
-        .exportJSON()
-        .objects.filter(obj => {
-          if (!obj.id) {
-            return false;
-          }
-          return true;
-        });
-      const exportDatas = {
-        objects
-      };
-      const anchorEl = document.createElement('a');
-      anchorEl.href = `data:text/json;charset=utf-8,${encodeURIComponent(
-        JSON.stringify(exportDatas, null, '\t')
-      )}`;
-      anchorEl.download = `${this.canvasRef.workarea.name || 'sample'}.json`;
-      document.body.appendChild(anchorEl); // required for firefox
-      anchorEl.click();
-      anchorEl.remove();
-      this.showLoading(false);
-    },
     onSaveImage: () => {
       this.canvasRef.handlers.saveCanvasImage();
     }
@@ -532,44 +497,9 @@ class ImageEditor extends Component {
       onLink,
       onContext
     } = this.canvasHandlers;
-    const { onDownload, onUpload, onSaveImage } = this.handlers;
+    const { onSaveImage } = this.handlers;
     const action = (
       <React.Fragment>
-        <CommonButton
-          className="rde-action-btn"
-          shape="circle"
-          icon="file-download"
-          disabled={!editing}
-          tooltipTitle={i18n.t('action.download')}
-          onClick={onDownload}
-          tooltipPlacement="bottomRight"
-        />
-        {editing ? (
-          <Popconfirm
-            title={i18n.t('imagemap.imagemap-editing-confirm')}
-            okText={i18n.t('action.ok')}
-            cancelText={i18n.t('action.cancel')}
-            onConfirm={onUpload}
-            placement="bottomRight"
-          >
-            <CommonButton
-              className="rde-action-btn"
-              shape="circle"
-              icon="file-upload"
-              tooltipTitle={i18n.t('action.upload')}
-              tooltipPlacement="bottomRight"
-            />
-          </Popconfirm>
-        ) : (
-          <CommonButton
-            className="rde-action-btn"
-            shape="circle"
-            icon="file-upload"
-            tooltipTitle={i18n.t('action.upload')}
-            tooltipPlacement="bottomRight"
-            onClick={onUpload}
-          />
-        )}
         <CommonButton
           className="rde-action-btn"
           shape="circle"

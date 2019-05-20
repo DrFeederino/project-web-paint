@@ -6,7 +6,7 @@ import uuid from 'uuid/v4';
 import debounce from 'lodash/debounce';
 import interact from 'interactjs';
 import anime from 'animejs';
-
+import i18n from 'i18next';
 import CanvasObjects from './CanvasObjects';
 import Arrow from './Arrow';
 
@@ -1146,7 +1146,11 @@ class Canvas extends Component {
       }
     },
     saveCanvasImage: (
-      option = { name: 'New Image', format: 'png', quality: 1 }
+      option = {
+        name: i18n.t('action.save-file-name'),
+        format: 'png',
+        quality: 1
+      }
     ) => {
       const dataUrl = this.canvas.toDataURL(option);
       if (dataUrl) {
