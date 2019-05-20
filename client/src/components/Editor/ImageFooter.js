@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Switch, Tooltip } from 'antd';
+import { Button } from 'antd';
 import i18n from 'i18next';
 
 import CommonButton from '../common/CommonButton';

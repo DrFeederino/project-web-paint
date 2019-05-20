@@ -20,7 +20,6 @@ class ImageItems extends Component {
     this.state = {
       canvasRef: props.canvasRef,
       descriptors: props.descriptors,
-      activeKey: [],
       collapse: false,
       textSearch: '',
       filteredDescriptors: []
@@ -62,11 +61,6 @@ class ImageItems extends Component {
     ) {
       return true;
     } else if (this.state.textSearch !== nextState.textSearch) {
-      return true;
-    } else if (
-      JSON.stringify(this.state.activeKey) !==
-      JSON.stringify(nextState.activeKey)
-    ) {
       return true;
     } else if (this.state.collapse !== nextState.collapse) {
       return true;
@@ -155,11 +149,6 @@ class ImageItems extends Component {
       } else {
         canvasRef.drawingHandlers.polygon.init();
       }
-    },
-    onChangeActiveKey: activeKey => {
-      this.setState({
-        activeKey
-      });
     },
     onCollapse: () => {
       this.setState({
@@ -317,7 +306,7 @@ class ImageItems extends Component {
 
   render() {
     const { descriptors } = this.props;
-    const { collapse, textSearch, filteredDescriptors, activeKey } = this.state;
+    const { collapse, textSearch, filteredDescriptors } = this.state;
     const className = classnames('rde-editor-items', {
       minimize: collapse
     });

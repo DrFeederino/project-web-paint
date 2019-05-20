@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import i18n from 'i18next';
 import { FlexBox, FlexItem } from '../flex';
 import { CommonButton } from '../common';
+import Icon from '../icon/Icon';
+import { Button } from 'antd';
 
 class ImageHeaderToolbar extends Component {
   static propTypes = {
@@ -123,14 +125,6 @@ class ImageHeaderToolbar extends Component {
             className="rde-action-btn"
             shape="circle"
             disabled={isCropping}
-            onClick={() => canvasRef.handlers.saveImage()}
-            icon="image"
-            tooltipTitle={i18n.t('action.image-save')}
-          />
-          <CommonButton
-            className="rde-action-btn"
-            shape="circle"
-            disabled={isCropping}
             onClick={() => canvasRef.handlers.duplicate()}
             icon="clone"
             tooltipTitle={i18n.t('action.clone')}
@@ -144,16 +138,16 @@ class ImageHeaderToolbar extends Component {
             tooltipTitle={i18n.t('action.delete')}
           />
         </FlexItem>
-        {/* <FlexItem className="rde-canvas-toolbar rde-canvas-toolbar-history">
-                    <Button className="rde-action-btn" disabled={isCropping}>
-                        <Icon name="undo-alt" style={{ marginRight: 8 }} />
-                        {'Undo'}
-                    </Button>
-                    <Button className="rde-action-btn" disabled={isCropping}>
-                        {'Redo'}
-                        <Icon name="redo-alt" style={{ marginLeft: 8 }} />
-                    </Button>
-                </FlexItem> */}
+        <FlexItem className="rde-canvas-toolbar rde-canvas-toolbar-history">
+          <Button className="rde-action-btn" disabled={isCropping}>
+            <Icon name="undo-alt" style={{ marginRight: 8 }} />
+            {'Undo'}
+          </Button>
+          <Button className="rde-action-btn" disabled={isCropping}>
+            {'Redo'}
+            <Icon name="redo-alt" style={{ marginLeft: 8 }} />
+          </Button>
+        </FlexItem>
       </FlexBox>
     );
   }

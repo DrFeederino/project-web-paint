@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ResizeSensor } from 'css-element-queries';
-import { Badge, Button, Spin, Popconfirm, Menu, Modal } from 'antd';
+import { Badge, Button, Popconfirm, Menu } from 'antd';
 import debounce from 'lodash/debounce';
 import i18n from 'i18next';
 
@@ -84,10 +84,6 @@ class ImageEditor extends Component {
         height: 150
       },
       loading: false,
-      progress: 0,
-      animations: [],
-      styles: [],
-      dataSources: [],
       editing: false,
       descriptors: {}
     };
@@ -339,7 +335,6 @@ class ImageEditor extends Component {
     },
     onTooltip: (ref, target) => {
       const value = Math.random() * 10 + 1;
-      const { animations, styles } = this.state;
       return (
         <div>
           <div>
@@ -351,7 +346,7 @@ class ImageEditor extends Component {
         </div>
       );
     },
-    onLink: (canvas, target) => {
+    onLink: target => {
       const { link } = target;
       if (link.state === 'current') {
         document.location.href = link.url;
@@ -458,52 +453,6 @@ class ImageEditor extends Component {
   };
 
   handlers = {
-    onProgress: progress => {
-      this.setState({
-        progress
-      });
-    },
-    onImport: files => {
-      if (files) {
-        this.showLoading(true);
-        setTimeout(() => {
-          const reader = new FileReader();
-          reader.onprogress = e => {
-            if (e.lengthComputable) {
-              const progress = parseInt((e.loaded / e.total) * 100, 10);
-              this.handlers.onProgress(progress);
-            }
-          };
-          reader.onload = e => {
-            const { objects, animations, styles, dataSources } = JSON.parse(
-              e.target.result
-            );
-            this.setState({
-              animations,
-              styles,
-              dataSources
-            });
-            if (objects) {
-              this.canvasRef.handlers.clear(true);
-              const data = objects.filter(obj => {
-                if (!obj.id) {
-                  return false;
-                }
-                return true;
-              });
-              this.canvasRef.handlers.importJSON(JSON.stringify(data));
-            }
-          };
-          reader.onloadend = () => {
-            this.showLoading(false);
-          };
-          reader.onerror = () => {
-            this.showLoading(false);
-          };
-          reader.readAsText(files[0]);
-        }, 500);
-      }
-    },
     onUpload: () => {
       const inputEl = document.createElement('input');
       inputEl.accept = '.json';
@@ -526,12 +475,8 @@ class ImageEditor extends Component {
           }
           return true;
         });
-      const { animations, styles, dataSources } = this.state;
       const exportDatas = {
-        objects,
-        animations,
-        styles,
-        dataSources
+        objects
       };
       const anchorEl = document.createElement('a');
       anchorEl.href = `data:text/json;charset=utf-8,${encodeURIComponent(
@@ -542,30 +487,6 @@ class ImageEditor extends Component {
       anchorEl.click();
       anchorEl.remove();
       this.showLoading(false);
-    },
-    onChangeAnimations: animations => {
-      if (!this.state.editing) {
-        this.changeEditing(true);
-      }
-      this.setState({
-        animations
-      });
-    },
-    onChangeStyles: styles => {
-      if (!this.state.editing) {
-        this.changeEditing(true);
-      }
-      this.setState({
-        styles
-      });
-    },
-    onChangeDataSources: dataSources => {
-      if (!this.state.editing) {
-        this.changeEditing(true);
-      }
-      this.setState({
-        dataSources
-      });
     },
     onSaveImage: () => {
       this.canvasRef.handlers.saveCanvasImage();
@@ -597,10 +518,6 @@ class ImageEditor extends Component {
       canvasRect,
       zoomRatio,
       loading,
-      progress,
-      animations,
-      styles,
-      dataSources,
       editing,
       descriptors
     } = this.state;
@@ -615,14 +532,7 @@ class ImageEditor extends Component {
       onLink,
       onContext
     } = this.canvasHandlers;
-    const {
-      onDownload,
-      onUpload,
-      onChangeAnimations,
-      onChangeStyles,
-      onChangeDataSources,
-      onSaveImage
-    } = this.handlers;
+    const { onDownload, onUpload, onSaveImage } = this.handlers;
     const action = (
       <React.Fragment>
         <CommonButton
@@ -733,12 +643,6 @@ class ImageEditor extends Component {
           canvasRef={this.canvasRef}
           onChange={onChange}
           selectedItem={selectedItem}
-          onChangeAnimations={onChangeAnimations}
-          onChangeStyles={onChangeStyles}
-          onChangeDataSources={onChangeDataSources}
-          animations={animations}
-          styles={styles}
-          dataSources={dataSources}
         />
       </div>
     );

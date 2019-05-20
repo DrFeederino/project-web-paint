@@ -6,8 +6,6 @@ import ImageProperty from './ImageProperty';
 import TextProperty from './TextProperty';
 import MapProperty from './MapProperty';
 import LinkProperty from './LinkProperty';
-import VideoProperty from './VideoProperty';
-import IFrameProperty from './IFrameProperty';
 import AnimationProperty from './AnimationProperty';
 import ShadowProperty from './ShadowProperty';
 import UserProperty from './UserProperty';
@@ -350,26 +348,6 @@ export default {
     userProperty: {
       title: 'User Property',
       component: UserProperty
-    }
-  },
-  video: {
-    general: {
-      title: 'General',
-      component: GeneralProperty
-    },
-    video: {
-      title: 'Video',
-      component: VideoProperty
-    }
-  },
-  iframe: {
-    general: {
-      title: 'General',
-      component: GeneralProperty
-    },
-    video: {
-      title: 'IFrame',
-      component: IFrameProperty
     }
   }
 };
