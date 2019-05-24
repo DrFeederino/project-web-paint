@@ -6,7 +6,7 @@
   flex: 1;
 }
 
-.rde-editor-items {
+.rde-editor-side {
   position: relative;
   width: 240px;
   -webkit-box-shadow: 5px 0 5px -5px rgba(0, 0, 0, 0.5);
@@ -16,20 +16,20 @@
   transition: width 0.5s ease;
 }
 
-.rde-editor-items:hover .rde-track-vertical {
+.rde-editor-side:hover .rde-track-vertical {
   opacity: 1;
   z-index: 9999;
 }
 
-.rde-editor-items.minimize {
+.rde-editor-side.minimize {
   width: 47px;
 }
 
-.rde-editor-items .ant-collapse-content-box {
+.rde-editor-side .ant-collapse-content-box {
   padding: 0;
 }
 
-.rde-editor-items-item {
+.rde-editor-side-item {
   display: flex;
   height: 40px;
   align-items: center;
@@ -39,7 +39,7 @@
   cursor: pointer;
 }
 
-.rde-editor-items-item-icon {
+.rde-editor-side-item-icon {
   padding: 0 8px;
   font-size: 1.5em;
   width: 40px;
@@ -47,18 +47,18 @@
   justify-content: center;
 }
 
-.rde-editor-items-item-text {
+.rde-editor-side-item-text {
   padding: 0 8px;
   font-size: 14px;
   font-weight: 500;
 }
 
-.rde-editor-items-item:hover {
+.rde-editor-side-item:hover {
   background: rgba(0, 0, 0, 0.2);
   box-shadow: 0 0 11px rgba(33, 33, 33, 0.2);
 }
 
-.rde-editor-items-item:not(:last-child):after {
+.rde-editor-side-item:not(:last-child):after {
   background-color: #e8e8e8;
   position: absolute;
   bottom: 0;
@@ -80,10 +80,6 @@
   height: 100%;
   top: 0;
   left: 0;
-}
-
-.rde-editor-canvas .rde-canvas iframe {
-  pointer-events: none;
 }
 
 .rde-editor-toolbar-debug {

@@ -1,13 +1,16 @@
 .ant-tabs .ant-tabs-bar {
-    margin: 0;
+  margin: 0;
 }
 
 .ant-tabs .ant-tabs-content {
-    height: -webkit-calc(100% - 44px);
-    height: -moz-calc(100% - 44px);
-    height: calc(100% - 44px);
+  height: -webkit-calc(100% - 44px);
+  height: -moz-calc(100% - 44px);
+  height: calc(100% - 44px);
 }
 
 .ant-tabs .ant-tabs-content .ant-tabs-tabpane {
-    overflow-y: auto;
+  overflow-y: auto;
+}
+.ant-tabs-right-content > .ant-tabs-tabpane-inactive {
+  display: none;
 }

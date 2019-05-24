@@ -4,6 +4,7 @@
   -webkit-animation: visibility 0.3s linear;
   animation: visibility 0.3s linear;
   z-index: 600000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 .rde-contextmenu-right {
   position: relative;

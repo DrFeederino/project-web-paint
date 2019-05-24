@@ -1,15 +1,10 @@
 import MarkerProperty from './MarkerProperty';
 import GeneralProperty from './GeneralProperty';
 import StyleProperty from './StyleProperty';
-import TooltipProperty from './TooltipProperty';
 import ImageProperty from './ImageProperty';
 import TextProperty from './TextProperty';
 import MapProperty from './MapProperty';
-import LinkProperty from './LinkProperty';
-import AnimationProperty from './AnimationProperty';
 import ShadowProperty from './ShadowProperty';
-import UserProperty from './UserProperty';
-import TriggerProperty from './TriggerProperty';
 
 export default {
   map: {
@@ -41,14 +36,6 @@ export default {
       title: 'Marker',
       component: MarkerProperty
     },
-    link: {
-      title: 'Link',
-      component: LinkProperty
-    },
-    tooltip: {
-      title: 'Tooltip',
-      component: TooltipProperty
-    },
     style: {
       title: 'Style',
       component: StyleProperty
@@ -56,18 +43,6 @@ export default {
     shadow: {
       title: 'Shadow',
       component: ShadowProperty
-    },
-    animation: {
-      title: 'Animation',
-      component: AnimationProperty
-    },
-    trigger: {
-      title: 'Trigger',
-      component: TriggerProperty
-    },
-    userProperty: {
-      title: 'User Property',
-      component: UserProperty
     }
   },
   textbox: {
@@ -79,14 +54,6 @@ export default {
       title: 'Text',
       component: TextProperty
     },
-    link: {
-      title: 'Link',
-      component: LinkProperty
-    },
-    tooltip: {
-      title: 'Tooltip',
-      component: TooltipProperty
-    },
     style: {
       title: 'Style',
       component: StyleProperty
@@ -94,18 +61,6 @@ export default {
     shadow: {
       title: 'Shadow',
       component: ShadowProperty
-    },
-    animation: {
-      title: 'Animation',
-      component: AnimationProperty
-    },
-    trigger: {
-      title: 'Trigger',
-      component: TriggerProperty
-    },
-    userProperty: {
-      title: 'User Property',
-      component: UserProperty
     }
   },
   image: {
@@ -117,14 +72,6 @@ export default {
       title: 'Image',
       component: ImageProperty
     },
-    link: {
-      title: 'Link',
-      component: LinkProperty
-    },
-    tooltip: {
-      title: 'Tooltip',
-      component: TooltipProperty
-    },
     style: {
       title: 'Style',
       component: StyleProperty
@@ -132,18 +79,6 @@ export default {
     shadow: {
       title: 'Shadow',
       component: ShadowProperty
-    },
-    animation: {
-      title: 'Animation',
-      component: AnimationProperty
-    },
-    trigger: {
-      title: 'Trigger',
-      component: TriggerProperty
-    },
-    userProperty: {
-      title: 'User Property',
-      component: UserProperty
     }
   },
   triangle: {
@@ -151,14 +86,6 @@ export default {
       title: 'General',
       component: GeneralProperty
     },
-    link: {
-      title: 'Link',
-      component: LinkProperty
-    },
-    tooltip: {
-      title: 'Tooltip',
-      component: TooltipProperty
-    },
     style: {
       title: 'Style',
       component: StyleProperty
@@ -166,18 +93,6 @@ export default {
     shadow: {
       title: 'Shadow',
       component: ShadowProperty
-    },
-    animation: {
-      title: 'Animation',
-      component: AnimationProperty
-    },
-    trigger: {
-      title: 'Trigger',
-      component: TriggerProperty
-    },
-    userProperty: {
-      title: 'User Property',
-      component: UserProperty
     }
   },
   rect: {
@@ -185,14 +100,6 @@ export default {
       title: 'General',
       component: GeneralProperty
     },
-    link: {
-      title: 'Link',
-      component: LinkProperty
-    },
-    tooltip: {
-      title: 'Tooltip',
-      component: TooltipProperty
-    },
     style: {
       title: 'Style',
       component: StyleProperty
@@ -200,18 +107,6 @@ export default {
     shadow: {
       title: 'Shadow',
       component: ShadowProperty
-    },
-    animation: {
-      title: 'Animation',
-      component: AnimationProperty
-    },
-    trigger: {
-      title: 'Trigger',
-      component: TriggerProperty
-    },
-    userProperty: {
-      title: 'User Property',
-      component: UserProperty
     }
   },
   circle: {
@@ -219,14 +114,6 @@ export default {
       title: 'General',
       component: GeneralProperty
     },
-    link: {
-      title: 'Link',
-      component: LinkProperty
-    },
-    tooltip: {
-      title: 'Tooltip',
-      component: TooltipProperty
-    },
     style: {
       title: 'Style',
       component: StyleProperty
@@ -234,18 +121,6 @@ export default {
     shadow: {
       title: 'Shadow',
       component: ShadowProperty
-    },
-    animation: {
-      title: 'Animation',
-      component: AnimationProperty
-    },
-    trigger: {
-      title: 'Trigger',
-      component: TriggerProperty
-    },
-    userProperty: {
-      title: 'User Property',
-      component: UserProperty
     }
   },
   polygon: {
@@ -253,14 +128,6 @@ export default {
       title: 'General',
       component: GeneralProperty
     },
-    link: {
-      title: 'Link',
-      component: LinkProperty
-    },
-    tooltip: {
-      title: 'Tooltip',
-      component: TooltipProperty
-    },
     style: {
       title: 'Style',
       component: StyleProperty
@@ -268,18 +135,6 @@ export default {
     shadow: {
       title: 'Shadow',
       component: ShadowProperty
-    },
-    animation: {
-      title: 'Animation',
-      component: AnimationProperty
-    },
-    trigger: {
-      title: 'Trigger',
-      component: TriggerProperty
-    },
-    userProperty: {
-      title: 'User Property',
-      component: UserProperty
     }
   },
   line: {
@@ -287,14 +142,6 @@ export default {
       title: 'General',
       component: GeneralProperty
     },
-    link: {
-      title: 'Link',
-      component: LinkProperty
-    },
-    tooltip: {
-      title: 'Tooltip',
-      component: TooltipProperty
-    },
     style: {
       title: 'Style',
       component: StyleProperty
@@ -302,18 +149,6 @@ export default {
     shadow: {
       title: 'Shadow',
       component: ShadowProperty
-    },
-    animation: {
-      title: 'Animation',
-      component: AnimationProperty
-    },
-    trigger: {
-      title: 'Trigger',
-      component: TriggerProperty
-    },
-    userProperty: {
-      title: 'User Property',
-      component: UserProperty
     }
   },
   arrow: {
@@ -321,14 +156,6 @@ export default {
       title: 'General',
       component: GeneralProperty
     },
-    link: {
-      title: 'Link',
-      component: LinkProperty
-    },
-    tooltip: {
-      title: 'Tooltip',
-      component: TooltipProperty
-    },
     style: {
       title: 'Style',
       component: StyleProperty
@@ -336,18 +163,6 @@ export default {
     shadow: {
       title: 'Shadow',
       component: ShadowProperty
-    },
-    animation: {
-      title: 'Animation',
-      component: AnimationProperty
-    },
-    trigger: {
-      title: 'Trigger',
-      component: TriggerProperty
-    },
-    userProperty: {
-      title: 'User Property',
-      component: UserProperty
     }
   }
 };

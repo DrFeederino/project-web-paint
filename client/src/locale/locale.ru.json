@@ -1,4 +1,7 @@
 {
+  "editor": {
+    "darkTheme": "Включить темную тему"
+  },
   "imagemap": {
     "imagemap": "Редактор",
     "imagemap-editing-confirm": "The image map contents have been modified. Do you want to do that anyway?",

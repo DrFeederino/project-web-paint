@@ -1,4 +1,7 @@
 {
+  "editor": {
+    "darkTheme": "Enable Dark Theme"
+  },
   "imagemap": {
     "imagemap": "Image Editor App",
     "imagemap-editing-confirm": "The image map contents have been modified. Do you want to do that anyway?",

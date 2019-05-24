@@ -83,7 +83,8 @@ class ImageEditor extends Component {
       },
       loading: false,
       editing: false,
-      descriptors: {}
+      descriptors: {},
+      darkTheme: false
     };
   }
 
@@ -118,7 +119,11 @@ class ImageEditor extends Component {
       selectedItem: null
     });
   }
-
+  onChangeTheme = () => {
+    this.setState({
+      darkTheme: !this.state.darkTheme
+    });
+  };
   canvasHandlers = {
     onAdd: target => {
       if (!this.state.editing) {
@@ -356,7 +361,7 @@ class ImageEditor extends Component {
       if ((target && target.id === 'workarea') || !target) {
         const { layerX: left, layerY: top } = event;
         return (
-          <Menu>
+          <Menu theme="dark">
             <Menu.SubMenu
               key="add"
               style={{ width: 120 }}
@@ -483,7 +488,8 @@ class ImageEditor extends Component {
       zoomRatio,
       loading,
       editing,
-      descriptors
+      descriptors,
+      darkTheme
     } = this.state;
     const {
       onAdd,
@@ -502,21 +508,27 @@ class ImageEditor extends Component {
         <CommonButton
           className="rde-action-btn"
           shape="circle"
-          icon="image"
+          icon="save"
           tooltipTitle={i18n.t('action.image-save')}
           onClick={onSaveImage}
           tooltipPlacement="bottomRight"
         />
       </React.Fragment>
     );
-    const titleContent = (
+    let titleContent = (
       <React.Fragment>
         <span>{i18n.t('imagemap.imagemap-editor')}</span>
       </React.Fragment>
     );
-    const title = <ImageTitle title={titleContent} action={action} />;
-    const content = (
-      <div className="rde-editor">
+    let title = (
+      <ImageTitle
+        title={titleContent}
+        action={action}
+        onChange={this.onChangeTheme}
+      />
+    );
+    let content = (
+      <div className={'rde-editor' + (darkTheme ? ' dark' : '')}>
         <ImageItems
           ref={c => {
             this.itemsRef = c;

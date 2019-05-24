@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { notification, Input, message } from 'antd';
 import uuid from 'uuid/v4';
-import classnames from 'classnames';
 import i18n from 'i18next';
 
 import { FlexBox } from '../flex';
@@ -267,10 +266,10 @@ class ImageItems extends Component {
         key={item.name}
         draggable
         onClick={e => this.handlers.onDrawingItem(item)}
-        className="rde-editor-items-item"
+        className="rde-editor-side-item"
         style={{ justifyContent: this.state.collapse ? 'center' : null }}
       >
-        <span className="rde-editor-items-item-icon">
+        <span className="rde-editor-side-item-icon">
           <Icon
             name={item.icon.name}
             prefix={item.icon.prefix}
@@ -278,7 +277,7 @@ class ImageItems extends Component {
           />
         </span>
         {this.state.collapse ? null : (
-          <div className="rde-editor-items-item-text">{item.name}</div>
+          <div className="rde-editor-side-item-text">{item.name}</div>
         )}
       </div>
     ) : (
@@ -288,10 +287,10 @@ class ImageItems extends Component {
         onClick={e => this.handlers.onAddItem(item, centered)}
         onDragStart={e => this.events.onDragStart(e, item)}
         onDragEnd={e => this.events.onDragEnd(e, item)}
-        className="rde-editor-items-item"
+        className="rde-editor-side-item"
         style={{ justifyContent: this.state.collapse ? 'center' : null }}
       >
-        <span className="rde-editor-items-item-icon">
+        <span className="rde-editor-side-item-icon">
           <Icon
             name={item.icon.name}
             prefix={item.icon.prefix}
@@ -299,7 +298,7 @@ class ImageItems extends Component {
           />
         </span>
         {this.state.collapse ? null : (
-          <div className="rde-editor-items-item-text">{item.name}</div>
+          <div className="rde-editor-side-item-text">{item.name}</div>
         )}
       </div>
     );
@@ -307,11 +306,8 @@ class ImageItems extends Component {
   render() {
     const { descriptors } = this.props;
     const { collapse, textSearch, filteredDescriptors } = this.state;
-    const className = classnames('rde-editor-items', {
-      minimize: collapse
-    });
     return (
-      <div className={className}>
+      <div className={'rde-editor-side' + (collapse ? ' minimize' : '')}>
         <FlexBox flex="1" flexDirection="column" style={{ height: '100%' }}>
           <FlexBox
             justifyContent="center"
