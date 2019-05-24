@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import classnames from 'classnames';
 import { Tabs } from 'antd';
 import NodeProperties from './properties/NodeProperties';
 import Properties from './properties/Properties';
@@ -25,7 +24,8 @@ class ImageConfigurations extends Component {
 
   onChangeTab = activeKey => {
     this.setState({
-      activeKey
+      activeKey,
+      collapse: false
     });
   };
 
@@ -38,11 +38,10 @@ class ImageConfigurations extends Component {
   render() {
     const { onChange, selectedItem, canvasRef } = this.props;
     const { collapse, activeKey } = this.state;
-    const className = classnames('rde-editor-configurations', {
-      minimize: collapse
-    });
     return (
-      <div className={className}>
+      <div
+        className={'rde-editor-configurations' + (collapse ? ' minimize' : '')}
+      >
         <CommonButton
           className="rde-action-btn"
           shape="circle"
@@ -76,16 +75,10 @@ class ImageConfigurations extends Component {
             />
           </Tabs.TabPane>
           <Tabs.TabPane
-            tab={<Icon name="table" />}
+            tab={<Icon name="layer-group" />}
             key="list"
             forceRender={false}
           >
-            <CommonButton
-              className="rde-action-btn"
-              shape="circle"
-              icon="layer-group"
-              tooltipTitle={i18n.t('action.canvas-list')}
-            />
             <div className="rde-canvas-list">
               <CanvasList canvasRef={canvasRef} selectedItem={selectedItem} />
             </div>
