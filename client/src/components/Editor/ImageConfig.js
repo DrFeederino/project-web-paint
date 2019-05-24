@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { Tabs } from 'antd';
+import NodeProperties from './properties/NodeProperties';
 import Properties from './properties/Properties';
 import Icon from '../icon/Icon';
 import CommonButton from '../common/CommonButton';
@@ -12,7 +13,7 @@ class ImageConfigurations extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeKey: 'map',
+      activeKey: 'image',
       collapse: false
     };
   }
@@ -22,23 +23,21 @@ class ImageConfigurations extends Component {
     onChange: PropTypes.func
   };
 
-  handlers = {
-    onChangeTab: activeKey => {
-      this.setState({
-        activeKey
-      });
-    },
-    onCollapse: () => {
-      this.setState({
-        collapse: !this.state.collapse
-      });
-    }
+  onChangeTab = activeKey => {
+    this.setState({
+      activeKey
+    });
+  };
+
+  onCollapse = () => {
+    this.setState({
+      collapse: !this.state.collapse
+    });
   };
 
   render() {
     const { onChange, selectedItem, canvasRef } = this.props;
     const { collapse, activeKey } = this.state;
-    const { onChangeTab, onCollapse } = this.handlers;
     const className = classnames('rde-editor-configurations', {
       minimize: collapse
     });
@@ -48,20 +47,39 @@ class ImageConfigurations extends Component {
           className="rde-action-btn"
           shape="circle"
           icon={collapse ? 'angle-double-left' : 'angle-double-right'}
-          onClick={onCollapse}
+          onClick={this.onCollapse}
           style={{ position: 'absolute', top: 16, right: 16, zIndex: 1000 }}
         />
         <Tabs
           tabPosition="right"
           style={{ height: '100%' }}
           activeKey={activeKey}
-          onChange={onChangeTab}
+          onChange={this.onChangeTab}
           tabBarStyle={{ marginTop: 60 }}
         >
-          <Tabs.TabPane tab={<Icon name="cog" />} key="map">
+          <Tabs.TabPane
+            tab={<Icon name="cog" />}
+            key="image"
+            forceRender={false}
+          >
             <Properties onChange={onChange} canvasRef={canvasRef} />
           </Tabs.TabPane>
-          <Tabs.TabPane tab={<Icon name="star-half-alt" />}>
+          <Tabs.TabPane
+            tab={<Icon name="cogs" />}
+            key="props"
+            forceRender={false}
+          >
+            <NodeProperties
+              onChange={onChange}
+              selectedItem={selectedItem}
+              canvasRef={canvasRef}
+            />
+          </Tabs.TabPane>
+          <Tabs.TabPane
+            tab={<Icon name="table" />}
+            key="list"
+            forceRender={false}
+          >
             <CommonButton
               className="rde-action-btn"
               shape="circle"

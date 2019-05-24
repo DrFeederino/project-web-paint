@@ -32,7 +32,7 @@ const defaultWorkareaOption = {
   scaleX: 1,
   scaleY: 1,
   backgroundColor: '#fff',
-  hasBorders: false,
+  hasBorders: true,
   hasControls: false,
   selectable: false,
   lockMovementX: true,
@@ -112,7 +112,10 @@ class Canvas extends Component {
     super(props);
     this.state = {
       id: uuid(),
-      clipboard: null
+      clipboard: null,
+      width: props.width,
+      height: props.height,
+      color: props.color
     };
     this.fabricObjects = CanvasObjects(
       props.fabricObjects,
@@ -129,7 +132,10 @@ class Canvas extends Component {
       editable,
       canvasOption,
       workareaOption,
-      guidelineOption
+      guidelineOption,
+      width,
+      height,
+      color
     } = this.props;
     const mergedCanvasOption = Object.assign(
       {},
@@ -139,18 +145,23 @@ class Canvas extends Component {
     this.canvas = new fabric.Canvas(`canvas_${id}`, mergedCanvasOption);
     this.canvas.setBackgroundColor(
       mergedCanvasOption.backgroundColor,
-      this.canvas.renderAll.bind(this.canvas)
+      this.canvas.requestRenderAll.bind(this.canvas)
     );
     const mergedWorkareaOption = Object.assign(
       {},
-      defaultWorkareaOption,
+      {
+        ...defaultWorkareaOption,
+        width: width ? width : defaultCanvasOption.width,
+        height: height ? height : defaultCanvasOption.height,
+        color: color ? color : defaultCanvasOption.color
+      },
       workareaOption
     );
     this.workarea = new fabric.Image(null, mergedWorkareaOption);
     this.canvas.add(this.workarea);
     this.objects.push(this.workarea);
     this.canvas.centerObject(this.workarea);
-    this.canvas.renderAll();
+    this.canvas.requestRenderAll();
     this.gridHandlers.init();
     const {
       modified,
@@ -228,7 +239,7 @@ class Canvas extends Component {
       }
       this.canvas.setBackgroundColor(
         this.props.canvasOption.backgroundColor,
-        this.canvas.renderAll.bind(this.canvas)
+        this.canvas.requestRenderAll.bind(this.canvas)
       );
       this.canvas.selection = this.props.canvasOption.selection;
     }
@@ -376,6 +387,7 @@ class Canvas extends Component {
       }
     },
     add: (obj, centered = true, loaded = false) => {
+      this.contextmenuHandlers.hide();
       const { editable } = this.props;
       const option = {
         hasControls: editable,
@@ -519,6 +531,7 @@ class Canvas extends Component {
       reader.readAsDataURL(file);
     },
     addElement: (obj, centered = true, loaded = false) => {
+      console.log('add element is fired');
       const { canvas } = this;
       const { editable } = this.props;
       const { src, file, code, ...otherOption } = obj;
@@ -548,6 +561,7 @@ class Canvas extends Component {
       }
     },
     remove: () => {
+      console.log('remove was fired');
       const activeObject = this.canvas.getActiveObject();
       if (!activeObject) {
         return false;
@@ -598,6 +612,7 @@ class Canvas extends Component {
       }
     },
     removeById: id => {
+      this.contextmenuHandlers.hide();
       const findObject = this.handlers.findById(id);
       if (findObject) {
         this.canvas.discardActiveObject();
@@ -649,6 +664,7 @@ class Canvas extends Component {
       }, propertiesToInclude);
     },
     duplicateById: id => {
+      this.contextmenuHandlers.hide();
       const { onAdd, propertiesToInclude } = this.props;
       const findObject = this.handlers.findById(id);
       if (findObject) {
@@ -768,7 +784,7 @@ class Canvas extends Component {
       }
       obj.set(key, value);
       obj.setCoords();
-      this.canvas.renderAll();
+      this.canvas.requestRenderAll();
       const { onModified } = this.props;
       if (onModified) {
         onModified(obj);
@@ -798,12 +814,12 @@ class Canvas extends Component {
             repeat: 'repeat'
           });
           obj.setCoords();
-          this.canvas.renderAll();
+          this.canvas.requestRenderAll();
           return;
         }
         obj.setElement(source);
         obj.setCoords();
-        this.canvas.renderAll();
+        this.canvas.requestRenderAll();
       });
     },
     setImage: (obj, src) => {
@@ -873,7 +889,7 @@ class Canvas extends Component {
       }
       if (filteredObjects.length === 1) {
         canvas.setActiveObject(filteredObjects[0]);
-        canvas.renderAll();
+        canvas.requestRenderAll();
         return;
       }
       const activeSelection = new fabric.ActiveSelection(filteredObjects, {
@@ -881,7 +897,7 @@ class Canvas extends Component {
         ...this.props.activeSelection
       });
       canvas.setActiveObject(activeSelection);
-      canvas.renderAll();
+      canvas.requestRenderAll();
     },
     select: obj => {
       const findObject = this.handlers.find(obj);
@@ -984,7 +1000,7 @@ class Canvas extends Component {
             obj.top += diffTop;
           }
           this.handlers.add(obj, false, true);
-          this.canvas.renderAll();
+          this.canvas.requestRenderAll();
         });
         if (callback) {
           callback(this.canvas);
@@ -1086,7 +1102,7 @@ class Canvas extends Component {
       if (onSelect) {
         onSelect(group);
       }
-      canvas.renderAll();
+      canvas.requestRenderAll();
     },
     toActiveSelection: () => {
       const { canvas } = this;
@@ -1101,7 +1117,7 @@ class Canvas extends Component {
       if (onSelect) {
         onSelect(activeObject);
       }
-      canvas.renderAll();
+      canvas.requestRenderAll();
     },
     getOriginObjects: () => this.objects,
     findOriginById: id => {
@@ -1198,7 +1214,7 @@ class Canvas extends Component {
       this.canvas.setActiveObject(this.cropRect);
       this.cropObject.selectable = false;
       this.cropObject.evented = false;
-      this.canvas.renderAll();
+      this.canvas.requestRenderAll();
     },
     finish: () => {
       const { left, top, width, height, scaleX, scaleY } = this.cropRect;
@@ -1219,7 +1235,7 @@ class Canvas extends Component {
       this.canvas.remove(this.cropRect);
       this.cropRect = null;
       // this.cropObject = null;
-      this.canvas.renderAll();
+      this.canvas.requestRenderAll();
     },
     resize: opt => {
       const {
@@ -1468,7 +1484,7 @@ class Canvas extends Component {
           }
         }
       });
-      this.canvas.renderAll();
+      this.canvas.requestRenderAll();
     },
     grab: callback => {
       this.interactionMode = 'grab';
@@ -1492,7 +1508,7 @@ class Canvas extends Component {
           }
         }
       });
-      this.canvas.renderAll();
+      this.canvas.requestRenderAll();
     },
     drawing: (callback, type) => {
       this.interactionMode = type;
@@ -1516,7 +1532,7 @@ class Canvas extends Component {
           }
         }
       });
-      this.canvas.renderAll();
+      this.canvas.requestRenderAll();
     },
     moving: e => {
       const delta = new fabric.Point(e.movementX, e.movementY);
@@ -1549,7 +1565,7 @@ class Canvas extends Component {
           lockMovementY: true,
           hoverCursor: 'pointer'
         });
-        this.canvas.renderAll();
+        this.canvas.requestRenderAll();
         instance.play();
       }
     },
@@ -1654,7 +1670,7 @@ class Canvas extends Component {
         console.warn('Not supported type.');
       }
       obj.set(option);
-      this.canvas.renderAll();
+      this.canvas.requestRenderAll();
     },
     getAnimation: (obj, hasControls) => {
       const {
@@ -1679,7 +1695,7 @@ class Canvas extends Component {
             lockMovementY: true,
             hoverCursor: 'pointer'
           });
-          this.canvas.renderAll();
+          this.canvas.requestRenderAll();
         },
         update: e => {
           if (type === 'flash') {
@@ -1691,7 +1707,7 @@ class Canvas extends Component {
             obj.set('stroke', stroke);
           }
           obj.setCoords();
-          this.canvas.renderAll();
+          this.canvas.requestRenderAll();
         },
         complete: () => {
           this.animationHandlers.initAnimation(obj, hasControls);
@@ -1827,48 +1843,7 @@ class Canvas extends Component {
           'mousedown',
           e => {
             this.canvas.setActiveObject(obj);
-            this.canvas.renderAll();
-          },
-          false
-        );
-      }
-      obj.setCoords();
-    },
-    createIFrame: (obj, src) => {
-      obj.set('src', src);
-      const { editable } = this.props;
-      const { id, scaleX, scaleY, angle } = obj;
-      if (editable) {
-        this.elementHandlers.removeById(id);
-      }
-      const { left, top } = obj.getBoundingRect();
-      const iframeElement = fabric.util.makeElement('iframe', {
-        id,
-        src,
-        width: '100%',
-        height: '100%'
-      });
-      const zoom = this.canvas.getZoom();
-      const width = obj.width * scaleX * zoom;
-      const height = obj.height * scaleY * zoom;
-      const iframe = fabric.util.wrapElement(iframeElement, 'div', {
-        id: `${id}_container`,
-        style: `transform: rotate(${angle}deg);
-                        width: ${width}px;
-                        height: ${height}px;
-                        left: ${left}px;
-                        top: ${top}px;
-                        position: absolute;
-                        z-index: 100000;`
-      });
-      this.container.current.appendChild(iframe);
-      if (editable) {
-        this.elementHandlers.draggable(iframe, obj);
-        iframe.addEventListener(
-          'mousedown',
-          e => {
-            this.canvas.setActiveObject(obj);
-            this.canvas.renderAll();
+            this.canvas.requestRenderAll();
           },
           false
         );
@@ -1968,7 +1943,7 @@ class Canvas extends Component {
             top: obj.top + dy
           });
           obj.setCoords();
-          this.canvas.renderAll();
+          this.canvas.requestRenderAll();
         },
         onend: () => {
           if (this.props.onSelect) {
@@ -1994,16 +1969,16 @@ class Canvas extends Component {
           scaleX = this.workarea.workareaWidth / _element.width;
           scaleY = this.workarea.workareaHeight / _element.height;
         } else if (isResponsive) {
-          scaleX = canvas.getWidth() / _element.width;
-          scaleY = canvas.getHeight() / _element.height;
+          scaleX = canvas.getScaledWidth() / _element.width;
+          scaleY = canvas.getScaledHeight() / _element.height;
           if (_element.height > _element.width) {
             scaleX = scaleY;
           } else {
             scaleY = scaleX;
           }
         } else {
-          scaleX = canvas.getWidth() / _element.width;
-          scaleY = canvas.getHeight() / _element.height;
+          scaleX = canvas.getScaledWidth() / _element.width;
+          scaleY = canvas.getScaledHeight() / _element.height;
         }
       }
       canvas.getObjects().forEach(obj => {
@@ -2043,7 +2018,7 @@ class Canvas extends Component {
           });
         }
         canvas.centerObject(this.workarea);
-        canvas.renderAll();
+        canvas.requestRenderAll();
         return;
       }
       if (_element) {
@@ -2082,7 +2057,7 @@ class Canvas extends Component {
       };
       canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
       this.zoomHandlers.zoomToPoint(point, 1);
-      canvas.renderAll();
+      canvas.requestRenderAll();
     },
     setResponsiveImage: (src, loaded) => {
       const { canvas, workarea, zoomHandlers } = this;
@@ -2139,7 +2114,7 @@ class Canvas extends Component {
           };
           canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
           zoomHandlers.zoomToPoint(point, scaleX);
-          canvas.renderAll();
+          canvas.requestRenderAll();
         });
       };
       if (!src) {
@@ -2230,7 +2205,7 @@ class Canvas extends Component {
           };
           canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
           zoomHandlers.zoomToPoint(point, 1);
-          canvas.renderAll();
+          canvas.requestRenderAll();
         });
       };
       if (!src) {
@@ -2293,7 +2268,7 @@ class Canvas extends Component {
               color: object.stroke
             });
             this.nodeHandlers.highlightingNode(object, 300);
-            this.canvas.renderAll();
+            this.canvas.requestRenderAll();
             return;
           }
         }
@@ -2339,7 +2314,7 @@ class Canvas extends Component {
           });
         }
       });
-      this.canvas.renderAll();
+      this.canvas.requestRenderAll();
     },
     selectById: id => {
       this.handlers.getOriginObjects().forEach(object => {
@@ -2356,7 +2331,7 @@ class Canvas extends Component {
           blur: 0
         });
       });
-      this.canvas.renderAll();
+      this.canvas.requestRenderAll();
     },
     deselect: () => {
       this.handlers.getOriginObjects().forEach(object => {
@@ -2381,7 +2356,7 @@ class Canvas extends Component {
           });
         }
       });
-      this.canvas.renderAll();
+      this.canvas.requestRenderAll();
     },
     highlightingByPath: path => {
       if (!path || !path.length) {
@@ -2439,7 +2414,7 @@ class Canvas extends Component {
           }
         }
       });
-      this.canvas.renderAll();
+      this.canvas.requestRenderAll();
     },
     highlightingLink: (object, targetObject, duration = 500) => {
       object.animation = {
@@ -2461,7 +2436,7 @@ class Canvas extends Component {
             easing: fabric.util.ease.easeInOutQuad,
             onChange: value => {
               object.shadow.blur = value;
-              this.canvas.renderAll();
+              this.canvas.requestRenderAll();
             },
             onComplete: () => {
               object.isAnimated = false;
@@ -2480,7 +2455,7 @@ class Canvas extends Component {
         duration,
         onChange: value => {
           object.shadow.blur = value;
-          this.canvas.renderAll();
+          this.canvas.requestRenderAll();
         },
         onComplete
       });
@@ -2511,20 +2486,20 @@ class Canvas extends Component {
               toPort.set({
                 fill: toPort.errorFill
               });
-              this.canvas.renderAll();
+              this.canvas.requestRenderAll();
               return;
             }
             toPort.set({
               fill: toPort.hoverFill
             });
-            this.canvas.renderAll();
+            this.canvas.requestRenderAll();
           }
         });
         toPort.on('mouseout', () => {
           toPort.set({
             fill: toPort.originFill
           });
-          this.canvas.renderAll();
+          this.canvas.requestRenderAll();
         });
         this.canvas.add(toPort);
         toPort.setCoords();
@@ -2543,25 +2518,25 @@ class Canvas extends Component {
                   port.set({
                     fill: port.errorFill
                   });
-                  this.canvas.renderAll();
+                  this.canvas.requestRenderAll();
                   return;
                 }
                 port.set({
                   fill: port.hoverFill
                 });
-                this.canvas.renderAll();
+                this.canvas.requestRenderAll();
                 return;
               }
               port.set({
                 fill: port.errorFill
               });
-              this.canvas.renderAll();
+              this.canvas.requestRenderAll();
             });
             port.on('mouseout', () => {
               port.set({
                 fill: port.originFill
               });
-              this.canvas.renderAll();
+              this.canvas.requestRenderAll();
             });
             this.canvas.add(port);
             port.setCoords();
@@ -2692,7 +2667,7 @@ class Canvas extends Component {
         this.lineArray = [];
         this.activeLine = null;
         this.activeShape = null;
-        this.canvas.renderAll();
+        this.canvas.requestRenderAll();
         this.modeHandlers.selection();
       },
       addPoint: opt => {
@@ -2752,7 +2727,7 @@ class Canvas extends Component {
           this.canvas.remove(this.activeShape);
           this.canvas.add(polygon);
           this.activeShape = polygon;
-          this.canvas.renderAll();
+          this.canvas.requestRenderAll();
         } else {
           const polyPoint = [{ x, y }];
           const polygon = new fabric.Polygon(polyPoint, {
@@ -2853,7 +2828,7 @@ class Canvas extends Component {
         target.set({
           diffPoints
         });
-        this.canvas.renderAll();
+        this.canvas.requestRenderAll();
       }
     },
     line: {
@@ -2869,7 +2844,7 @@ class Canvas extends Component {
         this.canvas.remove(this.activeLine);
         this.pointArray = [];
         this.activeLine = null;
-        this.canvas.renderAll();
+        this.canvas.requestRenderAll();
         this.modeHandlers.selection();
       },
       addPoint: opt => {
@@ -2951,7 +2926,7 @@ class Canvas extends Component {
         this.canvas.remove(this.activeLine);
         this.pointArray = [];
         this.activeLine = null;
-        this.canvas.renderAll();
+        this.canvas.requestRenderAll();
         this.modeHandlers.selection();
       },
       addPoint: opt => {
@@ -3034,7 +3009,7 @@ class Canvas extends Component {
             left: activeObjectLeft
           });
           obj.setCoords();
-          this.canvas.renderAll();
+          this.canvas.requestRenderAll();
         });
       }
     },
@@ -3046,7 +3021,7 @@ class Canvas extends Component {
             left: 0 - (obj.width * obj.scaleX) / 2
           });
           obj.setCoords();
-          this.canvas.renderAll();
+          this.canvas.requestRenderAll();
         });
       }
     },
@@ -3059,7 +3034,7 @@ class Canvas extends Component {
             left: activeObjectLeft - obj.width * obj.scaleX
           });
           obj.setCoords();
-          this.canvas.renderAll();
+          this.canvas.requestRenderAll();
         });
       }
     }
@@ -3188,14 +3163,14 @@ class Canvas extends Component {
   };
 
   contextmenuHandlers = {
-    show: debounce(async (e, target) => {
+    show: (e, target) => {
       const { onContext } = this.props;
       while (this.contextmenuRef.hasChildNodes()) {
         this.contextmenuRef.removeChild(this.contextmenuRef.firstChild);
       }
       const contextmenu = document.createElement('div');
       contextmenu.className = 'rde-contextmenu-right';
-      const element = await onContext(this.contextmenuRef, e, target);
+      const element = onContext(this.contextmenuRef, e, target);
       if (!element) {
         return;
       }
@@ -3204,12 +3179,12 @@ class Canvas extends Component {
       ReactDOM.render(element, contextmenu);
       this.contextmenuRef.classList.remove('contextmenu-hidden');
       const { clientX: left, clientY: top } = e;
-      this.contextmenuRef.style.left = `${left}px`;
-      this.contextmenuRef.style.top = `${top}px`;
-    }),
-    hide: debounce(target => {
+      this.contextmenuRef.style.left = `${left - 50}px`;
+      this.contextmenuRef.style.top = `${top - 25}px`;
+    },
+    hide: () => {
       this.contextmenuRef.classList.add('contextmenu-hidden');
-    }, 100)
+    }
   };
 
   guidelineHandlers = {
@@ -3715,19 +3690,19 @@ class Canvas extends Component {
       if (e.keyCode === 38) {
         activeObject.set('top', activeObject.top - 2);
         activeObject.setCoords();
-        this.canvas.renderAll();
+        this.canvas.requestRenderAll();
       } else if (e.keyCode === 40) {
         activeObject.set('top', activeObject.top + 2);
         activeObject.setCoords();
-        this.canvas.renderAll();
+        this.canvas.requestRenderAll();
       } else if (e.keyCode === 37) {
         activeObject.set('left', activeObject.left - 2);
         activeObject.setCoords();
-        this.canvas.renderAll();
+        this.canvas.requestRenderAll();
       } else if (e.keyCode === 39) {
         activeObject.set('left', activeObject.left + 2);
         activeObject.setCoords();
-        this.canvas.renderAll();
+        this.canvas.requestRenderAll();
       }
       if (this.props.onModified) {
         this.props.onModified(activeObject);
@@ -3767,7 +3742,6 @@ class Canvas extends Component {
         }
         if (target && target.type === 'fromPort') {
           if (this.interactionMode === 'link' && this.activeLine) {
-            console.warn('이미 링크를 그리는 중입니다.');
             return;
           }
           this.linkHandlers.init(target);
@@ -3889,12 +3863,16 @@ class Canvas extends Component {
         this.verticalLines.length = 0;
         this.horizontalLines.length = 0;
       }
-      this.canvas.renderAll();
+      this.canvas.requestRenderAll();
     },
     mouseout: opt => {
       if (!opt.target) {
+        this.contextmenuHandlers.hide();
         this.tooltipHandlers.hide();
       }
+    },
+    mouseleave: e => {
+      this.contextmenuHandlers.hide();
     },
     selection: opt => {
       const { onSelect, activeSelection } = this.props;
@@ -3922,7 +3900,6 @@ class Canvas extends Component {
       this.horizontalLines.length = 0;
     },
     resize: (currentWidth, currentHeight, nextWidth, nextHeight) => {
-      this.currentWidth = currentWidth;
       this.canvas.setWidth(nextWidth).setHeight(nextHeight);
       if (!this.workarea) {
         return;
@@ -3945,7 +3922,7 @@ class Canvas extends Component {
             obj.setCoords();
           }
         });
-        this.canvas.renderAll();
+        this.canvas.requestRenderAll();
         return;
       }
       let scaleX = nextWidth / this.workarea.width;
@@ -3969,7 +3946,7 @@ class Canvas extends Component {
           y: center.top
         };
         this.zoomHandlers.zoomToPoint(point, scaleX);
-        this.canvas.renderAll();
+        this.canvas.requestRenderAll();
         return;
       }
       const diffScaleX =
@@ -4003,7 +3980,7 @@ class Canvas extends Component {
           obj.setCoords();
         }
       });
-      this.canvas.renderAll();
+      this.canvas.requestRenderAll();
     },
     paste: e => {
       if (this.canvas.wrapperEl !== document.activeElement) {
@@ -4078,7 +4055,7 @@ class Canvas extends Component {
       } else if (e.keyCode === 27 && esc) {
         if (this.interactionMode === 'selection') {
           this.canvas.discardActiveObject();
-          this.canvas.renderAll();
+          this.canvas.requestRenderAll();
         } else if (this.interactionMode === 'polygon') {
           this.drawingHandlers.polygon.finish();
         } else if (this.interactionMode === 'line') {
@@ -4102,6 +4079,9 @@ class Canvas extends Component {
       }
     },
     onmousedown: e => {
+      if (e.target.localName !== 'canvas') {
+        return;
+      }
       this.contextmenuHandlers.hide();
     }
   };

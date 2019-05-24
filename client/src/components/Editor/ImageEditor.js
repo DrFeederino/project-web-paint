@@ -28,8 +28,6 @@ const propertiesToInclude = [
   'layout',
   'workareaWidth',
   'workareaHeight',
-  'videoLoadType',
-  'autoplay',
   'shadow',
   'muted',
   'loop',
@@ -475,6 +473,7 @@ class ImageEditor extends Component {
     this.setState({
       editing
     });
+    console.log(this.state);
   };
 
   render() {
@@ -546,7 +545,7 @@ class ImageEditor extends Component {
               canvasOption={{
                 width: canvasRect.width,
                 height: canvasRect.height,
-                backgroundColor: '#f3f3f3',
+                backgroundColor: '#333',
                 selection: true
               }}
               minZoom={30}
@@ -560,6 +559,9 @@ class ImageEditor extends Component {
               onTooltip={onTooltip}
               onLink={onLink}
               onContext={onContext}
+              color="#fff"
+              width={900}
+              height={900}
             />
           </div>
           <div className="rde-editor-footer-toolbar">
@@ -581,7 +583,7 @@ class ImageEditor extends Component {
         title={title}
         content={content}
         loading={loading}
-        className=""
+        className="rde-main"
       />
     );
   }
