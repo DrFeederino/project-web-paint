@@ -4,16 +4,21 @@
   display: -ms-flexbox;
   display: flex;
   flex: 1;
+  position: relative;
 }
 
 .rde-editor-side {
-  position: relative;
+  position: absolute;
+  top: 40px;
+  left: 0;
+  height: 100%;
   width: 240px;
   -webkit-box-shadow: 5px 0 5px -5px rgba(0, 0, 0, 0.5);
   -moz-box-shadow: 5px 0 5px -5px rgba(56, 41, 41, 0.5);
   box-shadow: 5px 0 5px -5px rgba(0, 0, 0, 0.5);
   z-index: 900;
   transition: width 0.5s ease;
+  background: #fff;
 }
 
 .rde-editor-side:hover .rde-track-vertical {
@@ -22,7 +27,7 @@
 }
 
 .rde-editor-side.minimize {
-  width: 47px;
+  width: 60px;
 }
 
 .rde-editor-side .ant-collapse-content-box {
@@ -58,24 +63,19 @@
   box-shadow: 0 0 11px rgba(33, 33, 33, 0.2);
 }
 
-.rde-editor-side-item:not(:last-child):after {
-  background-color: #e8e8e8;
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 1px;
-  content: '';
-}
-
 .rde-editor-canvas {
   position: relative;
   -webkit-box-flex: 1;
   -ms-flex: 1;
   flex: 1;
+  background: #999;
 }
-
+.rde-editor-workarea {
+  width: 600px;
+  height: 600px;
+  margin: 0 auto;
+}
 .rde-editor-canvas .rde-canvas {
-  position: absolute;
   width: 100%;
   height: 100%;
   top: 0;
@@ -137,10 +137,12 @@
 }
 
 .rde-editor-configurations {
-  position: relative;
+  position: absolute;
   overflow-y: auto;
   width: 400px;
+  top: 40px;
   right: 0;
+  height: 100%;
   -webkit-box-shadow: -5px 0 5px -5px rgba(0, 0, 0, 0.5);
   -moz-box-shadow: -5px 0 5px -5px rgba(0, 0, 0, 0.5);
   box-shadow: -5px 0 5px -5px rgba(0, 0, 0, 0.5);

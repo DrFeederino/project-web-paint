@@ -1,16 +1,16 @@
 {
   "MARKER": [
     {
-      "name": "Marker",
+      "name": "Icon",
       "description": "",
       "type": "marker",
       "icon": {
         "prefix": "fas",
-        "name": "map-marker-alt"
+        "name": "map-marker"
       },
       "option": {
         "type": "i-text",
-        "text": "\uf3c5",
+        "text": "\uf041",
         "fontFamily": "Font Awesome 5 Free",
         "fontWeight": 900,
         "fontSize": 60,
@@ -145,6 +145,47 @@
       "option": {
         "type": "arrow",
         "name": "New arrow"
+      }
+    }
+  ],
+  "BRUSH": [
+    {
+      "name": "Pen",
+      "description": "",
+      "type": "pen",
+      "icon": {
+        "prefix": "fas",
+        "name": "paint-brush"
+      },
+      "option": {
+        "type": "pen",
+        "name": "New pen"
+      }
+    },
+    {
+      "name": "Pencil",
+      "description": "",
+      "type": "pencil",
+      "icon": {
+        "prefix": "fas",
+        "name": "pencil-alt"
+      },
+      "option": {
+        "type": "polygon",
+        "name": "New pencil"
+      }
+    },
+    {
+      "name": "Fill",
+      "description": "",
+      "type": "fill",
+      "icon": {
+        "prefix": "fas",
+        "name": "fill-drip"
+      },
+      "option": {
+        "type": "fill",
+        "name": "New pencil"
       }
     }
   ]

@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { fabric } from 'fabric';
 import uuid from 'uuid/v4';
-import debounce from 'lodash/debounce';
 import interact from 'interactjs';
 import anime from 'animejs';
 import i18n from 'i18next';
@@ -142,6 +141,7 @@ class Canvas extends Component {
       defaultCanvasOption,
       canvasOption
     );
+    console.log(mergedCanvasOption);
     this.canvas = new fabric.Canvas(`canvas_${id}`, mergedCanvasOption);
     this.canvas.setBackgroundColor(
       mergedCanvasOption.backgroundColor,
@@ -149,12 +149,7 @@ class Canvas extends Component {
     );
     const mergedWorkareaOption = Object.assign(
       {},
-      {
-        ...defaultWorkareaOption,
-        width: width ? width : defaultCanvasOption.width,
-        height: height ? height : defaultCanvasOption.height,
-        color: color ? color : defaultCanvasOption.color
-      },
+      defaultWorkareaOption,
       workareaOption
     );
     this.workarea = new fabric.Image(null, mergedWorkareaOption);
@@ -3113,7 +3108,7 @@ class Canvas extends Component {
   };
 
   tooltipHandlers = {
-    show: debounce(async target => {
+    show: async target => {
       if (target.tooltip && target.tooltip.enabled) {
         while (this.tooltipRef.hasChildNodes()) {
           this.tooltipRef.removeChild(this.tooltipRef.firstChild);
@@ -3155,11 +3150,11 @@ class Canvas extends Component {
         this.tooltipRef.style.top = `${calcTop}px`;
         this.target = target;
       }
-    }, 100),
-    hide: debounce(target => {
+    },
+    hide: target => {
       this.target = null;
       this.tooltipRef.classList.add('tooltip-hidden');
-    }, 100)
+    }
   };
 
   contextmenuHandlers = {
@@ -4089,13 +4084,8 @@ class Canvas extends Component {
   render() {
     const { id } = this.state;
     return (
-      <div
-        ref={this.container}
-        id="rde-canvas"
-        className="rde-canvas"
-        style={{ width: '100%', height: '100%' }}
-      >
-        <canvas id={`canvas_${id}`} />
+      <div ref={this.container} id="rde-canvas" className="rde-canvas">
+        <canvas id={`canvas_${id}`} className="rde-editor-workarea" />
       </div>
     );
   }

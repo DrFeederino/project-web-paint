@@ -13,7 +13,7 @@ class ImageConfigurations extends Component {
     super(props);
     this.state = {
       activeKey: 'image',
-      collapse: false
+      collapse: true
     };
   }
   static propTypes = {
@@ -47,7 +47,7 @@ class ImageConfigurations extends Component {
           shape="circle"
           icon={collapse ? 'angle-double-left' : 'angle-double-right'}
           onClick={this.onCollapse}
-          style={{ position: 'absolute', top: 16, right: 16, zIndex: 1000 }}
+          style={{ position: 'absolute', top: 20, right: 20, zIndex: 1 }}
         />
         <Tabs
           tabPosition="right"

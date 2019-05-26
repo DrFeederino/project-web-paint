@@ -358,10 +358,11 @@ class ImageEditor extends Component {
       window.open(link.url);
     },
     onContext: (ref, event, target) => {
+      const { darkTheme } = this.state;
       if ((target && target.id === 'workarea') || !target) {
         const { layerX: left, layerY: top } = event;
         return (
-          <Menu theme="dark">
+          <Menu theme={darkTheme ? 'dark' : 'light'}>
             <Menu.SubMenu
               key="add"
               style={{ width: 120 }}
@@ -555,8 +556,6 @@ class ImageEditor extends Component {
                 this.canvasRef = c;
               }}
               canvasOption={{
-                width: canvasRect.width,
-                height: canvasRect.height,
                 backgroundColor: '#333',
                 selection: true
               }}
@@ -571,9 +570,8 @@ class ImageEditor extends Component {
               onTooltip={onTooltip}
               onLink={onLink}
               onContext={onContext}
-              color="#fff"
-              width={900}
-              height={900}
+              height={canvasRect.height}
+              width={canvasRect.width}
             />
           </div>
           <div className="rde-editor-footer-toolbar">

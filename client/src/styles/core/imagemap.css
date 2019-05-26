@@ -2,6 +2,8 @@
   display: flex;
   flex: 1;
   flex-direction: column;
+  width: 100%;
+  height: 100%;
 }
 .rde-editor-header-toolbar {
   background: rgba(0, 0, 0, 0.05);
@@ -98,6 +100,7 @@
 }
 .rde-editor-footer-toolbar {
   position: relative;
+  left: calc(100vw / 2 - 150px);
 }
 .rde-editor-footer-toolbar-interaction {
   color: #fff;
@@ -141,4 +144,28 @@
 .dark {
   background: #001529 !important;
   color: rgba(255, 255, 255, 0.65) !important;
+  background-color: #001529 !important;
+  color: rgba(255, 255, 255, 1) !important;
+}
+.dark span {
+  color: #fff;
+  background: #001529;
+}
+.dark div {
+  color: #fff;
+  background: #001529;
+}
+.dark > div {
+  box-shadow: 0 5px 10px -5px rgb(255, 255, 255);
+}
+.dark button {
+  color: #fff;
+  background: #001529;
+  border: 1px solid transparent;
+}
+.dark button[disabled] {
+  color: rgba(255, 255, 255, 0.5);
+}
+.dark .ant-collapse > .ant-collapse-item > .ant-collapse-header {
+  color: #fff;
 }
