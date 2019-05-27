@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'antd';
-
 import Icon from '../icon/Icon';
 import { FlexBox, FlexItem } from '../flex';
+import i18n from 'i18next';
 
 class CanvasList extends Component {
   static propTypes = {
@@ -42,6 +42,7 @@ class CanvasList extends Component {
 
   renderItem = () => {
     const { canvasRef, selectedItem } = this.props;
+    console.log(selectedItem);
     const idCropping = canvasRef ? canvasRef.interactionMode === 'crop' : false;
     return canvasRef
       ? canvasRef.canvas
@@ -61,41 +62,34 @@ class CanvasList extends Component {
             let prefix = 'fas';
             if (obj.type === 'i-text') {
               icon = 'map-marker-alt';
-              title = 'Marker';
+              title = i18n.t('editor.icon');
             } else if (obj.type === 'textbox') {
               icon = 'font';
-              title = 'Text';
+              title = i18n.t('editor.text');
             } else if (obj.type === 'image') {
               icon = 'image';
-              title = 'Image';
+              title = i18n.t('editor.image');
             } else if (obj.type === 'triangle') {
               icon = 'image';
-              title = 'Triangle';
+              title = i18n.t('editor.image');
             } else if (obj.type === 'rect') {
               icon = 'image';
-              title = 'Rect';
+              title = i18n.t('editor.rectangle');
             } else if (obj.type === 'circle') {
               icon = 'circle';
-              title = 'Circle';
+              title = i18n.t('editor.circle');
             } else if (obj.type === 'polygon') {
               icon = 'draw-polygon';
-              title = 'Polygon';
+              title = i18n.t('editor.polygon');
             } else if (obj.type === 'line') {
               icon = 'image';
-              title = 'Line';
-            } else if (obj.type === 'element') {
-              icon = 'html5';
-              title = 'Element';
-              prefix = 'fab';
-            } else if (obj.type === 'iframe') {
-              icon = 'window-maximize';
-              title = 'iframe';
-            } else if (obj.type === 'video') {
-              icon = 'video';
-              title = 'Video';
+              title = i18n.t('editor.line');
+            } else if (obj.type === 'path') {
+              icon = 'paint-brush';
+              title = i18n.t('editor.pen');
             } else {
               icon = 'image';
-              title = 'Default';
+              title = i18n.t('editor.default');
             }
             let className = 'rde-canvas-list-item';
             if (selectedItem && selectedItem.id === obj.id) {

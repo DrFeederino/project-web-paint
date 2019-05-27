@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Collapse, List } from 'antd';
-
+import i18n from 'i18next';
 import PropertyDefinition from './PropertyDefinition';
 import Scrollbar from '../../common/Scrollbar';
 import { FlexBox } from '../../flex';
@@ -34,7 +34,10 @@ class NodeProperties extends Component {
                 return (
                   <Panel
                     key={key}
-                    header={PropertyDefinition[selectedItem.type][key].title}
+                    header={i18n.t(
+                      'editor.' +
+                        PropertyDefinition[selectedItem.type][key].title
+                    )}
                     showArrow={showArrow}
                   >
                     {PropertyDefinition[selectedItem.type][

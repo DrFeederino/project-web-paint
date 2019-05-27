@@ -251,3 +251,34 @@ video {
 .dark .rde-content-layout-title-welcome-logout span {
   background: inherit;
 }
+
+.dark .ant-form-item-label > label {
+  color: #fff;
+}
+
+.dark .ant-collapse-content .ant-btn-circle {
+  border: 1px solid white;
+}
+.dark .ant-slider-handle {
+  background-color: #1890ff;
+  border: 1px solid #1890ff;
+}
+.dark .ant-collapse-content-box .ant-slider-step {
+  background: #fff;
+}
+
+.dark .ant-form-item-control-wrapper label {
+  color: #fff;
+}
+
+.dark .ant-form-item-control-wrapper .ant-radio-button-wrapper {
+  background: inherit;
+}
+
+.dark .ant-radio-button-wrapper-checked > span {
+  color: #1890ff;
+}
+
+.dark .ant-upload-drag-container > p {
+  color: inherit !important;
+}

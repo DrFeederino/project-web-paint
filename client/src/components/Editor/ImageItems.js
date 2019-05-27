@@ -285,7 +285,9 @@ class ImageItems extends Component {
           />
         </span>
         {this.state.collapse ? null : (
-          <div className="rde-editor-side-item-text">{item.name}</div>
+          <div className="rde-editor-side-item-text">
+            {i18n.t('editor.' + item.name.toLowerCase())}
+          </div>
         )}
       </div>
     ) : (
@@ -306,7 +308,9 @@ class ImageItems extends Component {
           />
         </span>
         {this.state.collapse ? null : (
-          <div className="rde-editor-side-item-text">{item.name}</div>
+          <div className="rde-editor-side-item-text">
+            {i18n.t('editor.' + item.name.toLowerCase())}
+          </div>
         )}
       </div>
     );

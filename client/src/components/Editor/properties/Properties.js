@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Collapse } from 'antd';
-
+import i18n from 'i18next';
 import PropertyDefinition from './PropertyDefinition';
 import Scrollbar from '../../common/Scrollbar';
 
@@ -24,7 +24,9 @@ class Properties extends Component {
                 return (
                   <Panel
                     key={key}
-                    header={PropertyDefinition.map[key].title}
+                    header={i18n.t(
+                      'editor.' + PropertyDefinition.map[key].title
+                    )}
                     showArrow={showArrow}
                   >
                     {PropertyDefinition.map[key].component.render(

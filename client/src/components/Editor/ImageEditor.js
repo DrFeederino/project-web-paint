@@ -96,7 +96,6 @@ class ImageEditor extends Component {
       this.canvasRef.handlers.select(target);
     },
     onSelect: target => {
-      console.log(target);
       if (
         target &&
         target.id &&
@@ -349,7 +348,6 @@ class ImageEditor extends Component {
   };
   share = () => {
     const image = this.canvasRef.handlers.getImage();
-    console.log('lol');
   };
   transformList = () => {
     return Object.values(this.state.descriptors).reduce(

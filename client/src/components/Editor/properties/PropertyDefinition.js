@@ -5,164 +5,163 @@ import ImageProperty from './ImageProperty';
 import TextProperty from './TextProperty';
 import MapProperty from './MapProperty';
 import ShadowProperty from './ShadowProperty';
-import i18n from '../../../locale/i18nClient';
 
 export default {
   map: {
     map: {
-      title: 'Canvas properties',
+      title: 'canvas-props',
       component: MapProperty
     },
     image: {
-      title: 'Image options',
+      title: 'image-props',
       component: ImageProperty
     }
   },
   group: {
     general: {
-      title: 'General',
+      title: 'general',
       component: GeneralProperty
     },
     shadow: {
-      title: 'Shadow',
+      title: 'shadow',
       component: ShadowProperty
     }
   },
   'i-text': {
     general: {
-      title: 'General',
+      title: 'general',
       component: GeneralProperty
     },
     marker: {
-      title: 'Marker',
+      title: 'icon',
       component: MarkerProperty
     },
     style: {
-      title: 'Style',
+      title: 'style',
       component: StyleProperty
     },
     shadow: {
-      title: 'Shadow',
+      title: 'shadow',
       component: ShadowProperty
     }
   },
   textbox: {
     general: {
-      title: 'General',
+      title: 'general',
       component: GeneralProperty
     },
     text: {
-      title: 'Text',
+      title: 'text',
       component: TextProperty
     },
     style: {
-      title: 'Style',
+      title: 'style',
       component: StyleProperty
     },
     shadow: {
-      title: 'Shadow',
+      title: 'shadow',
       component: ShadowProperty
     }
   },
   image: {
     general: {
-      title: 'General',
+      title: 'general',
       component: GeneralProperty
     },
     image: {
-      title: 'Image',
+      title: 'image',
       component: ImageProperty
     },
     style: {
-      title: 'Style',
+      title: 'style',
       component: StyleProperty
     },
     shadow: {
-      title: 'Shadow',
+      title: 'shadow',
       component: ShadowProperty
     }
   },
   triangle: {
     general: {
-      title: 'General',
+      title: 'general',
       component: GeneralProperty
     },
     style: {
-      title: 'Style',
+      title: 'style',
       component: StyleProperty
     },
     shadow: {
-      title: 'Shadow',
+      title: 'shadow',
       component: ShadowProperty
     }
   },
   rect: {
     general: {
-      title: 'General',
+      title: 'general',
       component: GeneralProperty
     },
     style: {
-      title: 'Style',
+      title: 'style',
       component: StyleProperty
     },
     shadow: {
-      title: 'Shadow',
+      title: 'shadow',
       component: ShadowProperty
     }
   },
   circle: {
     general: {
-      title: 'General',
+      title: 'general',
       component: GeneralProperty
     },
     style: {
-      title: 'Style',
+      title: 'style',
       component: StyleProperty
     },
     shadow: {
-      title: 'Shadow',
+      title: 'shadow',
       component: ShadowProperty
     }
   },
   polygon: {
     general: {
-      title: 'General',
+      title: 'general',
       component: GeneralProperty
     },
     style: {
-      title: 'Style',
+      title: 'style',
       component: StyleProperty
     },
     shadow: {
-      title: 'Shadow',
+      title: 'shadow',
       component: ShadowProperty
     }
   },
   line: {
     general: {
-      title: 'General',
+      title: 'general',
       component: GeneralProperty
     },
     style: {
-      title: 'Style',
+      title: 'style',
       component: StyleProperty
     },
     shadow: {
-      title: 'Shadow',
+      title: 'shadow',
       component: ShadowProperty
     }
   },
   arrow: {
     general: {
-      title: 'General',
+      title: 'general',
       component: GeneralProperty
     },
     style: {
-      title: 'Style',
+      title: 'style',
       component: StyleProperty
     },
     shadow: {
-      title: 'Shadow',
+      title: 'shadow',
       component: ShadowProperty
     }
   }

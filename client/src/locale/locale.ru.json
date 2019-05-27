@@ -1,6 +1,23 @@
 {
   "editor": {
-    "darkTheme": "Включить темную тему"
+    "darkTheme": "Включить темную тему",
+    "canvas-props": "Свойства холста",
+    "image-props": "Свойства изображения",
+    "icon": "Иконка",
+    "text": "Текст",
+    "image": "Изображение",
+    "triangle": "Треугольник",
+    "rectangle": "Прямоугольник",
+    "circle": "Круг",
+    "polygon": "Полигон",
+    "line": "Линия",
+    "arrow": "Стрелка",
+    "pen": "Ручка",
+    "pencil": "Карандаш",
+    "fill": "Заливка",
+    "general": "Общие",
+    "style": "Стиль",
+    "shadow": "Тень"
   },
   "imagemap": {
     "imagemap": "Редактор",
@@ -10,60 +27,21 @@
       "choose-icon": "Choose icon from Fontawesome",
       "search-icon": "Search {{length}} icons for..."
     },
-    "link": {
-      "link-enabled": "Link Enabled"
-    },
-    "tooltip": {
-      "tooltip-enabled": "Tooltip Enabled"
-    },
     "style": {
-      "fill-color": "Fill Color",
-      "stroke-color": "Stroke Color",
-      "stroke-width": "Stroke Width"
+      "fill-color": "Цвет заливки",
+      "stroke-color": "Цвет штриха",
+      "stroke-width": "Толщина штриха"
     },
     "shadow": {
-      "shadow-enabled": "Shadow Enabled",
-      "offset-x": "Offset X",
-      "offset-y": "Offset Y"
-    },
-    "animation": {
-      "animation-type": "Animation Type",
-      "none": "None",
-      "fade": "Fade",
-      "bounce": "Bounce",
-      "shake": "Shake",
-      "scaling": "Scaling",
-      "rotation": "Rotation",
-      "flash": "Flash",
-      "auto-play": "Auto Play",
-      "playback": "Playback",
-      "bounce-type": "Bounce Type",
-      "shake-type": "Shake Type"
-    },
-    "trigger": {
-      "trigger-enabled": "Trigger Enabled"
+      "shadow-enabled": "Отобразить тень",
+      "offset-x": "Сдвиг по Х",
+      "offset-y": "Сдвиг по Y"
     },
     "image": {
       "image-load-type": "Тип загружаемого файла",
       "file-upload": "Загрузка файла",
       "image-url": "URL изображения"
     }
-  },
-  "workflow": {
-    "workflow": "Workflow",
-    "workflow-list": "Workflow List",
-    "workflow-editor": "Workflow Editor",
-    "workflow-info": "Workflow Info",
-    "workflow-editing-confirm": "Workflow content has been modified. Do you want to do that anyway?",
-    "node-configuration": "Node Configuration",
-    "variables": "Global Parameters",
-    "variables-add": "Add Global Parameters",
-    "variables-modify": "Modify Global Parameters",
-    "virtual-button-execute-failed": "{{name}} execute failed",
-    "virtual-button-execute-success": "{{name}} execute success",
-    "validate-fields-error": "A node with the wrong setting exists.",
-    "node-name-required": "Please input node name",
-    "node-description-required": "Please input node description"
   },
   "action": {
     "image-share": "Поделиться изображением",
@@ -142,7 +120,7 @@
     "opacity": "Прозачность",
     "code": "Код",
     "layout": "Макет",
-    "fixed": "Фиксированный",
+    "fixed": "Фиксир.",
     "responsive": "Отзывчивый",
     "fullscreen": "Полный экран",
     "src": "Исходный код"

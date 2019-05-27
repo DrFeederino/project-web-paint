@@ -12,7 +12,7 @@ const i18nClient = i18n.use(LanguageDetector).init({
     escapeValue: false
   },
   react: {
-    wait: true, // set to true if you like to wait for loaded in every translated hoc
+    wait: false, // set to true if you like to wait for loaded in every translated hoc
     nsMode: 'default' // set it to fallback to let passed namespaces to translated hoc act as fallbacks
   },
   defaultNS: 'locale.ru',

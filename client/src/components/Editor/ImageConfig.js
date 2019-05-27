@@ -6,7 +6,6 @@ import Properties from './properties/Properties';
 import Icon from '../icon/Icon';
 import CommonButton from '../common/CommonButton';
 import CanvasList from '../canvas/CanvasList';
-import i18n from 'i18next';
 
 class ImageConfigurations extends Component {
   constructor(props) {
