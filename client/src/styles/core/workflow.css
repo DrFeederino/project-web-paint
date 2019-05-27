@@ -13,25 +13,21 @@
   left: 0;
   height: 100%;
   width: 240px;
-  -webkit-box-shadow: 5px 0 5px -5px rgba(0, 0, 0, 0.5);
-  -moz-box-shadow: 5px 0 5px -5px rgba(56, 41, 41, 0.5);
-  box-shadow: 5px 0 5px -5px rgba(0, 0, 0, 0.5);
-  z-index: 900;
+  -webkit-box-shadow: 0px 0 7px -2px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 0 7px -2px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0 7px -2px rgba(0, 0, 0, 0.75);
+  z-index: 1;
   transition: width 0.5s ease;
   background: #fff;
-}
-
-.rde-editor-side:hover .rde-track-vertical {
-  opacity: 1;
-  z-index: 9999;
+  overflow: hidden;
 }
 
 .rde-editor-side.minimize {
   width: 60px;
 }
 
-.rde-editor-side .ant-collapse-content-box {
-  padding: 0;
+.ant-collapse {
+  background: #fff;
 }
 
 .rde-editor-side-item {
@@ -60,7 +56,6 @@
 
 .rde-editor-side-item:hover {
   background: rgba(0, 0, 0, 0.2);
-  box-shadow: 0 0 11px rgba(33, 33, 33, 0.2);
 }
 
 .rde-editor-canvas {
@@ -68,30 +63,15 @@
   -webkit-box-flex: 1;
   -ms-flex: 1;
   flex: 1;
-  background: #999;
+  background: rgba(0, 0, 0, 0.15);
 }
-.rde-editor-workarea {
-  width: 600px;
-  height: 600px;
-  margin: 0 auto;
-}
-.rde-editor-canvas .rde-canvas {
+.rde-canvas {
   width: 100%;
   height: 100%;
-  top: 0;
-  left: 0;
-}
-
-.rde-editor-toolbar-debug {
-  background: rgba(0, 0, 0, 0.25);
-  position: absolute;
-  display: block;
-  top: 30px;
-  left: 40px;
-  border-radius: 12px;
-  -webkit-box-shadow: 0 5px 10px -5px rgba(0, 0, 0, 0.5);
-  -moz-box-shadow: 0 5px 10px -5px rgba(0, 0, 0, 0.5);
-  box-shadow: 0 5px 10px -5px rgba(0, 0, 0, 0.5);
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .rde-editor-toolbar-interaction {
@@ -119,18 +99,6 @@
   box-shadow: 0 5px 10px -5px rgba(0, 0, 0, 0.5);
 }
 
-.rde-editor-properties {
-  position: absolute;
-  overflow-y: auto;
-  width: 400px;
-  right: 0;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.85);
-  -webkit-box-shadow: -5px 0 5px -5px rgba(0, 0, 0, 0.5);
-  -moz-box-shadow: -5px 0 5px -5px rgba(0, 0, 0, 0.5);
-  box-shadow: -5px 0 5px -5px rgba(0, 0, 0, 0.5);
-}
-
 .rde-editor-properties:hover .rde-track-vertical {
   opacity: 1;
   z-index: 9999;
@@ -143,9 +111,9 @@
   top: 40px;
   right: 0;
   height: 100%;
-  -webkit-box-shadow: -5px 0 5px -5px rgba(0, 0, 0, 0.5);
-  -moz-box-shadow: -5px 0 5px -5px rgba(0, 0, 0, 0.5);
-  box-shadow: -5px 0 5px -5px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0px 0 7px -2px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 0 7px -2px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0 7px -2px rgba(0, 0, 0, 0.75);
   background: #fff;
   transition: width 0.5s ease;
 }
@@ -253,4 +221,24 @@
   cursor: pointer;
   background: rgba(0, 0, 0, 0.15);
   box-shadow: 0 0 11px rgba(33, 33, 33, 0.2);
+}
+
+.canvas-container {
+  -webkit-box-shadow: 0 0 10px -1px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0 0 10px -1px rgba(0, 0, 0, 0.75);
+  box-shadow: 0 0 10px -1px rgba(0, 0, 0, 0.75);
+}
+
+.dark .rde-editor-side-item:hover {
+  background: #d9d9d9;
+  color: #000;
+}
+
+.dark .rde-editor-side-item-icon {
+  background: inherit;
+  color: inherit;
+}
+.dark .rde-editor-side-item-text {
+  background: inherit;
+  color: inherit;
 }

@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import i18n from 'i18next';
 import { FlexBox, FlexItem } from '../flex';
 import { CommonButton } from '../common';
-import Icon from '../icon/Icon';
-import { Button } from 'antd';
+//import Icon from '../icon/Icon';
+import { Button, Switch, Icon } from 'antd';
 
 class ImageHeaderToolbar extends Component {
   static propTypes = {
@@ -12,10 +12,36 @@ class ImageHeaderToolbar extends Component {
   };
 
   render() {
-    const { canvasRef } = this.props;
+    const { canvasRef, share } = this.props;
     const isCropping = canvasRef ? canvasRef.interactionMode === 'crop' : false;
     return (
       <FlexBox className="rde-editor-header-toolbar-container" flex="1">
+        <FlexItem
+          className="rde-canvas-toolbar rde-canvas-toolbar-alignment"
+          style={{ paddingLeft: '4em' }}
+        >
+          <CommonButton
+            className="rde-action-btn"
+            shape="circle"
+            onClick={() => canvasRef.handlers.new()}
+            icon="file"
+            tooltipTitle={i18n.t('action.image-new')}
+          />
+          <CommonButton
+            className="rde-action-btn"
+            shape="circle"
+            onClick={() => share()}
+            icon="share-alt"
+            tooltipTitle={i18n.t('action.image-share')}
+          />
+          <CommonButton
+            className="rde-action-btn"
+            shape="circle"
+            onClick={() => canvasRef.handlers.saveCanvasImage()}
+            icon="save"
+            tooltipTitle={i18n.t('action.image-save')}
+          />
+        </FlexItem>
         <FlexItem className="rde-canvas-toolbar rde-canvas-toolbar-alignment">
           <CommonButton
             className="rde-action-btn"
@@ -140,13 +166,26 @@ class ImageHeaderToolbar extends Component {
         </FlexItem>
         <FlexItem className="rde-canvas-toolbar rde-canvas-toolbar-history">
           <Button className="rde-action-btn" disabled={isCropping}>
-            <Icon name="undo-alt" style={{ marginRight: 8 }} />
-            {'Undo'}
+            <Icon type="undo" style={{ marginRight: 8 }} />
+            {i18n.t('action.undo')}
           </Button>
           <Button className="rde-action-btn" disabled={isCropping}>
-            {'Redo'}
-            <Icon name="redo-alt" style={{ marginLeft: 8 }} />
+            {i18n.t('action.redo')}
+            <Icon type="redo" style={{ marginLeft: 8 }} />
           </Button>
+        </FlexItem>
+        <FlexItem
+          className="rde-canvas-toolbar rde-canvas-dark-theme"
+          style={{ paddingRight: '4em' }}
+        >
+          <span style={{ padding: '0 1em 0 1em' }}>
+            {i18n.t('editor.darkTheme')}
+          </span>
+          <Switch
+            checkedChildren={<Icon type="check" />}
+            unCheckedChildren={<Icon type="close" />}
+            onChange={this.props.onChange}
+          />
         </FlexItem>
       </FlexBox>
     );

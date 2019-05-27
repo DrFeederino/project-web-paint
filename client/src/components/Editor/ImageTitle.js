@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import { FlexBox, FlexItem } from '../flex';
 import i18n from 'i18next';
-import { Switch, Icon } from 'antd';
+import { Button, Icon } from 'antd';
 
 class ImageTitle extends Component {
   welcomeUser = name => i18n.t('user.welcome') + name + '!';
   render() {
-    const { title, action } = this.props;
+    const { title, isDark } = this.props;
     return (
       <FlexBox
-        className="rde-content-layout-title"
+        className={'rde-content-layout-title' + (isDark ? ' dark' : '')}
         alignItems="center"
         flexWrap="wrap"
       >
@@ -22,29 +22,30 @@ class ImageTitle extends Component {
             {title instanceof String ? <h3>{title}</h3> : title}
           </FlexBox>
         </FlexItem>
-        <FlexItem flex="1 1 auto">
+        <FlexItem className="rde-content-layout-title-welcome-logout">
           <FlexBox
-            className="rde-content-layout-title-title"
-            justifyContent="flex-start"
-            alignItems="center"
-          >
-            {this.welcomeUser('tester')}
-          </FlexBox>
-        </FlexItem>
-        <span style={{ marginRight: '5px' }}>{i18n.t('editor.darkTheme')}</span>
-        <Switch
-          checkedChildren={<Icon type="check" />}
-          unCheckedChildren={<Icon type="close" />}
-          onChange={this.props.onChange}
-        />
-        <FlexItem>
-          <FlexBox
-            className="rde-content-layout-title-action"
+            className="rde-content-layout-title-welcome"
             justifyContent="flex-end"
             alignItems="center"
           >
-            {action}
+            {this.welcomeUser('tester')}
+            <Icon
+              type="user"
+              style={{
+                backgroundColor: '#000',
+                color: '#fff',
+                borderRadius: '50%',
+                margin: '0 0 0 1em'
+              }}
+            />
           </FlexBox>
+          <Button
+            type="primary"
+            icon="logout"
+            onClick={() => console.log('log out')}
+          >
+            {i18n.t('user.logout')}
+          </Button>
         </FlexItem>
       </FlexBox>
     );

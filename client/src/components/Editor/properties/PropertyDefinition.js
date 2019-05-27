@@ -5,15 +5,16 @@ import ImageProperty from './ImageProperty';
 import TextProperty from './TextProperty';
 import MapProperty from './MapProperty';
 import ShadowProperty from './ShadowProperty';
+import i18n from '../../../locale/i18nClient';
 
 export default {
   map: {
     map: {
-      title: 'Map',
+      title: 'Canvas properties',
       component: MapProperty
     },
     image: {
-      title: 'Image',
+      title: 'Image options',
       component: ImageProperty
     }
   },

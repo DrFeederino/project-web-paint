@@ -19,7 +19,7 @@ class ImageItems extends Component {
     this.state = {
       canvasRef: props.canvasRef,
       descriptors: props.descriptors,
-      collapse: false,
+      collapse: true,
       textSearch: '',
       filteredDescriptors: []
     };
@@ -132,7 +132,7 @@ class ImageItems extends Component {
       if (canvasRef.workarea.layout === 'responsive') {
         if (!canvasRef.workarea._element) {
           notification.warn({
-            message: 'Please your select background image'
+            message: 'Please select your background image'
           });
           return;
         }
@@ -145,6 +145,10 @@ class ImageItems extends Component {
         canvasRef.drawingHandlers.line.init();
       } else if (item.option.type === 'arrow') {
         canvasRef.drawingHandlers.arrow.init();
+      } else if (item.option.type === 'Pencil') {
+        canvasRef.drawingHandlers.pencil.init();
+      } else if (item.option.type === 'Pen') {
+        canvasRef.drawingHandlers.pen.init();
       } else {
         canvasRef.drawingHandlers.polygon.init();
       }
@@ -254,7 +258,11 @@ class ImageItems extends Component {
   renderItems = items => {
     if (!items.map) return;
     return (
-      <FlexBox flexWrap="wrap" flexDirection="column" style={{ width: '100%' }}>
+      <FlexBox
+        flexWrap="wrap"
+        flexDirection="column"
+        style={{ width: '100%', overflow: 'hidden' }}
+      >
         {items.map(item => this.renderItem(item))}
       </FlexBox>
     );

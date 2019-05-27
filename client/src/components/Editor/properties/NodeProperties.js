@@ -24,7 +24,6 @@ class NodeProperties extends Component {
 
   render() {
     const { canvasRef, selectedItem, form } = this.props;
-    console.log(this.props);
     const showArrow = false;
     return (
       <Scrollbar>
@@ -45,17 +44,7 @@ class NodeProperties extends Component {
                 );
               })
             ) : (
-              <FlexBox
-                justifyContent="center"
-                alignItems="center"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  color: 'rgba(0, 0, 0, 0.45)',
-                  fontSie: 16,
-                  padding: 16
-                }}
-              >
+              <FlexBox justifyContent="center" alignItems="center">
                 <List />
               </FlexBox>
             )}

@@ -19,7 +19,7 @@ class Properties extends Component {
       return (
         <Scrollbar>
           <Form layout="horizontal">
-            <Collapse bordered={true}>
+            <Collapse bordered={false}>
               {Object.keys(PropertyDefinition.map).map(key => {
                 return (
                   <Panel

@@ -10,7 +10,6 @@ const fonts = Fonts.getFonts();
 export default {
   render(canvasRef, form, data) {
     const { getFieldDecorator } = form;
-    console.log(data.textAlign);
     return (
       <React.Fragment>
         <Col span={16}>

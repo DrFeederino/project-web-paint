@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { ResizeSensor } from 'css-element-queries';
 import { Badge, Button, Menu } from 'antd';
-import debounce from 'lodash/debounce';
 import i18n from 'i18next';
 
 import Canvas from '../canvas/Canvas';
@@ -14,7 +12,6 @@ import ImageConfigurations from './ImageConfig';
 import '@fortawesome/fontawesome-free/css/all.css';
 import '../../styles/index.css';
 import Container from '../common/Container';
-import CommonButton from '../common/CommonButton';
 
 const propertiesToInclude = [
   'id',
@@ -42,33 +39,7 @@ const propertiesToInclude = [
 
 const defaultOptions = {
   fill: 'rgba(0, 0, 0, 1)',
-  stroke: 'rgba(255, 255, 255, 0)',
-  resource: {},
-  link: {
-    enabled: false,
-    type: 'resource',
-    state: 'new',
-    dashboard: {}
-  },
-  tooltip: {
-    enabled: true,
-    type: 'resource',
-    template: '<div>{{message.name}}</div>'
-  },
-  animation: {
-    type: 'none',
-    loop: true,
-    autoplay: true,
-    delay: 100,
-    duration: 1000
-  },
-  userProperty: {},
-  trigger: {
-    enabled: false,
-    type: 'alarm',
-    script: 'return message.value > 0;',
-    effect: 'style'
-  }
+  stroke: 'rgba(255, 255, 255, 0)'
 };
 
 class ImageEditor extends Component {
@@ -78,8 +49,8 @@ class ImageEditor extends Component {
       selectedItem: null,
       zoomRatio: 1,
       canvasRect: {
-        width: 300,
-        height: 150
+        width: 0,
+        height: 0
       },
       loading: false,
       editing: false,
@@ -101,23 +72,12 @@ class ImageEditor extends Component {
         }
       );
     });
-    this.resizeSensor = new ResizeSensor(this.container, () => {
-      const { canvasRect: currentCanvasRect } = this.state;
-      const canvasRect = Object.assign({}, currentCanvasRect, {
-        width: this.container.clientWidth,
-        height: this.container.clientHeight
-      });
-      this.setState({
-        canvasRect
-      });
+    const { canvasRect: currentCanvasRect } = this.state;
+    const canvasRect = Object.assign({}, currentCanvasRect, {
+      width: 600,
+      height: 600
     });
-    this.setState({
-      canvasRect: {
-        width: this.container.clientWidth,
-        height: this.container.clientHeight
-      },
-      selectedItem: null
-    });
+    this.setState({ canvasRect });
   }
   onChangeTheme = () => {
     this.setState({
@@ -136,6 +96,7 @@ class ImageEditor extends Component {
       this.canvasRef.handlers.select(target);
     },
     onSelect: target => {
+      console.log(target);
       if (
         target &&
         target.id &&
@@ -148,54 +109,17 @@ class ImageEditor extends Component {
         ) {
           return;
         }
-        this.canvasRef.handlers.getObjects().forEach(obj => {
-          if (obj) {
-            this.canvasRef.animationHandlers.initAnimation(obj, true);
-          }
-        });
         this.setState({
           selectedItem: target
         });
         return;
       }
-      this.canvasRef.handlers.getObjects().forEach(obj => {
-        if (obj) {
-          this.canvasRef.animationHandlers.initAnimation(obj, true);
-        }
-      });
-      this.setState({
-        selectedItem: null
-      });
     },
     onRemove: target => {
       if (!this.state.editing) {
         this.changeEditing(true);
       }
       this.canvasHandlers.onSelect(null);
-    },
-    onModified: debounce(target => {
-      if (!this.state.editing) {
-        this.changeEditing(true);
-      }
-      if (
-        target &&
-        target.id &&
-        target.id !== 'workarea' &&
-        target.type !== 'activeSelection'
-      ) {
-        this.setState({
-          selectedItem: target
-        });
-        return;
-      }
-      this.setState({
-        selectedItem: null
-      });
-    }, 300),
-    onZoom: zoom => {
-      this.setState({
-        zoomRatio: zoom
-      });
     },
     onChange: (selectedItem, changedValues, allValues) => {
       if (!this.state.editing) {
@@ -241,29 +165,6 @@ class ImageEditor extends Component {
         }
         return;
       }
-      if (changedKey === 'link') {
-        const link = Object.assign({}, defaultOptions.link, allValues.link);
-        this.canvasRef.handlers.set(changedKey, link);
-        return;
-      }
-      if (changedKey === 'tooltip') {
-        const tooltip = Object.assign(
-          {},
-          defaultOptions.tooltip,
-          allValues.tooltip
-        );
-        this.canvasRef.handlers.set(changedKey, tooltip);
-        return;
-      }
-      if (changedKey === 'animation') {
-        const animation = Object.assign(
-          {},
-          defaultOptions.animation,
-          allValues.animation
-        );
-        this.canvasRef.handlers.set(changedKey, animation);
-        return;
-      }
       if (changedKey === 'icon') {
         const { unicode, styles } = changedValue[Object.keys(changedValue)[0]];
         const uni = parseInt(unicode, 16);
@@ -302,15 +203,6 @@ class ImageEditor extends Component {
       }
       if (changedKey === 'textAlign') {
         this.canvasRef.handlers.set(changedKey, Object.keys(changedValue)[0]);
-        return;
-      }
-      if (changedKey === 'trigger') {
-        const trigger = Object.assign(
-          {},
-          defaultOptions.trigger,
-          allValues.trigger
-        );
-        this.canvasRef.handlers.set(changedKey, trigger);
         return;
       }
       this.canvasRef.handlers.set(changedKey, changedValue);
@@ -455,13 +347,10 @@ class ImageEditor extends Component {
       );
     }
   };
-
-  handlers = {
-    onSaveImage: () => {
-      this.canvasRef.handlers.saveCanvasImage();
-    }
+  share = () => {
+    const image = this.canvasRef.handlers.getImage();
+    console.log('lol');
   };
-
   transformList = () => {
     return Object.values(this.state.descriptors).reduce(
       (prev, curr) => prev.concat(curr),
@@ -479,9 +368,7 @@ class ImageEditor extends Component {
     this.setState({
       editing
     });
-    console.log(this.state);
   };
-
   render() {
     const {
       selectedItem,
@@ -492,6 +379,7 @@ class ImageEditor extends Component {
       descriptors,
       darkTheme
     } = this.state;
+    console.log(selectedItem);
     const {
       onAdd,
       onRemove,
@@ -503,31 +391,12 @@ class ImageEditor extends Component {
       onLink,
       onContext
     } = this.canvasHandlers;
-    const { onSaveImage } = this.handlers;
-    const action = (
-      <React.Fragment>
-        <CommonButton
-          className="rde-action-btn"
-          shape="circle"
-          icon="save"
-          tooltipTitle={i18n.t('action.image-save')}
-          onClick={onSaveImage}
-          tooltipPlacement="bottomRight"
-        />
-      </React.Fragment>
-    );
     let titleContent = (
       <React.Fragment>
         <span>{i18n.t('imagemap.imagemap-editor')}</span>
       </React.Fragment>
     );
-    let title = (
-      <ImageTitle
-        title={titleContent}
-        action={action}
-        onChange={this.onChangeTheme}
-      />
-    );
+    let title = <ImageTitle title={titleContent} isDark={darkTheme} />;
     let content = (
       <div className={'rde-editor' + (darkTheme ? ' dark' : '')}>
         <ImageItems
@@ -543,6 +412,9 @@ class ImageEditor extends Component {
               canvasRef={this.canvasRef}
               selectedItem={selectedItem}
               onSelect={onSelect}
+              isDark={darkTheme}
+              onChange={this.onChangeTheme}
+              share={this.share}
             />
           </div>
           <div
@@ -556,8 +428,10 @@ class ImageEditor extends Component {
                 this.canvasRef = c;
               }}
               canvasOption={{
-                backgroundColor: '#333',
-                selection: true
+                backgroundColor: '#fff',
+                selection: true,
+                height: canvasRect.height,
+                width: canvasRect.width
               }}
               minZoom={30}
               defaultOptions={defaultOptions}
@@ -570,8 +444,6 @@ class ImageEditor extends Component {
               onTooltip={onTooltip}
               onLink={onLink}
               onContext={onContext}
-              height={canvasRect.height}
-              width={canvasRect.width}
             />
           </div>
           <div className="rde-editor-footer-toolbar">

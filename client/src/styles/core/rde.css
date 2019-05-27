@@ -62,13 +62,13 @@ video {
   height: 40px;
   background: #fff;
   line-height: 40px;
+  padding: 0 4em 0 4em;
 }
 
 .rde-content-layout-title-title {
   justify-content: flex-start;
-  margin-left: 30px;
-  font-size: 20px;
-  color: rgba(0, 0, 0, 0.65);
+  font-size: 1.5em;
+  color: #000;
   font-weight: 500;
 }
 
@@ -76,12 +76,16 @@ video {
   line-height: 35px;
 }
 
-.rde-content-layout-title-content {
-  margin-left: 60px;
+.rde-content-layout-title-welcome-logout {
+  flex: 1 1 auto;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  font-size: 1.25em;
 }
 
-.rde-content-layout-title-action {
-  margin-right: 12px;
+.rde-content-layout-title-welcome {
+  padding-right: 2em;
 }
 
 .rde-content-layout-main {
@@ -148,11 +152,6 @@ video {
 .ant-btn.rde-action-button:focus {
   color: unset;
   background: unset;
-  border-color: transparent;
-}
-
-.ant-btn.rde-action-button:hover {
-  background: rgba(219, 234, 251, 0.85);
   border-color: transparent;
 }
 
@@ -247,4 +246,8 @@ video {
   top: 2px;
   border-radius: 3px;
   opacity: 0;
+}
+
+.dark .rde-content-layout-title-welcome-logout span {
+  background: inherit;
 }

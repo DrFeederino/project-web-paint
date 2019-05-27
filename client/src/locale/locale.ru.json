@@ -66,6 +66,10 @@
     "node-description-required": "Please input node description"
   },
   "action": {
+    "image-share": "Поделиться изображением",
+    "image-new": "Создать",
+    "undo": "Отмена",
+    "redo": "Повторить",
     "selection": "Режим выбора(Q)",
     "grab": "Режим захвата(W)",
     "zoom-in": "Приблизить",
@@ -148,6 +152,7 @@
     "already-property": "Уже существует {{arg}}."
   },
   "user": {
-    "welcome": "Добро пожаловать, "
+    "welcome": "Добро пожаловать, ",
+    "logout": "Выйти"
   }
 }

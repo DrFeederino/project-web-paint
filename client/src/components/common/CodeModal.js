@@ -59,7 +59,7 @@ class CodeModal extends Component {
     const { onOk, onCancel, onClick } = this.handlers;
     const { form } = this.props;
     const { getFieldDecorator } = form;
-    const { code, visible, tempCode } = this.state;
+    const { code, visible } = this.state;
     const label = (
       <React.Fragment>
         <span style={{ marginRight: 8 }}>{i18n.t('common.code')}</span>
@@ -67,9 +67,6 @@ class CodeModal extends Component {
           <Icon name="edit" />
         </Button>
       </React.Fragment>
-    );
-    const codeLabel = (
-      <span>Code (value, styles, animations, userProperty)</span>
     );
     return (
       <React.Fragment>

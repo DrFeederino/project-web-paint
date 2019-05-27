@@ -154,7 +154,7 @@ class CanvasList extends Component {
 
   render() {
     return (
-      <FlexBox style={{ height: '100%' }} flexDirection="column">
+      <FlexBox style={{ height: '100%', width: '100%' }} flexDirection="column">
         {this.renderActions()}
         <div className="rde-canvas-list-items">{this.renderItem()}</div>
       </FlexBox>

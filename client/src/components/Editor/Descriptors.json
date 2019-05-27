@@ -152,27 +152,25 @@
     {
       "name": "Pen",
       "description": "",
-      "type": "pen",
+      "type": "drawing",
       "icon": {
         "prefix": "fas",
         "name": "paint-brush"
       },
       "option": {
-        "type": "pen",
-        "name": "New pen"
+        "type": "Pencil"
       }
     },
     {
       "name": "Pencil",
       "description": "",
-      "type": "pencil",
+      "type": "drawing",
       "icon": {
         "prefix": "fas",
         "name": "pencil-alt"
       },
       "option": {
-        "type": "polygon",
-        "name": "New pencil"
+        "type": "Pen"
       }
     },
     {
@@ -182,10 +180,6 @@
       "icon": {
         "prefix": "fas",
         "name": "fill-drip"
-      },
-      "option": {
-        "type": "fill",
-        "name": "New pencil"
       }
     }
   ]

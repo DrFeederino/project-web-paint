@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { fabric } from 'fabric';
 import uuid from 'uuid/v4';
-import interact from 'interactjs';
 import anime from 'animejs';
 import i18n from 'i18next';
 import CanvasObjects from './CanvasObjects';
@@ -14,23 +13,24 @@ import '../../styles/core/contextmenu.css';
 
 const defaultCanvasOption = {
   preserveObjectStacking: true,
-  width: 300,
-  height: 150,
+  width: 500,
+  height: 500,
   selection: true,
   defaultCursor: 'default',
-  backgroundColor: '#fff'
+  backgroundColor: '#fff',
+  isDrawingMode: false
 };
 
 const defaultWorkareaOption = {
-  width: 600,
-  height: 400,
-  workareaWidth: 600,
-  workareaHeight: 400,
-  lockScalingX: true,
-  lockScalingY: true,
+  width: defaultCanvasOption.width,
+  height: defaultCanvasOption.height,
+  workareaWidth: defaultCanvasOption.width,
+  workareaHeight: defaultCanvasOption.height,
+  lockScalingX: false,
+  lockScalingY: false,
   scaleX: 1,
   scaleY: 1,
-  backgroundColor: '#fff',
+  backgroundColor: defaultCanvasOption.backgroundColor,
   hasBorders: true,
   hasControls: false,
   selectable: false,
@@ -131,17 +131,13 @@ class Canvas extends Component {
       editable,
       canvasOption,
       workareaOption,
-      guidelineOption,
-      width,
-      height,
-      color
+      guidelineOption
     } = this.props;
     const mergedCanvasOption = Object.assign(
       {},
       defaultCanvasOption,
       canvasOption
     );
-    console.log(mergedCanvasOption);
     this.canvas = new fabric.Canvas(`canvas_${id}`, mergedCanvasOption);
     this.canvas.setBackgroundColor(
       mergedCanvasOption.backgroundColor,
@@ -156,6 +152,8 @@ class Canvas extends Component {
     this.canvas.add(this.workarea);
     this.objects.push(this.workarea);
     this.canvas.centerObject(this.workarea);
+    this.canvas.setWidth(this.props.canvasOption.width);
+    this.canvas.setHeight(this.props.canvasOption.height);
     this.canvas.requestRenderAll();
     this.gridHandlers.init();
     const {
@@ -360,6 +358,12 @@ class Canvas extends Component {
 
   /* eslint-disable react/sort-comp, react/prop-types */
   handlers = {
+    new: () => {
+      this.canvas.clear();
+      this.canvas.setHeight(defaultCanvasOption.height);
+      this.canvas.setWidth(defaultCanvasOption.width);
+      this.canvas.setBackgroundColor(defaultCanvasOption.backgroundColor);
+    },
     centerObject: (obj, centered) => {
       if (centered) {
         this.canvas.centerObject(obj);
@@ -435,9 +439,6 @@ class Canvas extends Component {
       if (obj.type === 'image') {
         this.handlers.addImage(newOption, centered, loaded);
         return;
-      }
-      if (obj.superType === 'link') {
-        return this.linkHandlers.create(newOption);
       }
       createdObj = this.fabricObjects[obj.type].create(newOption);
       this.canvas.add(createdObj);
@@ -526,7 +527,6 @@ class Canvas extends Component {
       reader.readAsDataURL(file);
     },
     addElement: (obj, centered = true, loaded = false) => {
-      console.log('add element is fired');
       const { canvas } = this;
       const { editable } = this.props;
       const { src, file, code, ...otherOption } = obj;
@@ -556,7 +556,6 @@ class Canvas extends Component {
       }
     },
     remove: () => {
-      console.log('remove was fired');
       const activeObject = this.canvas.getActiveObject();
       if (!activeObject) {
         return false;
@@ -677,7 +676,6 @@ class Canvas extends Component {
             onAdd(cloned);
           }
           this.canvas.setActiveObject(cloned);
-          this.portHandlers.createPort(cloned);
           this.canvas.requestRenderAll();
         }, propertiesToInclude);
       }
@@ -1156,6 +1154,15 @@ class Canvas extends Component {
         this.objects.splice(object.index, 1);
       }
     },
+    getImage: (
+      option = {
+        name: i18n.t('action.save-file-name'),
+        format: 'png',
+        quality: 1
+      }
+    ) => {
+      return this.canvas.toDataURL();
+    },
     saveCanvasImage: (
       option = {
         name: i18n.t('action.save-file-name'),
@@ -1535,420 +1542,6 @@ class Canvas extends Component {
     }
   };
 
-  animationHandlers = {
-    play: (id, hasControls) => {
-      const findObject = this.handlers.findById(id);
-      if (!findObject) {
-        return;
-      }
-      if (findObject.anime) {
-        findObject.anime.restart();
-        return;
-      }
-      if (findObject.animation.type === 'none') {
-        return;
-      }
-      const instance = this.animationHandlers.getAnimation(
-        findObject,
-        hasControls
-      );
-      if (instance) {
-        findObject.set('anime', instance);
-        findObject.set({
-          hasControls: false,
-          lockMovementX: true,
-          lockMovementY: true,
-          hoverCursor: 'pointer'
-        });
-        this.canvas.requestRenderAll();
-        instance.play();
-      }
-    },
-    pause: id => {
-      const findObject = this.handlers.findById(id);
-      if (!findObject) {
-        return;
-      }
-      findObject.anime.pause();
-    },
-    stop: (id, hasControls = true) => {
-      const findObject = this.handlers.findById(id);
-      if (!findObject) {
-        return;
-      }
-      this.animationHandlers.initAnimation(findObject, hasControls);
-    },
-    restart: id => {
-      const findObject = this.handlers.findById(id);
-      if (!findObject) {
-        return;
-      }
-      if (!findObject.anime) {
-        return;
-      }
-      this.animationHandlers.stop(id);
-      this.animationHandlers.play(id);
-    },
-    initAnimation: (obj, hasControls = true) => {
-      if (!obj.anime) {
-        return;
-      }
-      let option;
-      if (this.props.editable) {
-        option = {
-          anime: null,
-          hasControls,
-          lockMovementX: !hasControls,
-          lockMovementY: !hasControls,
-          hoverCursor: hasControls ? 'move' : 'pointer'
-        };
-      } else {
-        option = {
-          anime: null,
-          hasControls: false,
-          lockMovementX: true,
-          lockMovementY: true,
-          hoverCursor: 'pointer'
-        };
-      }
-      anime.remove(obj);
-      const { type } = obj.animation;
-      if (type === 'fade') {
-        Object.assign(option, {
-          opacity: obj.originOpacity,
-          originOpacity: null
-        });
-      } else if (type === 'bounce') {
-        if (obj.animation.bounce === 'vertical') {
-          Object.assign(option, {
-            top: obj.originTop,
-            originTop: null
-          });
-        } else {
-          Object.assign(option, {
-            left: obj.originLeft,
-            originLeft: null
-          });
-        }
-      } else if (type === 'shake') {
-        if (obj.animation.shake === 'vertical') {
-          Object.assign(option, {
-            top: obj.originTop,
-            originTop: null
-          });
-        } else {
-          Object.assign(option, {
-            left: obj.originLeft,
-            originLeft: null
-          });
-        }
-      } else if (type === 'scaling') {
-        Object.assign(option, {
-          scaleX: obj.originScaleX,
-          scaleY: obj.originScaleY,
-          originScaleX: null,
-          originScaleY: null
-        });
-      } else if (type === 'rotation') {
-        Object.assign(option, {
-          angle: obj.originAngle,
-          originAngle: null
-        });
-      } else if (type === 'flash') {
-        Object.assign(option, {
-          fill: obj.originFill,
-          stroke: obj.originStroke,
-          originFill: null,
-          origniStroke: null
-        });
-      } else {
-        console.warn('Not supported type.');
-      }
-      obj.set(option);
-      this.canvas.requestRenderAll();
-    },
-    getAnimation: (obj, hasControls) => {
-      const {
-        delay = 100,
-        duration = 100,
-        autoplay = true,
-        loop = true,
-        type,
-        ...other
-      } = obj.animation;
-      const option = {
-        targets: obj,
-        delay,
-        loop,
-        autoplay,
-        duration,
-        direction: 'alternate',
-        begin: () => {
-          obj.set({
-            hasControls: false,
-            lockMovementX: true,
-            lockMovementY: true,
-            hoverCursor: 'pointer'
-          });
-          this.canvas.requestRenderAll();
-        },
-        update: e => {
-          if (type === 'flash') {
-            // I do not know why it works. Magic code...
-            const fill = e.animations[0].currentValue;
-            const stroke = e.animations[1].currentValue;
-            obj.set('fill', '');
-            obj.set('fill', fill);
-            obj.set('stroke', stroke);
-          }
-          obj.setCoords();
-          this.canvas.requestRenderAll();
-        },
-        complete: () => {
-          this.animationHandlers.initAnimation(obj, hasControls);
-        }
-      };
-      if (type === 'fade') {
-        const { opacity = 0 } = other;
-        obj.set('originOpacity', obj.opacity);
-        Object.assign(option, {
-          opacity,
-          easing: 'easeInQuad'
-        });
-      } else if (type === 'bounce') {
-        const { offset = 1 } = other;
-        if (other.bounce === 'vertical') {
-          obj.set('originTop', obj.top);
-          Object.assign(option, {
-            top: obj.top + offset,
-            easing: 'easeInQuad'
-          });
-        } else {
-          obj.set('originLeft', obj.left);
-          Object.assign(option, {
-            left: obj.left + offset,
-            easing: 'easeInQuad'
-          });
-        }
-      } else if (type === 'shake') {
-        const { offset = 1 } = other;
-        if (other.shake === 'vertical') {
-          obj.set('originTop', obj.top);
-          Object.assign(option, {
-            top: obj.top + offset,
-            delay: 0,
-            elasticity: 1000,
-            duration: 500
-          });
-        } else {
-          obj.set('originLeft', obj.left);
-          Object.assign(option, {
-            left: obj.left + offset,
-            delay: 0,
-            elasticity: 1000,
-            duration: 500
-          });
-        }
-      } else if (type === 'scaling') {
-        const { scale = 1 } = other;
-        obj.set('originScaleX', obj.scaleX);
-        obj.set('originScaleY', obj.scaleY);
-        const scaleX = obj.scaleX * scale;
-        const scaleY = obj.scaleY * scale;
-        Object.assign(option, {
-          scaleX,
-          scaleY,
-          easing: 'easeInQuad'
-        });
-      } else if (type === 'rotation') {
-        obj.set('originAngle', obj.angle);
-        Object.assign(option, {
-          angle: other.angle,
-          easing: 'easeInQuad'
-        });
-      } else if (type === 'flash') {
-        const { fill = obj.fill, stroke = obj.stroke } = other;
-        obj.set('originFill', obj.fill);
-        obj.set('originStroke', obj.stroke);
-        Object.assign(option, {
-          fill,
-          stroke,
-          easing: 'easeInQuad'
-        });
-      } else {
-        console.warn('Not supported type.');
-        return;
-      }
-      return anime(option);
-    }
-  };
-
-  elementHandlers = {
-    setById: (id, source) => {
-      const findObject = this.handlers.findById(id);
-      if (!findObject) {
-        return;
-      }
-    },
-    set: (obj, source) => {
-      this.elementHandlers.createElement(obj, source);
-    },
-    createElement: (obj, code) => {
-      obj.set('code', code);
-      const { editable } = this.props;
-      const { left, top } = obj.getBoundingRect();
-      const { id, scaleX, scaleY, angle } = obj;
-      if (editable) {
-        this.elementHandlers.removeById(id);
-        this.elementHandlers.removeStyleById(id);
-        this.elementHandlers.removeScriptById(id);
-      }
-      const zoom = this.canvas.getZoom();
-      const width = obj.width * scaleX * zoom;
-      const height = obj.height * scaleY * zoom;
-      const element = fabric.util.makeElement('div', {
-        id: `${id}_container`,
-        style: `transform: rotate(${angle}deg);
-                        width: ${width}px;
-                        height: ${height}px;
-                        left: ${left}px;
-                        top: ${top}px;
-                        position: absolute;`
-      });
-      const { html, css, js } = code;
-      if (code.css && code.css.length) {
-        const styleElement = document.createElement('style');
-        styleElement.id = `${id}_style`;
-        styleElement.type = 'text/css';
-        styleElement.innerHTML = css;
-        document.head.appendChild(styleElement);
-      }
-      this.container.current.appendChild(element);
-      if (code.js && code.js.length) {
-        const script = document.createElement('script');
-        script.id = `${id}_script`;
-        script.type = 'text/javascript';
-        script.innerHTML = js;
-        element.appendChild(script);
-      }
-      element.innerHTML = html;
-      if (editable) {
-        this.elementHandlers.draggable(element, obj);
-        element.addEventListener(
-          'mousedown',
-          e => {
-            this.canvas.setActiveObject(obj);
-            this.canvas.requestRenderAll();
-          },
-          false
-        );
-      }
-      obj.setCoords();
-    },
-    findScriptById: id => document.getElementById(`${id}_script`),
-    findStyleById: id => document.getElementById(`${id}_style`),
-    findById: id => document.getElementById(`${id}_container`),
-    remove: el => {
-      if (!el) {
-        return;
-      }
-      this.container.current.removeChild(el);
-    },
-    removeStyleById: id => {
-      const style = this.elementHandlers.findStyleById(id);
-      if (!style) {
-        return;
-      }
-      document.head.removeChild(style);
-    },
-    removeScriptById: id => {
-      const style = this.elementHandlers.findScriptById(id);
-      if (!style) {
-        return;
-      }
-      document.head.removeChild(style);
-    },
-    removeById: id => {
-      const el = this.elementHandlers.findById(id);
-      this.elementHandlers.remove(el);
-    },
-    removeByIds: ids => {
-      ids.forEach(id => {
-        this.elementHandlers.removeById(id);
-        this.elementHandlers.removeStyleById(id);
-        this.elementHandlers.removeScriptById(id);
-      });
-    },
-    setPosition: (el, left, top) => {
-      if (!el) {
-        return false;
-      }
-      el.style.left = `${left}px`;
-      el.style.top = `${top}px`;
-      el.style.transform = null;
-      el.setAttribute('data-x', 0);
-      el.setAttribute('data-y', 0);
-      return el;
-    },
-    setSize: (el, width, height) => {
-      if (!el) {
-        return false;
-      }
-      el.style.width = `${width}px`;
-      el.style.height = `${height}px`;
-      return el;
-    },
-    setScale: (el, x, y) => {
-      if (!el) {
-        return false;
-      }
-      el.style.transform = `scale(${x}, ${y})`;
-      return el;
-    },
-    setZoom: (el, zoom) => {
-      if (!el) {
-        return false;
-      }
-      el.style.zoom = zoom;
-      return el;
-    },
-    draggable: (el, obj) => {
-      if (!el) {
-        return false;
-      }
-      return interact(el).draggable({
-        restrict: {
-          restriction: 'parent'
-          // elementRect: { top: 0, left: 0, bottom: 1, right: 1 },
-        },
-        onmove: e => {
-          const { dx, dy, target } = e;
-          // keep the dragged position in the data-x/data-y attributes
-          const x = (parseFloat(target.getAttribute('data-x')) || 0) + dx;
-          const y = (parseFloat(target.getAttribute('data-y')) || 0) + dy;
-          // translate the element
-          target.style.webkitTransform = `translate(${x}px, ${y}px)`;
-          target.style.transform = `translate(${x}px, ${y}px)`;
-          // update the posiion attributes
-          target.setAttribute('data-x', x);
-          target.setAttribute('data-y', y);
-          // update canvas object the position
-          obj.set({
-            left: obj.left + dx,
-            top: obj.top + dy
-          });
-          obj.setCoords();
-          this.canvas.requestRenderAll();
-        },
-        onend: () => {
-          if (this.props.onSelect) {
-            this.props.onSelect(obj);
-          }
-        }
-      });
-    }
-  };
-
   workareaHandlers = {
     setLayout: value => {
       this.workarea.set('layout', value);
@@ -2228,415 +1821,169 @@ class Canvas extends Component {
     }
   };
 
-  nodeHandlers = {
-    selectByPath: path => {
-      if (!path || !path.length) {
+  elementHandlers = {
+    setById: (id, source) => {
+      const findObject = this.handlers.findById(id);
+      if (!findObject) {
         return;
       }
-      const splitPath = path.reduce((prev, curr, index) => {
-        if (!path[index + 1]) {
-          return prev;
-        }
-        const newPath = [path[index], path[index + 1]];
-        prev.push(newPath);
-        return prev;
-      }, []);
-      const targetObjects = this.handlers
-        .getOriginObjects()
-        .filter(object => path.some(id => id === object.id));
-      const nonTargetObjects = this.handlers
-        .getOriginObjects()
-        .filter(object => path.some(id => id !== object.id));
-      nonTargetObjects.forEach(object => {
-        if (object.superType === 'link') {
-          const { fromNode, toNode } = object;
-          if (
-            splitPath.some(
-              findPath =>
-                fromNode.id === findPath[0] && toNode.id === findPath[1]
-            )
-          ) {
-            object.set({
-              opacity: 1
-            });
-            object.setShadow({
-              color: object.stroke
-            });
-            this.nodeHandlers.highlightingNode(object, 300);
+    },
+    set: (obj, source) => {
+      this.elementHandlers.createElement(obj, source);
+    },
+    createElement: (obj, code) => {
+      obj.set('code', code);
+      const { editable } = this.props;
+      const { left, top } = obj.getBoundingRect();
+      const { id, scaleX, scaleY, angle } = obj;
+      if (editable) {
+        this.elementHandlers.removeById(id);
+        this.elementHandlers.removeStyleById(id);
+        this.elementHandlers.removeScriptById(id);
+      }
+      const zoom = this.canvas.getZoom();
+      const width = obj.width * scaleX * zoom;
+      const height = obj.height * scaleY * zoom;
+      const element = fabric.util.makeElement('div', {
+        id: `${id}_container`,
+        style: `transform: rotate(${angle}deg);
+                        width: ${width}px;
+                        height: ${height}px;
+                        left: ${left}px;
+                        top: ${top}px;
+                        position: absolute;`
+      });
+      const { html, css, js } = code;
+      if (code.css && code.css.length) {
+        const styleElement = document.createElement('style');
+        styleElement.id = `${id}_style`;
+        styleElement.type = 'text/css';
+        styleElement.innerHTML = css;
+        document.head.appendChild(styleElement);
+      }
+      this.container.current.appendChild(element);
+      if (code.js && code.js.length) {
+        const script = document.createElement('script');
+        script.id = `${id}_script`;
+        script.type = 'text/javascript';
+        script.innerHTML = js;
+        element.appendChild(script);
+      }
+      element.innerHTML = html;
+      if (editable) {
+        this.elementHandlers.draggable(element, obj);
+        element.addEventListener(
+          'mousedown',
+          e => {
+            this.canvas.setActiveObject(obj);
             this.canvas.requestRenderAll();
-            return;
-          }
-        }
-        object.set({
-          opacity: 0.2
-        });
-        if (object.superType === 'node') {
-          if (object.toPort) {
-            object.toPort.set({
-              opacity: 0.2
-            });
-          }
-          object.fromPort.forEach(port => {
-            port.set({
-              opacity: 0.2
-            });
-          });
-        }
-        if (!object.isAnimated) {
-          object.setShadow({
-            blur: 0
-          });
-        }
-      });
-      targetObjects.forEach(object => {
-        object.set({
-          opacity: 1
-        });
-        object.setShadow({
-          color: object.fill
-        });
-        this.nodeHandlers.highlightingNode(object, 300);
-        if (object.toPort) {
-          object.toPort.set({
-            opacity: 1
-          });
-        }
-        if (object.fromPort) {
-          object.fromPort.forEach(port => {
-            port.set({
-              opacity: 1
-            });
-          });
-        }
-      });
-      this.canvas.requestRenderAll();
+          },
+          false
+        );
+      }
+      obj.setCoords();
     },
-    selectById: id => {
-      this.handlers.getOriginObjects().forEach(object => {
-        if (id === object.id) {
-          object.setShadow({
-            color: object.fill,
-            blur: 50
-          });
-          return;
-        } else if (id === object.nodeId) {
-          return;
-        }
-        object.setShadow({
-          blur: 0
-        });
-      });
-      this.canvas.requestRenderAll();
-    },
-    deselect: () => {
-      this.handlers.getOriginObjects().forEach(object => {
-        object.set({
-          opacity: 1
-        });
-        if (object.superType === 'node') {
-          if (object.toPort) {
-            object.toPort.set({
-              opacity: 1
-            });
-          }
-          object.fromPort.forEach(port => {
-            port.set({
-              opacity: 1
-            });
-          });
-        }
-        if (!object.isAnimated) {
-          object.setShadow({
-            blur: 0
-          });
-        }
-      });
-      this.canvas.requestRenderAll();
-    },
-    highlightingByPath: path => {
-      if (!path || !path.length) {
+    findScriptById: id => document.getElementById(`${id}_script`),
+    findStyleById: id => document.getElementById(`${id}_style`),
+    findById: id => document.getElementById(`${id}_container`),
+    remove: el => {
+      if (!el) {
         return;
       }
-      const splitPath = path.reduce((prev, curr, index) => {
-        if (!path[index + 1]) {
-          return prev;
-        }
-        const newPath = [path[index], path[index + 1]];
-        prev.push(newPath);
-        return prev;
-      }, []);
-      const targetObjects = this.handlers
-        .getOriginObjects()
-        .filter(object => path.some(id => id === object.id));
-      const nonTargetObjects = this.handlers
-        .getOriginObjects()
-        .filter(object => path.some(id => id !== object.id));
-      const lastObject = targetObjects.filter(
-        obj => obj.id === path[path.length - 1]
-      )[0];
-      targetObjects.forEach(object => {
-        if (lastObject) {
-          object.setShadow({
-            color: lastObject.fill
-          });
-        } else {
-          object.setShadow({
-            color: object.fill
-          });
-        }
-        this.nodeHandlers.highlightingNode(object);
-      });
-      nonTargetObjects.forEach(object => {
-        if (object.superType === 'link') {
-          const { fromNode, toNode } = object;
-          if (
-            splitPath.some(
-              findPath =>
-                fromNode.id === findPath[0] && toNode.id === findPath[1]
-            )
-          ) {
-            if (lastObject) {
-              object.setShadow({
-                color: lastObject.stroke
-              });
-            } else {
-              object.setShadow({
-                color: object.stroke
-              });
-            }
-            this.nodeHandlers.highlightingNode(object);
-            this.nodeHandlers.highlightingLink(object, lastObject);
-          }
-        }
-      });
-      this.canvas.requestRenderAll();
+      this.container.current.removeChild(el);
     },
-    highlightingLink: (object, targetObject, duration = 500) => {
-      object.animation = {
-        duration,
-        type: 'flash',
-        stroke: targetObject ? targetObject.stroke : object.stroke,
-        loop: 1,
-        delay: 0
-      };
-      this.animationHandlers.play(object.id, false);
+    removeStyleById: id => {
+      const style = this.elementHandlers.findStyleById(id);
+      if (!style) {
+        return;
+      }
+      document.head.removeChild(style);
     },
-    highlightingNode: (object, duration = 500) => {
-      const maxBlur = 50;
-      const minBlur = 0;
-      const onComplete = () => {
-        if (object.shadow.blur === maxBlur) {
-          object.isAnimated = true;
-          object.animate('shadow.blur', minBlur, {
-            easing: fabric.util.ease.easeInOutQuad,
-            onChange: value => {
-              object.shadow.blur = value;
-              this.canvas.requestRenderAll();
-            },
-            onComplete: () => {
-              object.isAnimated = false;
-              if (object.superType === 'link') {
-                object.set({
-                  stroke: object.originStroke
-                });
-              }
-            }
+    removeScriptById: id => {
+      const style = this.elementHandlers.findScriptById(id);
+      if (!style) {
+        return;
+      }
+      document.head.removeChild(style);
+    },
+    removeById: id => {
+      const el = this.elementHandlers.findById(id);
+      this.elementHandlers.remove(el);
+    },
+    removeByIds: ids => {
+      ids.forEach(id => {
+        this.elementHandlers.removeById(id);
+        this.elementHandlers.removeStyleById(id);
+        this.elementHandlers.removeScriptById(id);
+      });
+    },
+    setPosition: (el, left, top) => {
+      if (!el) {
+        return false;
+      }
+      el.style.left = `${left}px`;
+      el.style.top = `${top}px`;
+      el.style.transform = null;
+      el.setAttribute('data-x', 0);
+      el.setAttribute('data-y', 0);
+      return el;
+    },
+    setSize: (el, width, height) => {
+      if (!el) {
+        return false;
+      }
+      el.style.width = `${width}px`;
+      el.style.height = `${height}px`;
+      return el;
+    },
+    setScale: (el, x, y) => {
+      if (!el) {
+        return false;
+      }
+      el.style.transform = `scale(${x}, ${y})`;
+      return el;
+    },
+    setZoom: (el, zoom) => {
+      if (!el) {
+        return false;
+      }
+      el.style.zoom = zoom;
+      return el;
+    },
+    draggable: (el, obj) => {
+      if (!el) {
+        return false;
+      }
+      return el.draggable({
+        restrict: {
+          restriction: 'parent'
+          // elementRect: { top: 0, left: 0, bottom: 1, right: 1 },
+        },
+        onmove: e => {
+          const { dx, dy, target } = e;
+          // keep the dragged position in the data-x/data-y attributes
+          const x = (parseFloat(target.getAttribute('data-x')) || 0) + dx;
+          const y = (parseFloat(target.getAttribute('data-y')) || 0) + dy;
+          // translate the element
+          target.style.webkitTransform = `translate(${x}px, ${y}px)`;
+          target.style.transform = `translate(${x}px, ${y}px)`;
+          // update the posiion attributes
+          target.setAttribute('data-x', x);
+          target.setAttribute('data-y', y);
+          // update canvas object the position
+          obj.set({
+            left: obj.left + dx,
+            top: obj.top + dy
           });
-        }
-      };
-      object.isAnimated = true;
-      object.animate('shadow.blur', maxBlur, {
-        easing: fabric.util.ease.easeInOutQuad,
-        duration,
-        onChange: value => {
-          object.shadow.blur = value;
+          obj.setCoords();
           this.canvas.requestRenderAll();
         },
-        onComplete
-      });
-    }
-  };
-
-  portHandlers = {
-    createPort: target => {
-      if (!target.createToPort) {
-        return;
-      }
-      const toPort = target.createToPort(
-        target.left + target.width / 2,
-        target.top
-      );
-      if (toPort) {
-        toPort.on('mouseover', () => {
-          if (
-            this.interactionMode === 'link' &&
-            this.activeLine &&
-            this.activeLine.class === 'line'
-          ) {
-            if (
-              toPort.links.some(
-                link => link.fromNode.id === this.activeLine.fromNode
-              )
-            ) {
-              toPort.set({
-                fill: toPort.errorFill
-              });
-              this.canvas.requestRenderAll();
-              return;
-            }
-            toPort.set({
-              fill: toPort.hoverFill
-            });
-            this.canvas.requestRenderAll();
+        onend: () => {
+          if (this.props.onSelect) {
+            this.props.onSelect(obj);
           }
-        });
-        toPort.on('mouseout', () => {
-          toPort.set({
-            fill: toPort.originFill
-          });
-          this.canvas.requestRenderAll();
-        });
-        this.canvas.add(toPort);
-        toPort.setCoords();
-        this.canvas.bringToFront(toPort);
-      }
-      const fromPort = target.createFromPort(
-        target.left + target.width / 2,
-        target.top + target.height
-      );
-      if (fromPort && fromPort.length) {
-        fromPort.forEach(port => {
-          if (port) {
-            port.on('mouseover', () => {
-              if (port.enabled) {
-                if (this.activeLine) {
-                  port.set({
-                    fill: port.errorFill
-                  });
-                  this.canvas.requestRenderAll();
-                  return;
-                }
-                port.set({
-                  fill: port.hoverFill
-                });
-                this.canvas.requestRenderAll();
-                return;
-              }
-              port.set({
-                fill: port.errorFill
-              });
-              this.canvas.requestRenderAll();
-            });
-            port.on('mouseout', () => {
-              port.set({
-                fill: port.originFill
-              });
-              this.canvas.requestRenderAll();
-            });
-            this.canvas.add(port);
-            port.setCoords();
-            this.canvas.bringToFront(port);
-          }
-        });
-      }
-    },
-    setCoords: target => {
-      if (target.toPort) {
-        const toCoords = {
-          left: target.left + target.width / 2,
-          top: target.top
-        };
-        target.toPort.set({
-          ...toCoords
-        });
-        target.toPort.setCoords();
-        if (target.toPort.links.length) {
-          target.toPort.links.forEach(link => {
-            const fromPort = link.fromNode.fromPort.filter(
-              port => port.id === link.fromPort
-            )[0];
-            this.linkHandlers.setCoords(
-              fromPort.left,
-              fromPort.top,
-              toCoords.left,
-              toCoords.top,
-              link
-            );
-          });
         }
-      }
-      if (target.fromPort) {
-        const fromCoords = {
-          left: target.left + target.width / 2,
-          top: target.top + target.height
-        };
-        target.fromPort.forEach(port => {
-          const left = port.leftDiff
-            ? fromCoords.left + port.leftDiff
-            : fromCoords.left;
-          const top = port.topDiff
-            ? fromCoords.top + port.topDiff
-            : fromCoords.top;
-          port.set({
-            left,
-            top
-          });
-          port.setCoords();
-          if (port.links.length) {
-            port.links.forEach(link => {
-              this.linkHandlers.setCoords(
-                left,
-                top,
-                link.toNode.toPort.left,
-                link.toNode.toPort.top,
-                link
-              );
-            });
-          }
-        });
-      }
-    },
-    recreatePort: target => {
-      const { fromPort, toPort } = target;
-      if (target.ports) {
-        target.ports.forEach(port => {
-          target.removeWithUpdate(port);
-          this.canvas.remove(port.fromPort);
-        });
-      }
-      this.canvas.remove(target.toPort);
-      if (target.toPort) {
-        target.toPort.links.forEach(link => {
-          this.linkHandlers.remove(link, 'from');
-        });
-      }
-      if (target.fromPort) {
-        target.fromPort.forEach(port => {
-          if (port.links.length) {
-            port.links.forEach(link => {
-              this.linkHandlers.remove(link, 'to');
-            });
-          }
-        });
-      }
-      this.portHandlers.createPort(target);
-      toPort.links.forEach(link => {
-        link.fromNode = link.fromNode.id;
-        link.toNode = target.toPort.nodeId;
-        this.linkHandlers.create(link);
       });
-      fromPort
-        .filter(op => target.fromPort.some(np => np.id === op.id))
-        .forEach(port => {
-          port.links.forEach(link => {
-            if (link.fromPort === port.id) {
-              link.fromNode = port.nodeId;
-              link.toNode = link.toNode.id;
-              this.linkHandlers.create(link);
-              this.portHandlers.setCoords(target);
-            }
-          });
-        });
     }
   };
 
@@ -2710,9 +2057,9 @@ class Canvas extends Component {
             y: position.y
           });
           const polygon = new fabric.Polygon(activeShapePoints, {
-            stroke: '#333333',
+            stroke: '#000',
             strokeWidth: 1,
-            fill: '#cccccc',
+            fill: '#000',
             opacity: 0.1,
             selectable: false,
             hasBorders: false,
@@ -2726,10 +2073,10 @@ class Canvas extends Component {
         } else {
           const polyPoint = [{ x, y }];
           const polygon = new fabric.Polygon(polyPoint, {
-            stroke: '#333333',
+            stroke: '#000',
             strokeWidth: 1,
-            fill: '#cccccc',
-            opacity: 0.1,
+            fill: '#000',
+            opacity: 0.9,
             selectable: false,
             hasBorders: false,
             hasControls: false,
@@ -2762,10 +2109,9 @@ class Canvas extends Component {
           id,
           points,
           type: 'polygon',
-          stroke: 'rgba(0, 0, 0, 1)',
-          strokeWidth: 3,
-          strokeDashArray: [10, 5],
-          fill: 'rgba(0, 0, 0, 0.25)',
+          stroke: '#000',
+          strokeWidth: 1,
+          fill: '#000',
           opacity: 1,
           objectCaching: !this.props.editable,
           name: 'New polygon',
@@ -2990,8 +2336,22 @@ class Canvas extends Component {
         this.modeHandlers.selection();
       }
     },
-    orthogonal: {},
-    curve: {}
+    pencil: {
+      init: () => {
+        this.canvas.freeDrawingBrush = new fabric.PencilBrush(this.canvas);
+        this.canvas.isDrawingMode = !this.canvas.isDrawingMode;
+        this.canvas.freeDrawingBrush.id = uuid();
+        this.canvas.freeDrawingBrush.color = '#000';
+        this.canvas.freeDrawingBrush.width = 8;
+        this.canvas.freeDrawingBrush.shadow = new fabric.Shadow({
+          blur: 0,
+          offsetX: 0,
+          offsetY: 0,
+          affectStroke: true,
+          color: '#000'
+        });
+      }
+    }
   };
 
   alignmentHandlers = {
@@ -4002,7 +3362,6 @@ class Canvas extends Component {
           } else if (clipboardType === 'text/html') {
             // Todo ...
             // const textHtml = clipboardData.getData('text/html');
-            // console.log(textHtml);
           } else if (clipboardType === 'Files') {
             Array.from(clipboardData.files).forEach(file => {
               const { type } = file;
@@ -4057,9 +3416,7 @@ class Canvas extends Component {
           this.drawingHandlers.line.finish();
         } else if (this.interactionMode === 'arrow') {
           this.drawingHandlers.arrow.finish();
-        } else if (this.interactionMode === 'link') {
-          this.linkHandlers.finish();
-        }
+        } //hmm
       }
     },
     contextmenu: e => {
