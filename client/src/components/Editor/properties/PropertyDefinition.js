@@ -27,6 +27,20 @@ export default {
       component: ShadowProperty
     }
   },
+  path: {
+    general: {
+      title: 'general',
+      component: GeneralProperty
+    },
+    style: {
+      title: 'style',
+      component: StyleProperty
+    },
+    shadow: {
+      title: 'shadow',
+      component: ShadowProperty
+    }
+  },
   'i-text': {
     general: {
       title: 'general',

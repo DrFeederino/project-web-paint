@@ -165,11 +165,19 @@ class ImageHeaderToolbar extends Component {
           />
         </FlexItem>
         <FlexItem className="rde-canvas-toolbar rde-canvas-toolbar-history">
-          <Button className="rde-action-btn" disabled={isCropping}>
+          <Button
+            className="rde-action-btn"
+            disabled={isCropping || (canvasRef && !canvasRef.undos.length)}
+            onClick={() => canvasRef.transactionHandlers.undo()}
+          >
             <Icon type="undo" style={{ marginRight: 8 }} />
             {i18n.t('action.undo')}
           </Button>
-          <Button className="rde-action-btn" disabled={isCropping}>
+          <Button
+            className="rde-action-btn"
+            disabled={isCropping || (canvasRef && !canvasRef.redos.length)}
+            onClick={() => canvasRef.transactionHandlers.redo()}
+          >
             {i18n.t('action.redo')}
             <Icon type="redo" style={{ marginLeft: 8 }} />
           </Button>

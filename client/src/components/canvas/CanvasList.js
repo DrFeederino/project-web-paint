@@ -42,7 +42,6 @@ class CanvasList extends Component {
 
   renderItem = () => {
     const { canvasRef, selectedItem } = this.props;
-    console.log(selectedItem);
     const idCropping = canvasRef ? canvasRef.interactionMode === 'crop' : false;
     return canvasRef
       ? canvasRef.canvas
@@ -86,7 +85,7 @@ class CanvasList extends Component {
               title = i18n.t('editor.line');
             } else if (obj.type === 'path') {
               icon = 'paint-brush';
-              title = i18n.t('editor.pen');
+              title = i18n.t('editor.brush');
             } else {
               icon = 'image';
               title = i18n.t('editor.default');

@@ -113,6 +113,9 @@ class ImageEditor extends Component {
         });
         return;
       }
+      this.setState({
+        selectedItem: null
+      });
     },
     onRemove: target => {
       if (!this.state.editing) {
@@ -377,7 +380,6 @@ class ImageEditor extends Component {
       descriptors,
       darkTheme
     } = this.state;
-    console.log(selectedItem);
     const {
       onAdd,
       onRemove,
@@ -389,13 +391,13 @@ class ImageEditor extends Component {
       onLink,
       onContext
     } = this.canvasHandlers;
-    let titleContent = (
+    const titleContent = (
       <React.Fragment>
         <span>{i18n.t('imagemap.imagemap-editor')}</span>
       </React.Fragment>
     );
-    let title = <ImageTitle title={titleContent} isDark={darkTheme} />;
-    let content = (
+    const title = <ImageTitle title={titleContent} isDark={darkTheme} />;
+    const content = (
       <div className={'rde-editor' + (darkTheme ? ' dark' : '')}>
         <ImageItems
           ref={c => {

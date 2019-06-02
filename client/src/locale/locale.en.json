@@ -12,12 +12,11 @@
     "polygon": "Polygon",
     "line": "Line",
     "arrow": "Arrow",
-    "pen": "Pen",
-    "pencil": "Pencil",
-    "fill": "Fill",
+    "brush": "Brush",
     "general": "General",
     "style": "Style",
-    "shadow": "Shadow"
+    "shadow": "Shadow",
+    "default": "Default"
   },
   "imagemap": {
     "imagemap": "Image Editor App",
@@ -85,7 +84,9 @@
     "pause": "Pause",
     "stop": "Stop",
     "execute": "Execute",
-    "save-file-name": "New image"
+    "save-file-name": "New image",
+    "click-drag": "Click or drag file to this area to upload",
+    "limit-size": "Support for a single upload. Limited to {{limit}}MB or less"
   },
   "common": {
     "name": "Name",

@@ -282,3 +282,9 @@ video {
 .dark .ant-upload-drag-container > p {
   color: inherit !important;
 }
+
+.ant-menu-vertical.ant-menu-sub,
+.ant-menu-vertical-left.ant-menu-sub,
+.ant-menu-vertical-right.ant-menu-sub {
+  min-width: 60px;
+}

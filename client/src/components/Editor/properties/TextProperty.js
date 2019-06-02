@@ -102,10 +102,7 @@ export default {
               valuePropName: 'checked',
               initialValue: data.textAlign === 'left' ? true : false
             })(
-              <Tag.CheckableTag
-                checked={data.textAlign === 'left' ? true : false}
-                className="rde-action-tag"
-              >
+              <Tag.CheckableTag className="rde-action-tag">
                 <Icon name="align-left" />
               </Tag.CheckableTag>
             )}

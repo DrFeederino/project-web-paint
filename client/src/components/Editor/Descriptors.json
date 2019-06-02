@@ -150,7 +150,7 @@
   ],
   "BRUSH": [
     {
-      "name": "Pen",
+      "name": "Brush",
       "description": "",
       "type": "drawing",
       "icon": {
@@ -159,18 +159,6 @@
       },
       "option": {
         "type": "Pencil"
-      }
-    },
-    {
-      "name": "Pencil",
-      "description": "",
-      "type": "drawing",
-      "icon": {
-        "prefix": "fas",
-        "name": "pencil-alt"
-      },
-      "option": {
-        "type": "Pen"
       }
     },
     {
