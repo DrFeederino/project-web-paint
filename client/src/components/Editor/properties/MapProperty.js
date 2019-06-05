@@ -25,7 +25,6 @@ import ColorPicker from '../../common/ColorPicker';
 export default {
   render(canvasRef, form, data) {
     const { getFieldDecorator } = form;
-    console.log(canvasRef);
     if (!data) {
       return null;
     }

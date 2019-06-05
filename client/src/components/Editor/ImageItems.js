@@ -205,9 +205,7 @@ class ImageItems extends Component {
       target.classList.remove('over');
     },
     onDrop: e => {
-      console.log(e);
       e = e || window.event;
-      console.log(window.event);
       if (e.preventDefault) {
         e.preventDefault();
       }

@@ -18,7 +18,8 @@
     "shadow": "Shadow",
     "default": "Default",
     "empty": "No Data",
-    "empty-title": "Please, input title."
+    "empty-title": "Please, input title.",
+    "title": "Web app to edit pictures"
   },
   "imagemap": {
     "imagemap": "Image Editor App",

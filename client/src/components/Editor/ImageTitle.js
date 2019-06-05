@@ -6,7 +6,7 @@ import { Button, Icon } from 'antd';
 class ImageTitle extends Component {
   welcomeUser = name => i18n.t('user.welcome') + name + '!';
   render() {
-    const { title, isDark } = this.props;
+    const { title, isDark, username } = this.props;
     return (
       <FlexBox
         className={'rde-content-layout-title' + (isDark ? ' dark' : '')}
@@ -28,7 +28,7 @@ class ImageTitle extends Component {
             justifyContent="flex-end"
             alignItems="center"
           >
-            {this.welcomeUser('tester')}
+            {this.welcomeUser(username)}
             <Icon
               type="user"
               style={{
@@ -42,7 +42,7 @@ class ImageTitle extends Component {
           <Button
             type="primary"
             icon="logout"
-            onClick={() => console.log('log out')}
+            onClick={() => this.props.handleLogout()}
           >
             {i18n.t('user.logout')}
           </Button>

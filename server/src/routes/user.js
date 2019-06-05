@@ -6,6 +6,7 @@ const router = Router();
 
 router.get('/show', async (req, res) => {
   let users = await req.context.models.User.find();
+  console.log(users.length)
   res.send(users); // to check if everything is fine on server side
 });
 

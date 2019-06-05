@@ -929,7 +929,6 @@ class Canvas extends Component {
     },
     originScaleToResize: (obj, width, height) => {
       if (obj.id === 'workarea') {
-        console.log('passed');
         this.handlers.setById(obj.id, 'workareaWidth', obj.width);
         this.handlers.setById(obj.id, 'workareaHeight', obj.height);
       }
