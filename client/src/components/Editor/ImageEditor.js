@@ -396,7 +396,14 @@ class ImageEditor extends Component {
         <span>{i18n.t('imagemap.imagemap-editor')}</span>
       </React.Fragment>
     );
-    const title = <ImageTitle title={titleContent} isDark={darkTheme} />;
+    const title = (
+      <ImageTitle
+        title={titleContent}
+        isDark={darkTheme}
+        handleLogout={this.props.handleLogout}
+        username={this.props.user.username}
+      />
+    );
     const content = (
       <div className={'rde-editor' + (darkTheme ? ' dark' : '')}>
         <ImageItems
