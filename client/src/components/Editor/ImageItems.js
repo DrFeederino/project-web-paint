@@ -111,6 +111,10 @@ class ImageItems extends Component {
   handlers = {
     onAddItem: (item, centered) => {
       const { canvasRef } = this.state;
+      if (item.name === 'Fill') {
+        canvasRef.drawingHandlers.fill.setColor('#33f');
+        return;
+      }
       if (canvasRef.workarea.layout === 'responsive') {
         if (!canvasRef.workarea._element) {
           notification.warn({

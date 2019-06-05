@@ -1,18 +1,38 @@
 import React from 'react';
-import { Form, Input, Row, Col, InputNumber } from 'antd';
+import { Form, Input, Slider, Row, Col, InputNumber } from 'antd';
 import i18n from 'i18next';
+import ColorPicker from '../../common/ColorPicker';
 
+/*  Layout stuff is commented out
+    because the way the project was handling
+    work with the canvas was dirty hack and
+    not very representable IMO.
+    For example, saving an image would result
+    in a full capture of everything displayed
+    canvas WITH workarea. It left much stuff
+    outside of workarea if viewport size is bigger
+    than workarea's. And maintaining this with up-to-date
+    versions of fabric is impossible due to the change of
+    how fabric handles images since 2.6.0. This is why
+    I could only keep the version up to 2.5.0.
+    I set out to change the workarea to be maximized
+    with fixed layout set as default for now. I might
+    be changing things for the better in the future.
+    Also, the project could use more, even bigger cleanups.
+    I'm looking towards removal of antd (~600Kb) and simplifying
+    styling with components. This migh as well result in a full rewrite.
+*/
 export default {
   render(canvasRef, form, data) {
     const { getFieldDecorator } = form;
-    console.log(form);
+    console.log(canvasRef);
     if (!data) {
       return null;
     }
     //const layout = data.layout || 'fixed';
     return (
       <React.Fragment>
-        <Form.Item label={i18n.t('common.name')} colon={false}>
+        {/*<Form.Item label={i18n.t('common.name')} colon={false}>
           {getFieldDecorator('name', {
             rules: [
               {
@@ -25,7 +45,8 @@ export default {
             initialValue: data.name || ''
           })(<Input />)}
         </Form.Item>
-        {/* <Form.Item label={i18n.t('common.layout')} colon={false}>
+
+        <Form.Item label={i18n.t('common.layout')} colon={false}>
                     {
                         getFieldDecorator('layout', {
                             initialValue: layout,
@@ -77,6 +98,14 @@ export default {
                 </Form.Item>
               </Col>
             </Row>
+            <Form.Item
+              label={i18n.t('imagemap.style.fill-color')}
+              colon={false}
+            >
+              {getFieldDecorator('backgroundColor', {
+                initialValue: data.fill || 'rgba(255, 255, 255, 1)'
+              })(<ColorPicker />)}
+            </Form.Item>
           </React.Fragment>
           //) : null
         }

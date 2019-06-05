@@ -9,7 +9,7 @@ import Arrow from './Arrow';
 
 import '../../styles/core/tooltip.css';
 import '../../styles/core/contextmenu.css';
-// WIP: Fill the canvas and set size of canvas
+
 const defaultCanvasOption = {
   preserveObjectStacking: true,
   width: 500,
@@ -39,7 +39,7 @@ const defaultWorkareaOption = {
   name: '',
   id: 'workarea',
   type: 'image',
-  layout: 'fixed', // fixed, responsive, fullscreen
+  layout: 'fullscreen', // fixed, responsive, fullscreen
   link: {},
   tooltip: {
     enabled: false
@@ -361,10 +361,14 @@ class Canvas extends Component {
   /* eslint-disable react/sort-comp, react/prop-types */
   handlers = {
     new: () => {
-      this.canvas.clear();
-      this.canvas.setHeight(defaultCanvasOption.height);
-      this.canvas.setWidth(defaultCanvasOption.width);
-      this.canvas.setBackgroundColor(defaultCanvasOption.backgroundColor);
+      const { canvas, workarea } = this;
+      workarea.backgroundColor = defaultCanvasOption.backgroundColor;
+      canvas.setHeight(defaultCanvasOption.height);
+      canvas.setWidth(defaultCanvasOption.width);
+      canvas.setBackgroundColor(defaultCanvasOption.backgroundColor);
+      canvas.clear();
+      canvas.add(workarea);
+      canvas.requestRenderAll();
     },
     centerObject: (obj, centered) => {
       if (centered) {
@@ -389,9 +393,8 @@ class Canvas extends Component {
     },
     add: (obj, centered = true, loaded = false, transaction = true) => {
       if (obj.type === 'fill') {
-        console.log('fill was added');
+        this.drawingHandlers.fill.init();
         this.canvas.setBackgroundColor('#999');
-        console.log(this.canvas);
         this.canvas.requestRenderAll();
         this.drawingHandlers.fill.setColor('#666');
         return;
@@ -926,11 +929,16 @@ class Canvas extends Component {
     },
     originScaleToResize: (obj, width, height) => {
       if (obj.id === 'workarea') {
+        console.log('passed');
         this.handlers.setById(obj.id, 'workareaWidth', obj.width);
         this.handlers.setById(obj.id, 'workareaHeight', obj.height);
       }
-      this.handlers.setById(obj.id, 'scaleX', width / obj.width);
-      this.handlers.setById(obj.id, 'scaleY', height / obj.height);
+      this.workarea.height = height;
+      this.workarea.width = width;
+      this.canvas.setWidth(width);
+      this.canvas.setHeight(height);
+      this.canvas.requestRenderAll();
+      return;
     },
     scaleToResize: (width, height) => {
       const activeObject = this.canvas.getActiveObject();
@@ -1747,7 +1755,6 @@ class Canvas extends Component {
       reader.readAsDataURL(src);
     },
     setImage: (src, loaded = false) => {
-      console.log('kek');
       const { canvas, workarea, zoomHandlers, workareaHandlers } = this;
       const { editable } = this.props;
       if (workarea.layout === 'responsive') {
@@ -1755,7 +1762,6 @@ class Canvas extends Component {
         return;
       }
       const imageFromUrl = source => {
-        console.log('so we are here');
         fabric.Image.fromURL(source, img => {
           let width = canvas.getWidth();
           let height = canvas.getHeight();
@@ -1949,7 +1955,6 @@ class Canvas extends Component {
       return el;
     },
     setSize: (el, width, height) => {
-      console.log('hm');
       if (!el) {
         return false;
       }
@@ -2380,7 +2385,11 @@ class Canvas extends Component {
     },
     fill: {
       init: () => {
-        this.color = this.canvas.backgroundColor;
+        //this.canvas.isApplyingColor = true;
+        //this.color = this.canvas.backgroundColor;
+      },
+      finish: () => {
+        this.canvas.isApplyingColor = false;
       },
       setFillMode: () => {},
       setColor: color => {
@@ -3369,7 +3378,6 @@ class Canvas extends Component {
       this.horizontalLines.length = 0;
     },
     resize: (currentWidth, currentHeight, nextWidth, nextHeight) => {
-      console.log('yo r we here');
       this.canvas.setWidth(nextWidth).setHeight(nextHeight);
       if (!this.workarea) {
         return;
