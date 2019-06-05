@@ -11,11 +11,11 @@ export default {
     map: {
       title: 'canvas-props',
       component: MapProperty
-    },
-    image: {
-      title: 'image-props',
-      component: ImageProperty
     }
+    // image: {
+    //   title: 'image-props',
+    //   component: ImageProperty,
+    // }
   },
   group: {
     general: {

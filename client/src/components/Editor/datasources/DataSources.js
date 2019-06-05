@@ -6,6 +6,7 @@ import { FlexBox } from '../../flex';
 import DataSourceModal from './DataSourceModal';
 import DataSourceList from './DataSourceList';
 import Icon from '../../icon/Icon';
+import i18next from 'i18next';
 
 class DataSources extends Component {
   static propTypes = {
@@ -121,7 +122,7 @@ class DataSources extends Component {
       if (!value || !value.length) {
         return {
           validateStatus: 'error',
-          help: 'Please input title.'
+          help: i18n.t('editor.empty-title')
         };
       }
       const exist = this.props.dataSources.some(

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Collapse, List } from 'antd';
+import { Form, Collapse, Empty } from 'antd';
 import i18n from 'i18next';
 import PropertyDefinition from './PropertyDefinition';
 import Scrollbar from '../../common/Scrollbar';
@@ -48,7 +48,10 @@ class NodeProperties extends Component {
               })
             ) : (
               <FlexBox justifyContent="center" alignItems="center">
-                <List />
+                <Empty
+                  description={i18n.t('editor.empty')}
+                  image={Empty.PRESENTED_IMAGE_SIMPLE}
+                />
               </FlexBox>
             )}
           </Collapse>

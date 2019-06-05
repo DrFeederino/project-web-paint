@@ -27,6 +27,7 @@ class ImageHeaderToolbar extends Component {
             icon="file"
             tooltipTitle={i18n.t('action.image-new')}
           />
+          {/* WIP
           <CommonButton
             className="rde-action-btn"
             shape="circle"
@@ -34,6 +35,7 @@ class ImageHeaderToolbar extends Component {
             icon="share-alt"
             tooltipTitle={i18n.t('action.image-share')}
           />
+          */}
           <CommonButton
             className="rde-action-btn"
             shape="circle"

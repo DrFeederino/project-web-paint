@@ -16,7 +16,9 @@
     "general": "General",
     "style": "Style",
     "shadow": "Shadow",
-    "default": "Default"
+    "default": "Default",
+    "empty": "No Data",
+    "empty-title": "Please, input title."
   },
   "imagemap": {
     "imagemap": "Image Editor App",
@@ -43,6 +45,9 @@
     }
   },
   "action": {
+    "already-drawing": "Already drawing",
+    "unsupported": "Sorry, drag and drop is not supported for this type.",
+    "unsupported-file-type": "К сожалению, не поддерживается данный тип файлов.",
     "image-share": "Share image",
     "image-new": "New image",
     "undo": "Undo",
@@ -86,7 +91,8 @@
     "execute": "Execute",
     "save-file-name": "New image",
     "click-drag": "Click or drag file to this area to upload",
-    "limit-size": "Support for a single upload. Limited to {{limit}}MB or less"
+    "limit-size": "Support for a single upload. Limited to {{limit}}MB or less",
+    "error-too-big": "Limit to upload size of {{limit}} MB."
   },
   "common": {
     "name": "Name",
@@ -128,7 +134,15 @@
   },
   "validation": {
     "enter-property": "Please enter {{arg}}.",
-    "already-property": "Already exist {{arg}}."
+    "already-property": "Already exist {{arg}}.",
+    "enter-arg": "Please, set a correct value!",
+    "select-background": "Please select your background image.",
+    "width": "Please input width",
+    "height": "Please input height",
+    "xval": "Please input X position",
+    "yval": "Please input Y position",
+    "angle": "Please input rotation",
+    "name": "Please input name"
   },
   "user": {
     "welcome": "Welcome, ",

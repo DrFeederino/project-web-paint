@@ -16,6 +16,7 @@ class Properties extends Component {
     const { canvasRef, form } = this.props;
     const showArrow = false;
     if (canvasRef) {
+      console.log(canvasRef);
       return (
         <Scrollbar>
           <Form layout="horizontal">

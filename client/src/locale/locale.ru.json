@@ -17,15 +17,17 @@
     "general": "Общие",
     "style": "Стиль",
     "shadow": "Тень",
-    "default": "По умолчанию"
+    "default": "По умолчанию",
+    "empty": "Ничего не выбрано",
+    "empty-title": "Пожалуйста, введите название."
   },
   "imagemap": {
     "imagemap": "Редактор",
     "imagemap-editing-confirm": "The image map contents have been modified. Do you want to do that anyway?",
     "imagemap-editor": "Редактор",
     "marker": {
-      "choose-icon": "Choose icon from Fontawesome",
-      "search-icon": "Search {{length}} icons for..."
+      "choose-icon": "Выберитe иконку из набора FontAwesome",
+      "search-icon": "Поиск среди {{length}} иконок..."
     },
     "style": {
       "fill-color": "Цвет заливки",
@@ -44,6 +46,9 @@
     }
   },
   "action": {
+    "already-drawing": "Вы в режиме рисования",
+    "unsupported": "К сожалению, перетаскивание не поддерживается для данного типа.",
+    "unsupported-file-type": "К сожалению, не поддерживается данный тип файлов.",
     "image-share": "Поделиться изображением",
     "image-new": "Создать",
     "undo": "Отмена",
@@ -87,7 +92,8 @@
     "execute": "Выполнить",
     "save-file-name": "Новое изображение",
     "click-drag": "Нажмите или перетащите файл в данную зону для загрузки",
-    "limit-size": "Поддерживается загрузка одного файла. Размер ограничен до {{limit}}Мб."
+    "limit-size": "Поддерживается загрузка одного файла. Размер ограничен до {{limit}} Мб.",
+    "error-too-big": "Ограничение на загрузку файлов до {{limit}} Мб."
   },
   "common": {
     "name": "Имя",
@@ -129,7 +135,15 @@
   },
   "validation": {
     "enter-property": "Введите пожалуйста {{arg}}.",
-    "already-property": "Уже существует {{arg}}."
+    "already-property": "Уже существует {{arg}}.",
+    "enter-arg": "Введено недопустимое значение!",
+    "select-background": "Пожалуйста, установите фоновое изображение.",
+    "width": "Пожалуйста, установите корректное значение ширины",
+    "height": "Пожалуйста, установите корректное значение высоты",
+    "xval": "Пожалуйста, установите корректное значение Х",
+    "yval": "Пожалуйста, установите корректное значение Y",
+    "angle": "Пожалуйста, установите корректное значние угла",
+    "name": "Пожалуйста, введите название"
   },
   "user": {
     "welcome": "Добро пожаловать, ",

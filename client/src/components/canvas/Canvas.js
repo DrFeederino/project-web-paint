@@ -9,7 +9,7 @@ import Arrow from './Arrow';
 
 import '../../styles/core/tooltip.css';
 import '../../styles/core/contextmenu.css';
-
+// WIP: Fill the canvas and set size of canvas
 const defaultCanvasOption = {
   preserveObjectStacking: true,
   width: 500,
@@ -148,14 +148,15 @@ class Canvas extends Component {
     const mergedWorkareaOption = Object.assign(
       {},
       defaultWorkareaOption,
-      workareaOption
+      workareaOption,
+      { backgroundColor: 'rgba(0, 0, 0, 0)' } //dirty hack
     );
     this.workarea = new fabric.Image(null, mergedWorkareaOption);
     this.canvas.add(this.workarea);
     this.objects.push(this.workarea);
     this.canvas.centerObject(this.workarea);
-    this.canvas.setWidth(this.props.canvasOption.width);
-    this.canvas.setHeight(this.props.canvasOption.height);
+    //this.canvas.setWidth(this.props.canvasOption.width);
+    //this.canvas.setHeight(this.props.canvasOption.height);
     this.canvas.requestRenderAll();
     this.gridHandlers.init();
     const {
@@ -387,6 +388,14 @@ class Canvas extends Component {
       }
     },
     add: (obj, centered = true, loaded = false, transaction = true) => {
+      if (obj.type === 'fill') {
+        console.log('fill was added');
+        this.canvas.setBackgroundColor('#999');
+        console.log(this.canvas);
+        this.canvas.requestRenderAll();
+        this.drawingHandlers.fill.setColor('#666');
+        return;
+      }
       this.contextmenuHandlers.hide();
       const { editable } = this.props;
       const option = {
@@ -858,7 +867,6 @@ class Canvas extends Component {
         return false;
       });
       if (!exist) {
-        console.warn('Not found object by id.');
         return exist;
       }
       return findObject;
@@ -1135,7 +1143,6 @@ class Canvas extends Component {
         return false;
       });
       if (!exist) {
-        console.warn('Not found object by id.');
         return exist;
       }
       return findObject;
@@ -1152,7 +1159,6 @@ class Canvas extends Component {
         return false;
       });
       if (!exist) {
-        console.warn('Not found object by id.');
         return exist;
       }
       return {
@@ -1741,6 +1747,7 @@ class Canvas extends Component {
       reader.readAsDataURL(src);
     },
     setImage: (src, loaded = false) => {
+      console.log('kek');
       const { canvas, workarea, zoomHandlers, workareaHandlers } = this;
       const { editable } = this.props;
       if (workarea.layout === 'responsive') {
@@ -1748,6 +1755,7 @@ class Canvas extends Component {
         return;
       }
       const imageFromUrl = source => {
+        console.log('so we are here');
         fabric.Image.fromURL(source, img => {
           let width = canvas.getWidth();
           let height = canvas.getHeight();
@@ -1941,6 +1949,7 @@ class Canvas extends Component {
       return el;
     },
     setSize: (el, width, height) => {
+      console.log('hm');
       if (!el) {
         return false;
       }
@@ -2367,6 +2376,17 @@ class Canvas extends Component {
       },
       finish: () => {
         this.canvas.isDrawingMode = false;
+      }
+    },
+    fill: {
+      init: () => {
+        this.color = this.canvas.backgroundColor;
+      },
+      setFillMode: () => {},
+      setColor: color => {
+        this.canvas.setBackgroundColor(color);
+        this.workarea.setColor(color);
+        this.canvas.requestRenderAll();
       }
     }
   };
@@ -3349,6 +3369,7 @@ class Canvas extends Component {
       this.horizontalLines.length = 0;
     },
     resize: (currentWidth, currentHeight, nextWidth, nextHeight) => {
+      console.log('yo r we here');
       this.canvas.setWidth(nextWidth).setHeight(nextHeight);
       if (!this.workarea) {
         return;

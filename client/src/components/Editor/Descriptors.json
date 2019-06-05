@@ -160,15 +160,18 @@
       "option": {
         "type": "Pencil"
       }
-    },
-    {
-      "name": "Fill",
-      "description": "",
-      "type": "fill",
-      "icon": {
-        "prefix": "fas",
-        "name": "fill-drip"
-      }
     }
-  ]
+  ],
+  "FILL": {
+    "name": "Fill",
+    "description": "",
+    "type": "fill",
+    "icon": {
+      "prefix": "fas",
+      "name": "fill-drip"
+    },
+    "option": {
+      "type": "fill"
+    }
+  }
 }

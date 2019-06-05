@@ -74,8 +74,8 @@ class ImageEditor extends Component {
     });
     const { canvasRect: currentCanvasRect } = this.state;
     const canvasRect = Object.assign({}, currentCanvasRect, {
-      width: 600,
-      height: 600
+      width: 500,
+      height: 500
     });
     this.setState({ canvasRect });
   }

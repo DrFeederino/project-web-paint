@@ -35,7 +35,7 @@ class FileUpload extends Component {
       onChange: info => {
         const isLimit = info.file.size / 1024 / 1024 < limit;
         if (!isLimit) {
-          message.error(`Limited to ${limit}MB or less`);
+          message.error(i18n.t('action.error-too-big', { limit: limit }));
           return false;
         }
         const { onChange } = this.props;

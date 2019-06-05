@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Button, Modal, Form, Col, Row, Input } from 'antd';
 import i18n from 'i18next';
 import Icon from './Icon';
-
+import icons from '../../lib/fontawesome-5.2.0/metadata/icons.json';
 class IconChooser extends Component {
   handlers = {
     onOk: () => {
@@ -62,7 +62,7 @@ class IconChooser extends Component {
   };
 
   static defaultProps = {
-    icon: { 'map-marker-alt': '' }
+    icon: { 'map-marker-alt': icons['map-marker-alt'] }
   };
 
   state = {
@@ -85,6 +85,17 @@ class IconChooser extends Component {
       prefix = 'far';
     }
     return prefix;
+  };
+
+  getIcons = textSearch => {
+    const lowerCase = textSearch.toLowerCase();
+    return Object.keys(icons)
+      .filter(
+        icon =>
+          icon.includes(lowerCase) ||
+          icons[icon].search.terms.some(term => term.includes(lowerCase))
+      )
+      .map(icon => ({ [icon]: icons[icon] }));
   };
 
   render() {

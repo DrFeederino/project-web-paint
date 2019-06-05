@@ -114,13 +114,13 @@ class ImageItems extends Component {
       if (canvasRef.workarea.layout === 'responsive') {
         if (!canvasRef.workarea._element) {
           notification.warn({
-            message: 'Please your select background image'
+            message: i18n.t('validation.select-background')
           });
           return;
         }
       }
       if (canvasRef.interactionMode === 'polygon') {
-        message.info('Already drawing');
+        message.info(i18n.t('action.already-drawing'));
         return;
       }
       const id = uuid();
@@ -132,13 +132,13 @@ class ImageItems extends Component {
       if (canvasRef.workarea.layout === 'responsive') {
         if (!canvasRef.workarea._element) {
           notification.warn({
-            message: 'Please select your background image'
+            message: i18n.t('validation.select-background')
           });
           return;
         }
       }
       if (canvasRef.interactionMode === 'polygon') {
-        message.info('Already drawing');
+        message.info(i18n.t('action.already-drawing'));
         return;
       }
       if (item.option.type === 'line') {
@@ -149,6 +149,8 @@ class ImageItems extends Component {
         canvasRef.drawingHandlers.pencil.init();
       } else if (item.option.type === 'Pen') {
         canvasRef.drawingHandlers.pen.init();
+      } else if (item.option.type === 'fill') {
+        canvasRef.drawingHandlers.fill.init();
       } else {
         canvasRef.drawingHandlers.polygon.init();
       }
@@ -199,16 +201,18 @@ class ImageItems extends Component {
       target.classList.remove('over');
     },
     onDrop: e => {
+      console.log(e);
       e = e || window.event;
+      console.log(window.event);
       if (e.preventDefault) {
         e.preventDefault();
       }
       if (e.stopPropagation) {
         e.stopPropagation();
       }
-      if (!this.item) {
+      if (!this.item && !e.dataTransfer) {
         notification.warn({
-          message: 'Sorry, drag and drop is not supported for vector types'
+          message: i18n.t('action.unsupported')
         });
         return;
       }
@@ -235,7 +239,7 @@ class ImageItems extends Component {
             this.handlers.onAddItem(item, false);
           } else {
             notification.warn({
-              message: 'Not supported file type'
+              message: i18n.t('action.unsupported-file-type')
             });
           }
         });
