@@ -3,16 +3,12 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import { ru, en } from './index';
 
 const i18nClient = i18n.use(LanguageDetector).init({
-  load: 'all',
-  whitelist: ['en', 'en-US', 'ru', 'ru-RU'],
-  nonExplicitWhitelist: false,
+  load: ['en', 'en-US', 'en-GB', 'ru', 'ru-RU'],
+  whitelist: ['en', 'en-US', 'en-GB', 'ru', 'ru-RU'],
+  fallbackLng: 'ru',
   lngs: ['en-US', 'ru-RU'],
-  fallbackLng: 'en-US',
-  interpolation: {
-    escapeValue: false
-  },
   react: {
-    wait: false, // set to true if you like to wait for loaded in every translated hoc
+    wait: true, // set to true if you like to wait for loaded in every translated hoc
     nsMode: 'default' // set it to fallback to let passed namespaces to translated hoc act as fallbacks
   },
   defaultNS: 'locale.ru',
@@ -22,6 +18,9 @@ const i18nClient = i18n.use(LanguageDetector).init({
     },
     'en-US': {
       'locale.en': en
+    },
+    'en-GB': {
+      'local.en': en
     },
     ru: {
       'locale.ru': ru
