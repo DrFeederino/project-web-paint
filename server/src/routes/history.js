@@ -4,7 +4,7 @@ const router = Router();
 
 router.get('/show', async (req, res) => {
   const history = await req.context.models.History.find();
-  return res.send(history);
+  return res.send(history); //for debug purposes
 });
 
 router.get('/:userId', async (req, res) => {
@@ -16,7 +16,7 @@ router.get('/:userId', async (req, res) => {
 
 router.get('/erase', async (req, res) => {
   req.context.models.History.deleteMany({})
-    .then(result => res.status(200).send(result))
-    .catch(err => res.send(err));
+    .then(res => res.status(200).send({"message" : "History has been successfully erased."}))
+    .catch(err => res.send({"message" : `An Error occured: {err}`}));
 })
 export default router;

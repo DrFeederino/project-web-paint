@@ -17,9 +17,13 @@ router.get('/', async (req, res) => {
 router.post('/login', async (req, res) => { //login users
   let user;
   console.log('Получен запрос на вход пользователя...');
+  if (!req.body || !req.body.email || !req.body.password) {
+    console.log("Received empty request");
+    res.status(401).send({"message" : "Request is badly formed."});
+    return;
+  }
   await req.context.models.User.findOne({
     email: req.body.email,
-    password: req.body.password,
   }).then(fetchUser => {
     console.log("Вход пользователя "+ fetchUser.email + " в " + new Date());
     const data = new req.context.models.History({
@@ -31,10 +35,14 @@ router.post('/login', async (req, res) => { //login users
         userId: fetchUser._id,
     })
     data.save();
-    console.log(data);
-    console.log(fetchUser);
     res.json(fetchUser);
-  }).catch(() => res.status(401).json({err: 'Введены неверно данные.'}));
+  }).catch(() => res.status(401).send({"err": 'Введены неверно данные.'}));
+  await req.context.models.User.findOne({
+    email: req.body.email,
+    password: req.body.password
+  }).then(user => {
+    res.json(user);
+  }).catch(() => res.status(401).send({"err": "User not found"}));
 });
 
 router.post('/create', async (req, res) => { //creates users
