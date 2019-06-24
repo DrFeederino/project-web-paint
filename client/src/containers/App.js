@@ -14,8 +14,8 @@ class App extends Component {
     this.state = {
       user: null,
       username: '',
-      email: 'admin@admin.com',
-      password: '12345',
+      email: '',
+      password: '',
       isLogged: false,
       text: ''
     };
