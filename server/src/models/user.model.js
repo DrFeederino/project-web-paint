@@ -4,18 +4,21 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     unique: true,
+    required: true,
   },
   username: {
     type: String,
     unique: true,
+    required: true,
   },
-  password: String,
-  createdAt: Date,
-  data: [{ type: mongoose.Schema.Types.ObjectId, ref: 'History'}],
-});
-
-userSchema.pre('remove', function(next) {
-  this.model('History').deleteMany({ user: this._id }, next);
+  password: {
+    type: String,
+    required: true,
+  },
+  timestamp: {
+    type: Date,
+    required: true,
+  }
 });
 
 const User = mongoose.model('User', userSchema);

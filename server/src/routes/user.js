@@ -1,155 +1,169 @@
 import { Router } from 'express';
-//import bcrypt from 'bcrypt';
+import bcrypt from 'bcrypt';
+import User from '../models/user.model';
+import History from '../models/history.model';
+import Response from '../response';
 
 const router = Router();
-//const saltRounds = 10; // per docs
+const saltRounds = 10; 
+const messages = {
+  "empty_request": "Received an empty request.",
+  "user_not_found": "User has not been found.",
+  "bad_request": "Received a bad request.",
+  "bad_update_request": "Received a bad update request.",
+  "user_deleted": "User is successfully deleted.",
+  "user_not_deleted": "Unable to delete user.",
+  "user_not_created": "Cannot add user.",
+  "user_updated": "User settings were successfully updated.",
+  "bad_password": "Password does not match.",
+  "internal_error": "Internal error has occured.",
+  "history_not_deleted": "Failed to erase user's history.",
+  "history_deleted": "User's history is deleted."
+};
 
-router.get('/show', async (req, res) => {
-  let users = await req.context.models.User.find();
-  console.log(users.length)
-  res.send(users); // to check if everything is fine on server side
-});
 
-router.get('/', async (req, res) => {
-  res.sendStatus(200);
-});
-
-router.post('/login', async (req, res) => { //login users
-  let user;
-  console.log('Получен запрос на вход пользователя...');
-  if (!req.body || !req.body.email || !req.body.password) {
-    console.log("Received empty request");
-    res.status(401).send({"message" : "Request is badly formed."});
-    return;
+//res.status(200).redirect(`/users/${newUser._id}`)
+async function handleCreateUser (userdata) {
+  const password = await bcrypt.hash(userdata.password, saltRounds);
+  const user = {
+     username: userdata.username,
+     email: userdata.email,
+     password: password,
+     timestamp: new Date(),
+  };
+  const data = userdata.data;
+  const newUser = new User(user);
+  if (newUser) {
+    newUser.save();
+    logHistory(newUser._id, data);
+    return new Response(200, newUser._id);
   }
-  await req.context.models.User.findOne({
-    email: req.body.email,
-  }).then(fetchUser => {
-    console.log("Вход пользователя "+ fetchUser.email + " в " + new Date());
-    const data = new req.context.models.History({
-        loginDate: req.body.data.date,
-        action: req.body.data.action,
-        os: req.body.data.os,
-        device: req.body.data.ua,
-        ip: req.ip,
-        userId: fetchUser._id,
-    })
-    data.save();
-    res.json(fetchUser);
-  }).catch(() => res.status(401).send({"err": 'Введены неверно данные.'}));
-  await req.context.models.User.findOne({
-    email: req.body.email,
-    password: req.body.password
-  }).then(user => {
-    res.json(user);
-  }).catch(() => res.status(401).send({"err": "User not found"}));
-});
+  return new Response(400, messages.user_not_created);
+}
 
-router.post('/create', async (req, res) => { //creates users
-  console.log('Получен запрос на регистрацию...');
-  let user = await req.context.models.User.findOne({
-    email: req.body.email,
-  });
-  console.log(user);
-  if (!user) {
-    console.log(req.body);
-    await req.context.models.User.create({
-      username: req.body.username,
-      email: req.body.email,
-      password: req.body.password,
-      createdAt: req.body.date,
-    }, (err, result) => {
-      if (err) { res.json('Ошибка регистрации'); }
-      console.log(req.body.data);
-      const data = new req.context.models.History({
-        loginDate: req.body.date,
-        action: req.body.data.action,
-        os: req.body.data.os,
-        device: req.body.data.ua,
-        ip: req.ip,
-        userId: result._id,
-      });
-      data.save();
-      console.log('Регистрация успешно выполнена!');
-      console.log(result);
-      res.status(200).redirect(`/users/${result._id}`);
+async function handleLoginUser(userdata) {
+  const data = userdata.data;
+  try {
+    const userFromDb = await User.findOne({
+      email: userdata.email,
     });
-  } else {
-    console.log('Пользователь имеется в БД.');
-    res.sendStatus(403);
+    const matchingPasswords = await bcrypt.compare(userdata.password, userFromDb.password);
+    if (matchingPasswords) {
+      logHistory(userFromDb._id, data);
+      return new Response(200, userFromDb);
+    } else {
+      return new Response(401, messages.bad_password);
+    }
+  } catch(e) {
+    console.log(e);
+    return new Response(404, messages.user_not_found);
   }
-});
+}
 
-router.get('/:userId', async (req, res) => {
-  console.log('Получен переход от регистрации...');
-  await req.context.models.User.findOne({
-    _id: req.params.userId,
-  }, (err, result) => {
-    if (err) { res.json('Ошибка получения данных пользователя!') }
-    console.log('Выдача данных пользователя.');
-    console.log(result);
-    res.status(200).json(result);
+async function handleFetchUserInfo(id) {
+  const user = await User.findOne({
+    _id: id,
   });
-});
+  if (user) {
+    return new Response(200, user);
+  } else {
+    return new Response(404, messages.user_not_found);
+  }
+}
 
-router.put('/:userId/update', async (req, res) => {
-  console.log('Получен запрос на обновление данных...');
-  let user = await req.context.models.User.findOne({
-    _id: req.params.userId,
+async function handleShowUsers() {
+  try {
+    const users = await User.find();
+    return new Response(200, users);
+  } catch (e) {
+    console.log(e);
+    return new Response(500, messages.internal_error);
+  }
+}
+
+async function handleDeleteUser(id) {
+  const user = await User.deleteOne({
+    _id: id
+  });
+  if (user.n > 0) {
+    deleteUserInfo(id);
+    return new Response(200, messages.user_deleted);
+  } else {
+    return new Response(404, messages.user_not_deleted);
+  }
+}
+
+async function deleteUserInfo(id) {
+  console.log('deleted')
+  await History.deleteMany({ userId : id});
+}
+function logHistory(id, data) {
+  const history = new History({
+    userId: id,
+    timestamp: new Date(),
+    action: data.action,
+    useragent: data.useragent,
+  });
+  history.save();
+}
+
+async function handleUpdateUserInfo(id, dataToUpdate) {
+  const user = await User.findOne({
+    _id: id
   });
   if (user) {
     console.log(user);
-    user = req.body;
-    await user.save();
-  }
-});
-
-router.delete('/:userId/delete', async (req, res) => { //delets users from db
-  console.log('Получен запрос на удаление...');
-  let user = await req.context.models.User.findOne({
-    _id: req.params.userId,
-  });
-  console.log(user);
-  if (user) {
-    await req.context.models.User.deleteOne(user, (err, result) => {
-      if (err) { res.send(err) }
-      console.log('Пользователь успешно удалён из системы!');
-      res.sendStatus(200);
-    });
+    updateUser(user, dataToUpdate);
+    return new Response(200, user);
   } else {
-    console.log('Невозможно удалить пользователя.');
-    res.sendStatus(401);
+    return new Response(404, messages.user_not_found);
   }
+}
+
+function updateUser(user, data) {
+  user.username = data.username || user.username;
+  user.email = data.email || user.email;
+  user.password = data.password || user.password;
+  user.save();
+}
+
+/*
+ * General Users operations
+ */
+
+router.get('/show', async (req, res) => {
+  const response = await handleShowUsers();
+  res.status(response.status).send(response.body);
 });
 
-// userSchema.statics.createUser = async (user) => {
-//   this.create(...user, (err) => {
-//     if (err) { return err; }
-//   });
-// };
+router.post('/login', async (req, res) => {
+  const response = await handleLoginUser(req.body);
+  console.log(response);
+  res.status(response.status).send(response.body);
+});
 
-// userSchema.statics.resetPassword = async (user) => {
-// this.update(user, (err) => {
-//   if (err) { return err; }
-// });
-// };
-// userSchema.statics.loginUser = async (user) => {
-// let userFromDB = await this.findOne({
-//   email: user.email,
-//   password: user.password,
-// });
-// return user;
-// };
+router.post('/create', async (req, res) => {
+  const response = await handleCreateUser(req.body);
+  res.status(response.status).send(response.body);
+});
 
-// userSchema.statics.findByLogin = async function(login) {
-// let user = await this.findOne({
-//   username: login,
-// });
+/*
+ * User specific operations 
+ */
 
-// if (!user) {
-//   user = await this.findOne({ email: login });
-// }
-// return user;
-// };
+router.get('/:userId', async (req, res) => {
+  const response = await handleFetchUserInfo(req.params.userId);
+  res.status(response.status).send(response.body);
+});
+
+router.put('/:userId/update', async (req, res) => {
+  const response = await handleUpdateUserInfo(req.params.userId, req.body);
+  res.status(response.status).send(response.body);
+});
+
+router.delete('/:userId/delete', async (req, res) => { 
+  const response = await handleDeleteUser(req.params.userId);
+  res.status(response.status).send(response.body);
+});
 
 export default router;

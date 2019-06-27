@@ -1,34 +1,36 @@
 import 'dotenv/config';
 import cors from 'cors';
-import bodyParser from 'body-parser';
 import express from 'express';
-import helmet from 'helmet'
-import models, { connectDb } from './models';
+import helmet from 'helmet';
 import routes from './routes/routes';
+import mongoose from 'mongoose';
 
 const app = express();
+const port = process.env.PORT || 9000;
 
 // Application-Level Middleware
-
 app.use(cors());
 app.use(helmet());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }))
 
-app.use(async (req, res, next) => {
-  req.context = { models };
-  next();
+// Database connection
+const uri = process.env.DATABASE_URI;
+mongoose.connect(uri, {
+  useNewUrlParser: true,
+  useCreateIndex: true
+});
+
+const connection = mongoose.connection;
+connection.once('open', () => {
+  console.log("MongoDB database connection established succesfully");
 });
 
 // Routes
-
 app.use('/history', routes.history);
 app.use('/users', routes.user);
 
 // Start
-
-connectDb().then(async () => {
-  app.listen(process.env.PORT, () =>
-    console.log(`Server on port ${process.env.PORT}!`),
-  );
-});
+app.listen(port, () =>
+  console.log(`Server is running on port ${port}!`)
+);

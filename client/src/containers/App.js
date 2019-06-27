@@ -110,7 +110,7 @@ class App extends Component {
       );
       return;
     }
-    await apiClass
+    apiClass
       .createUser(username, email, password, deviceDetect())
       .then(res => {
         if (res.status !== 403) {
