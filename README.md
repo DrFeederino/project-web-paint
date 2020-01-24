@@ -1,7 +1,6 @@
 # STATUS
 
-NO LONGER MAINTAINED, [SEE THIS](https://github.com/DrFeederino/neo-pwb)
-
+NO LONGER MAINTAINED
 # Project Web Paint
 This was done as a part of graduate paper. It was inspired by web technologies and [this magnificent react-design-editor by salgum1114](https://github.com/salgum1114/react-design-editor). Even though the front-end is based on work of RDE, it was heavily modified, simplified and tweaked to make the most sense of what to expect from graphical editor (RDE was made as a powerpoint alterntaive with workflows). Server side is a simple NodeJS app with basic CRUD operations on MongoDB to support login and registration.
 # Changes made
